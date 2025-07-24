@@ -1,0 +1,34 @@
+{
+  "name": "japanese-language-tools",
+  "author": "Sean McBroom (sean.mcbroom@outlook.com)",
+  "description": "Japanese Language Tools",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "",
+  "engines": {
+    "node": ">=22.11.0 <23.0.0",
+    "npm": ">=10.9.0",
+    "yarn": "yarn is not supported. Please use npm"
+  },
+  "scripts": {
+    "dev": "tsx ./src/index.ts",
+    "build": "tsc && tsc-alias",
+    "lint": "eslint --fix .",
+    "test": "tsx --test"
+  },
+  "keywords": [
+    "japanese",
+    "language"
+  ],
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "eslint": "^9.31.0",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.38.0"
+  }
+}

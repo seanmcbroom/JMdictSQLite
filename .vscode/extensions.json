@@ -1,0 +1,12 @@
+{
+  // View all by searching "@recommended" in the extension marketplace.
+  "recommendations": [
+    "aaron-bond.better-comments",        // Better comment highlighting
+    "eamodio.gitlens",
+    "dbaeumer.vscode-eslint",             // ESLint integration
+    "esbenp.prettier-vscode",             // Prettier for formatting
+    "ms-vscode.vscode-typescript-next",   // Latest TS features if you use TypeScript
+    "ryanluker.vscode-coverage-gutters",
+    "yoavbls.pretty-ts-errors"
+  ]
+}
