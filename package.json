@@ -14,7 +14,8 @@
     "dev": "tsx ./src/index.ts",
     "build": "tsc && tsc-alias",
     "lint": "eslint --fix .",
-    "test": "tsx --test"
+    "test": "tsx --test",
+    "download-jmdict": "tsx ./scripts/download-jmdict.ts"
   },
   "keywords": [
     "japanese",
@@ -22,7 +23,9 @@
   ],
   "license": "ISC",
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^24.1.0",
+    "@types/sax": "^1.2.7",
     "@typescript-eslint/eslint-plugin": "^8.38.0",
     "eslint": "^9.31.0",
     "ts-node": "^10.9.2",
@@ -30,5 +33,10 @@
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0"
+  },
+  "dependencies": {
+    "basic-ftp": "^5.0.5",
+    "better-sqlite3": "^12.2.0",
+    "sax": "^1.4.1"
   }
 }
