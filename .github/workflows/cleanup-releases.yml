@@ -1,4 +1,4 @@
-name: Cleanup Old Releases
+name: Cleanup Releases
 
 on:
   schedule:

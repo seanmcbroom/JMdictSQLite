@@ -1,4 +1,4 @@
-name: Daily JMdict Parser
+name: Release Latest JMDict SQLite
 
 on:
   schedule:
