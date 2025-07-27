@@ -29,6 +29,7 @@
     "@types/sax": "^1.2.7",
     "@typescript-eslint/eslint-plugin": "^8.38.0",
     "eslint": "^9.31.0",
+    "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.20.3",
