@@ -13,6 +13,6 @@ Database Schema Diagram
 │          – semicolon-delimited     │            └──────────────────────────────────────────────────┘
 └────────────────────────────────────┘
 ```
-PK = Primary Key
-FK = Foreign Key
-entries.ent_seq ⇄ senses.ent_seq (one-to-many)
+PK = Primary Key<br>
+FK = Foreign Key<br>
+entries.ent_seq -> senses.ent_seq (one-to-many)
