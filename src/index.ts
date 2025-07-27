@@ -1,7 +1,7 @@
 import fs from 'fs';
-import { createParser } from './parser/parser';
-import { JmdictDatabase } from './db';
-import EntityReplace from './parser/entityReplace';
+import { createParser } from '@/parser/parser.js';
+import { JmdictDatabase } from '@/db/index.js';
+import EntityReplace from '@/parser/entityReplace.js';
 import { DefaultArtifactClient } from '@actions/artifact';
 
 const startTime = Date.now();

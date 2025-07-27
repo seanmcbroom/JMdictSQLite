@@ -1,5 +1,5 @@
-import Entry from '@/models/entry';
-import Sense from '@/models/sense';
+import Entry from '@/models/entry.js';
+import Sense from '@/models/sense.js';
 import Database from 'better-sqlite3';
 import type { Database as DatabaseType, Statement } from 'better-sqlite3';
 
