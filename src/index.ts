@@ -1,12 +1,32 @@
 import fs from 'fs';
-import entityReplace from './parser/entityReplace';
 import { createParser } from './parser/parser';
-import { db } from './db';
+import { JmdictDatabase } from './db';
+import EntityReplace from './parser/entityReplace';
+import { DefaultArtifactClient } from '@actions/artifact';
 
-fs.createReadStream('./data/jmdict.xml')
-  .pipe(new entityReplace()) // Replace characters
-  .pipe(createParser()) // Parsing stream
+const startTime = Date.now();
+const db = new JmdictDatabase();
+const dbParser = createParser(db);
+
+const artifact = new DefaultArtifactClient();
+
+fs.createReadStream('./data/jmdict.xml', { encoding: 'utf8' })
+  .pipe(new EntityReplace()) // Handles entity replacements
+  .pipe(dbParser) // Parsing stream
   .on('end', () => {
-    console.log('✅ Done parsing XML.');
+    console.log(`✅ Done parsing XML. Time elapsed: ${((Date.now() - startTime) / 1000).toFixed(2)}s`);
+    
     db.close();
+
+    const now = new Date();
+    const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    artifact.uploadArtifact(`JMDictSQLite-${dateStr}`, ['./data/jmdict.db'], './', {
+      retentionDays: 7
+    })
+      .then(() => {
+        console.log('📦 Artifact uploaded successfully.');
+      })
+      .catch((err) => {
+        console.error('❌ Failed to upload artifact:', err);
+      });
   });

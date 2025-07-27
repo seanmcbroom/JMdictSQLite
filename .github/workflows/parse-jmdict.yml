@@ -1,0 +1,23 @@
+# .github/workflows/parse-jmdict.yml
+name: Daily JMdict Parser
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # Runs every day at 3 AM UTC
+  workflow_dispatch:      # Optional: allows manual runs
+
+jobs:
+  parse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies with npm
+        run: npm ci
+
+      - name: Parse and upload
+        run: npm run github:parse-jmdict
