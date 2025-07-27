@@ -1,7 +1,8 @@
 Automatic daily releases.<br>
-Availible for download at https://github.com/seanmcbroom/JMdictSQLite/releases/download/latest/jmdict.sqlite
+Download: https://github.com/seanmcbroom/JMdictSQLite/releases/download/latest/jmdict.sqlite
 
-Database Schema Diagram
+**[WARNING]: NOT FINAL**<br>
+_Database Schema Diagram_
 ```
 ┌────────────────────────────────────┐            ┌───────────────────────────────────────────────────┐
 │              entries               │◄───────────│                    senses                         │
