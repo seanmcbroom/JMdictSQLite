@@ -32,4 +32,4 @@ export const tags = {
   kanji: [
     'ateji','ik','iK','io','oK','ok','rK','sK','sk','rk'
   ]
-}
+} as const;
