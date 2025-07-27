@@ -57,6 +57,9 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
     );
 
     for (const sense of entry.senses) {
+      if (entry.ent_seq === undefined) {
+        continue; // Skip if ent_seq is undefined
+      }
       sense.ent_seq = entry.ent_seq;
       this.insertSense(sense);
     }
