@@ -10,13 +10,13 @@
     "yarn": "yarn is not supported. Please use npm"
   },
   "scripts": {
-    "dev": "tsx ./src/index.ts",
     "start": "node ./dist/src/index.js",
+    "build": "tsc && tsc-alias",
+    "dev": "tsx ./src/index.ts",
     "test": "tsx --test",
-    "build": "tsc && tsc-alias && npm run start",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "github:parse-jmdict": "npm run download-jmdict && npm run build",
+    "github:parse-jmdict": "npm run download-jmdict && npm run build && npm run start",
     "download-jmdict": "tsx ./scripts/download-jmdict.ts"
   },
   "keywords": [
