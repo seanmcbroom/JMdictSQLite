@@ -1,7 +1,7 @@
 {
-  "name": "japanese-language-tools",
+  "name": "jmdict-sqlite",
+  "description": "Read-only SQLite database for JMDict, a Japanese-English dictionary.",
   "author": "Sean McBroom (sean.mcbroom@outlook.com)",
-  "description": "Japanese Language Tools",
   "version": "0.1.0",
   "type": "module",
   "main": "",
@@ -12,9 +12,10 @@
   },
   "scripts": {
     "dev": "tsx ./src/index.ts",
+    "test": "tsx --test",
     "build": "tsc && tsc-alias",
     "lint": "eslint --fix .",
-    "test": "tsx --test",
+    "github:parse-jmdict": "npm run download-jmdict && npm run build",
     "download-jmdict": "tsx ./scripts/download-jmdict.ts"
   },
   "keywords": [
@@ -35,6 +36,7 @@
     "typescript-eslint": "^8.38.0"
   },
   "dependencies": {
+    "@actions/artifact": "^2.3.2",
     "basic-ftp": "^5.0.5",
     "better-sqlite3": "^12.2.0",
     "sax": "^1.4.1"
