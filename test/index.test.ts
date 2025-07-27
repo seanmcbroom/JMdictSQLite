@@ -11,11 +11,9 @@ const outPath = path.resolve('./test/data/jmdict-test.sqlite');
 
 describe('JMDict Processor Suite', () => {
   before(async () => {
-    console.log('before')
     const jmdictProcessor = new JmdictProcessor(xmlPath, outPath);
 
     await jmdictProcessor.process();
-    console.log('finsish')
   });
 
   it('should execute a basic truthy test', () => {
@@ -40,9 +38,6 @@ describe('JMDict Processor Suite', () => {
   });
 
   it('should create a non-empty SQLite file', async () => {
-    // Arrange
-    // (no additional setup needed)
-
     // Act
     const stat = await fs.stat(outPath);
 
