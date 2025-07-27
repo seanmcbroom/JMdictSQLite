@@ -21,3 +21,10 @@ jobs:
 
       - name: Parse and upload
         run: npm run github:parse-jmdict
+
+      - name: Upload jmdict.sqlite
+        uses: actions/upload-artifact@v4
+        with:
+          name: JMDictSQLite
+          path: ./data/jmdict.sqlite
+          retention-days: 7
