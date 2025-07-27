@@ -28,7 +28,6 @@ jobs:
 
       - name: GitHub Release Upload
         uses: softprops/action-gh-release@v2.3.2
-        if: github.ref_type == 'tag'
         with:
           tag_name: latest
           name: JMDict SQLite - ${{ steps.date.outputs.date }}
