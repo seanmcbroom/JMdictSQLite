@@ -19,3 +19,8 @@ PK = Primary Key<br>
 FK = Foreign Key<br>
 `?` = possibly undefined  
 `entries.ent_seq` → `senses.ent_seq` (one-to-many)
+
+
+## License
+This project contains components originally created by the **Electronic Dictionary Research and Development Group (EDRDG)**. These components are derived from data licensed under the **GNU General Public License Version 2 (GPLv2)**.
+You are free to use, modify, and distribute this software under the terms of the GPLv2. A copy of the full license is included in the `LICENSE` file.
