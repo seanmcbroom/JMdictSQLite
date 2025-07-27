@@ -1,4 +1,4 @@
-Automatic daily releases.
+Automatic daily releases.<br>
 Availible for download at https://github.com/seanmcbroom/JMdictSQLite/releases/download/latest/jmdict.sqlite
 
 Database Schema Diagram
