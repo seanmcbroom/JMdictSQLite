@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { JmdictProcessor } from './app.js';
+import { JmdictProcessor } from '@/app.js';
 
 const xmlPath = path.resolve('./data/jmdict.xml');
 const outPath = path.resolve('./data/jmdict.sqlite');
