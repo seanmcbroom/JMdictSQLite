@@ -1,7 +1,7 @@
-import Entry from '@/models/entry.js';
 import Sense from '@/models/sense.js';
 import Database from 'better-sqlite3';
 import type { Database as DatabaseType, Statement } from 'better-sqlite3';
+import Entry from '@/models/entry.js';
 
 export interface JmdictDatabaseInterface {
   insertEntry(entry: Entry): void;
@@ -53,7 +53,7 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
     this.insertEntryStmt.run(
       entry.ent_seq,
       entry.kanji?.length && entry.kanji.length > 0 ? entry.kanji.join('; ') : null,
-      entry.kana?.length && entry.kana.length > 0 ? entry.kana.join('; ') : null
+      entry.kana?.length && entry.kana.length > 0 ? entry.kana.join('; ') : null,
     );
 
     for (const sense of entry.senses) {
@@ -66,11 +66,7 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
   }
 
   insertSense(sense: Sense) {
-    this.insertSenseStmt.run(
-      sense.ent_seq,
-      sense.glosses.join('; '),
-      sense.pos.join('; ')
-    );
+    this.insertSenseStmt.run(sense.ent_seq, sense.glosses.join('; '), sense.pos.join('; '));
   }
 
   close() {
