@@ -19,6 +19,8 @@
   },
   "include": [
     "src/**/*",
+    "test/**/*",
+    "scripts/**/*",
     ".mocharc.js"
   ],
   "exclude": [
