@@ -15,7 +15,7 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
   insertEntryStmt!: Statement;
   insertSenseStmt!: Statement;
 
-  constructor(path = './data/jmdict.sqlite') {
+  constructor(path: string) {
     this.db = new Database(path);
     this.db.pragma('foreign_keys = ON');
     this._initializeTables();
