@@ -1,43 +1,56 @@
 import sax from 'sax';
 import type Entry from '@/models/entry';
-import { insertEntry, insertSense } from "@/db/index"
+import { JmdictDatabase } from '@/db';
 
 /**
  * Creates a SAX parser stream to parse JMDict XML.
  * 
  * @returns SAX parser stream
  */
-export function createParser() {
+export function createParser(db: JmdictDatabase) {
   const parser = sax.createStream(true, { trim: true });
 
-  let currentEntry: Entry | null = null;
+  let currentEntry: Entry | undefined; // undefined until an <entry> tag is opened
   let currentText = '';
-  let currentTag = '';
 
   parser.on('opentag', (node) => {
-    currentTag = node.name;
-
-    if (currentTag === 'entry') {
+    if (node.name === 'entry') {
       currentEntry = {
-        ent_seq: null,
+        ent_seq: undefined,
         kanji: [],
         kana: [],
         senses: [],
       };
     }
+
+    if (node.name === 'sense' && currentEntry) {
+      currentEntry.senses.push({
+        ent_seq: 0,
+        glosses: [],
+        pos: [],
+        misc: [],
+        field: [],
+      });
+    }
   });
+
 
   parser.on('text', (text) => {
     currentText += text;
   });
 
-  parser.on('closetag', (tagName) => {
+  parser.on('closetag', (name) => {
     const text = currentText.trim();
     currentText = '';
 
     if (!currentEntry) return;
 
-    switch (tagName) {
+    switch (name) {
+
+    case 'r_ele':
+      break;
+    
+    // Entry sequence number tag
     case 'ent_seq': {
       const parsed = parseInt(text, 10);
       if (!isNaN(parsed)) {
@@ -46,60 +59,62 @@ export function createParser() {
       break;
     }
 
+    // Kanji reading tag
     case 'keb':
       currentEntry.kanji.push(text);
       break;
 
+    // Kana reading tag
     case 'reb':
       currentEntry.kana.push(text);
       break;
 
+    // Glossary entry
     case 'gloss': {
-      const lastSense = currentEntry.senses[currentEntry.senses.length - 1];
-      if (lastSense) {
-        lastSense.glosses.push(text);
-      }
+      const lastSense = currentEntry.senses.at(-1);
+      if (lastSense) lastSense.glosses.push(text);
       break;
     }
 
+    // Part of speech tags
     case 'pos': {
-      const lastSense = currentEntry.senses[currentEntry.senses.length - 1];
-      if (lastSense) {
-        lastSense.pos.push(text);
-      }
+      const lastSense = currentEntry.senses.at(-1);
+      if (lastSense) lastSense.pos.push(text);
       break;
     }
 
+    // Miscellaneous tags
+    case 'misc': {
+      const lastSense = currentEntry.senses.at(-1);
+      if (lastSense) lastSense.misc?.push(text);
+      break;
+    }
+
+    // Field tags
+    case 'field': {
+      const lastSense = currentEntry.senses.at(-1);
+      if (lastSense) lastSense.field?.push(text);
+      break;
+    }
+
+    // Closing entry tag
     case 'entry': {
       if (typeof currentEntry.ent_seq !== 'number') {
         console.warn('⚠️ Skipping entry with missing ent_seq:', JSON.stringify(currentEntry, null, 2));
-        currentEntry = null;
+        currentEntry = undefined;
         return;
       }
 
-      insertEntry(
-        currentEntry.ent_seq,
-        currentEntry.kanji.length ? currentEntry.kanji.join('; ') : null,
-        currentEntry.kana.length ? currentEntry.kana.join('; ') : null
-      );
+      db.insertEntry(currentEntry);
 
-      for (const sense of currentEntry.senses) {
-        for (const gloss of sense.glosses) {
-          const posList = sense.pos.length ? sense.pos : [''];
-          for (const pos of posList) {
-            insertSense(currentEntry.ent_seq, gloss, pos);
-          }
-        }
-      }
-
-      currentEntry = null;
+      currentEntry = undefined; // Reset for the next entry
       break;
     }
     }
   });
 
   parser.on('error', (err) => {
-    console.error('❌ SAX Parser Error:', err);
+    console.warn('❌ SAX Parser Error:', err);
   });
 
   return parser;
