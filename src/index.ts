@@ -1,7 +1,8 @@
 import fs from 'fs';
-import { createParser } from '@/parser/parser.js';
+
 import { JmdictDatabase } from '@/db/index.js';
 import EntityReplace from '@/parser/entityReplace.js';
+import { createParser } from '@/parser/parser.js';
 
 const startTime = Date.now();
 const db = new JmdictDatabase();

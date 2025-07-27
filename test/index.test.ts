@@ -1,5 +1,5 @@
-import { describe, it } from 'node:test';
 import { equal } from 'assert';
+import { describe, it } from 'node:test';
 
 describe('Typescript usage suite', () => {
   it('should be able to execute a test', () => {

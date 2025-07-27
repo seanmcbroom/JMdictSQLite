@@ -1,8 +1,8 @@
+import * as ftp from 'basic-ftp';
 import fs from 'fs';
 import path from 'path';
 import { pipeline } from 'stream';
 import { promisify } from 'util';
-import * as ftp from 'basic-ftp';
 import * as zlib from 'zlib';
 
 const pipe = promisify(pipeline);

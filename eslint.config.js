@@ -1,8 +1,8 @@
-import tseslint from 'typescript-eslint';
 import tsParser from '@typescript-eslint/parser';
 import prettier from 'eslint-config-prettier';
 import eslintPluginImport from 'eslint-plugin-import';
 import eslintPluginUnusedImports from 'eslint-plugin-unused-imports';
+import tseslint from 'typescript-eslint';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
