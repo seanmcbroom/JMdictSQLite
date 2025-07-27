@@ -16,15 +16,20 @@ jobs:
         with:
           node-version: '22.17.0'
 
-      - name: Install dependencies with npm
+      - name: Install dependencies
         run: npm ci
 
-      - name: Parse and upload
+      - name: Parse
         run: npm run github:parse-jmdict
 
-      - name: Upload jmdict.sqlite
-        uses: actions/upload-artifact@v4
+      - name: Set release date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
+
+      - name: GitHub Release Upload
+        uses: softprops/action-gh-release@v2.3.2
+        if: github.ref_type == 'tag'
         with:
-          name: JMDictSQLite
-          path: ./data/jmdict.sqlite
-          retention-days: 90
+          tag_name: latest
+          name: JMDict SQLite - ${{ steps.date.outputs.date }}
+          files: ./data/jmdict.sqlite
