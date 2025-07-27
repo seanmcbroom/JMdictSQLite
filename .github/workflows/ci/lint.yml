@@ -2,12 +2,10 @@ name: ESLint
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: [ main ]
+    types: [opened, synchronize, reopened]
 
 permissions:
   checks: write
