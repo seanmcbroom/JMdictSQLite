@@ -28,7 +28,7 @@ fs.createReadStream('./data/jmdict.xml', { encoding: 'utf8' })
 
     artifact.uploadArtifact(
       `JMDictSQLite-${dateStr}`,
-      [path.resolve('./data/jmdict.db')],
+      [path.resolve('./data/jmdict.sqlite')],
       path.resolve('./data'),
       { retentionDays: 7 }
     ).then(() => {
