@@ -1,16 +1,15 @@
 
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "target": "es2022",
+    "module": "es2022",
+    "moduleResolution": "node",
     "outDir": "dist",
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
-
     "lib": ["es2023"],
-    "module": "es2022",
-    "moduleResolution": "bundler",
-    "target": "es2022",
     "strict": true,
     "esModuleInterop": true,
     "allowJs": false,
@@ -19,11 +18,7 @@
     "types": ["node"]
   },
   "include": [
-    "**/*.js",
-    "**/*.ts",
-    "**/*d.ts",
-    "**/*.json",
-    "**/*.mjs",
+    "src/**/*",
     ".mocharc.js"
   ],
   "exclude": [

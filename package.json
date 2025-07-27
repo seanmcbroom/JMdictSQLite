@@ -4,7 +4,6 @@
   "author": "Sean McBroom (sean.mcbroom@outlook.com)",
   "version": "0.1.0",
   "type": "module",
-  "main": "",
   "engines": {
     "node": ">=22.11.0 <23.0.0",
     "npm": ">=10.9.0",
@@ -12,9 +11,10 @@
   },
   "scripts": {
     "dev": "tsx ./src/index.ts",
+    "start": "node ./dist/index.js",
     "test": "tsx --test",
-    "build": "tsc && tsc-alias",
     "lint": "eslint --fix .",
+    "build": "tsc && tsc-alias && npm run start",
     "github:parse-jmdict": "npm run download-jmdict && npm run build",
     "download-jmdict": "tsx ./scripts/download-jmdict.ts"
   },
