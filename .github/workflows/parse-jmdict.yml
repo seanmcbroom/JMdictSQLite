@@ -27,4 +27,4 @@ jobs:
         with:
           name: JMDictSQLite
           path: ./data/jmdict.sqlite
-          retention-days: 7
+          retention-days: 90
