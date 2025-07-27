@@ -2,6 +2,7 @@ Automatic daily releases.
 Availible for download at https://github.com/seanmcbroom/JMdictSQLite/releases/download/latest/jmdict.sqlite
 
 Database Schema Diagram
+```
 ┌────────────────────────────────────┐            ┌──────────────────────────────────────────────────┐
 │              entries               │◄───────────│                    senses                       │
 ├────────────────────────────────────┤            ├──────────────────────────────────────────────────┤
@@ -11,6 +12,7 @@ Database Schema Diagram
 │ kana      TEXT          (array)    │            │ pos      TEXT        (array, semicolon-delimited)│
 │          – semicolon-delimited     │            └──────────────────────────────────────────────────┘
 └────────────────────────────────────┘
+```
 PK = Primary Key
 FK = Foreign Key
 entries.ent_seq ⇄ senses.ent_seq (one-to-many)
