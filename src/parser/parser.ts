@@ -1,7 +1,7 @@
 import sax from 'sax';
 
 import type { JmdictDatabase } from '@/db/index.js';
-import type Entry from '@/models/entry.js';
+import type Entry from '@/types/entry.js';
 
 /**
  * Creates a SAX parser stream to parse JMDict XML.
