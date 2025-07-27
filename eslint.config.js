@@ -12,8 +12,16 @@ export default [
         project: './tsconfig.json',
       },
     },
+    "plugins": [
+      "sort-imports-es6-autofix"
+    ],
     rules: {
       '@/indent': ['error', 2],
+      "sort-imports-es6-autofix/sort-imports-es6": [2, {
+        "ignoreCase": false,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
+      }]
     },
   }
 ];
