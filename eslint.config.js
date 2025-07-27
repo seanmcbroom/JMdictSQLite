@@ -9,12 +9,7 @@ export default [
   ...tseslint.configs.recommended,
 
   {
-    files: [
-      "src/**/*",
-      "test/**/*",
-      "scripts/**/*",
-      "**/*.js"
-    ],
+    files: ['**/*.{ts,tsx,js,jsx,mjs,cjs}'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -58,6 +53,22 @@ export default [
         },
       ],
 
+      // Require .js extension for internal files
+      'import/extensions': [
+        'error',
+        'ignorePackages',
+        {
+          js: 'always',
+          ts: 'never', // TypeScript will resolve .ts, but we write .js in imports
+        },
+      ],
+      'import/no-unresolved': [
+        'error',
+        {
+          ignore: ['\\.js$'],
+        },
+      ],
+
       // Additional recommended TS rules
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/consistent-type-imports': 'error',
@@ -70,5 +81,12 @@ export default [
     rules: {
       ...prettier.rules,
     },
+  },
+
+  {
+    ignores: [
+      'dist/**/*',
+      'eslint.config.js'
+    ]
   },
 ];
