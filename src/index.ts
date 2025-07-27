@@ -1,5 +1,4 @@
 import fs from 'fs';
-import path from 'path';
 import { createParser } from '@/parser/parser.js';
 import { JmdictDatabase } from '@/db/index.js';
 import EntityReplace from '@/parser/entityReplace.js';
@@ -7,10 +6,6 @@ import EntityReplace from '@/parser/entityReplace.js';
 const startTime = Date.now();
 const db = new JmdictDatabase();
 const dbParser = createParser(db);
-
-const dbPath = path.resolve('./data/jmdict.db');
-console.log(dbPath);
-
 
 fs.createReadStream('./data/jmdict.xml', { encoding: 'utf8' })
   .pipe(new EntityReplace()) // Handles entity replacements
