@@ -37,7 +37,7 @@ jobs:
           git tag "release-${{ steps.date.outputs.date }}"
           git push origin "release-${{ steps.date.outputs.date }}"
 
-      - name: Create or update 'latest' tag
+      - name: Update 'latest' tag
         run: |
           git tag -f latest
           git push origin -f latest
