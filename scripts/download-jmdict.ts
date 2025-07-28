@@ -9,8 +9,11 @@ const pipe = promisify(pipeline);
 
 async function downloadJmdict() {
   const ftpUrl = 'ftp.edrdg.org';
+
   const ftpPath = '/pub/Nihongo/JMdict_e.gz';
+
   const localGzPath = path.join('data', 'JMdict_e.gz');
+
   const localXmlPath = path.join('data', 'jmdict.xml');
 
   // Ensure data directory exists
@@ -18,6 +21,7 @@ async function downloadJmdict() {
 
   // Download file via FTP
   const client = new ftp.Client();
+
   client.ftp.verbose = true;
 
   try {
@@ -40,8 +44,11 @@ async function downloadJmdict() {
   // Decompress the .gz file to .xml
   try {
     console.log('Decompressing file...');
+
     const fileContents = fs.createReadStream(localGzPath);
+
     const writeStream = fs.createWriteStream(localXmlPath);
+
     const unzip = zlib.createGunzip();
 
     await pipe(fileContents, unzip, writeStream);

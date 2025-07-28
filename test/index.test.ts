@@ -8,10 +8,12 @@ import { fileURLToPath } from 'url';
 import { JmdictProcessor } from '@/app.js';
 
 const __filename = fileURLToPath(import.meta.url);
+
 const __dirname = path.dirname(__filename);
 
-const xmlPath = path.resolve(`${__dirname}/data/jmdict-sample.xml`); 
-const outPath = path.resolve(`${__dirname}/data/jmdict-test.sqlite`);  
+const xmlPath = path.resolve(`${__dirname}/data/jmdict-sample.xml`);
+
+const outPath = path.resolve(`${__dirname}/data/jmdict-test.sqlite`);
 
 describe('JMDict Processor Suite', () => {
   before(async () => {
@@ -31,6 +33,7 @@ describe('JMDict Processor Suite', () => {
   it('should generate an output SQLite file', async () => {
     // Act
     let exists = true;
+
     try {
       await fs.access(outPath);
     } catch {
@@ -52,14 +55,16 @@ describe('JMDict Processor Suite', () => {
   it('should create expected tables in the SQLite database', () => {
     // Arrange
     const expectedTables = ['entries', 'senses'];
+
     const db = new Database(outPath);
 
     // Act
-    const rows = db
-      .prepare("SELECT name FROM sqlite_master WHERE type='table'")
-      .all() as { name: string }[];
+    const rows = db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all() as {
+      name: string;
+    }[];
 
-    const actualTables = rows.map((row) => row.name);
+    const actualTables = rows.map(row => row.name);
+
     db.close();
 
     // Assert

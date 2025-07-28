@@ -6,7 +6,7 @@ import { tags } from '@/constants/tags.js';
 
 const entityMap: Record<string, string> = {};
 
-Object.values(tags).forEach((codes) => {
+Object.values(tags).forEach(codes => {
   for (const code of codes) {
     entityMap[`&${code};`] = code;
   }
@@ -23,6 +23,7 @@ export default class EntityReplace extends Transform {
 
     // Find the last '&' in the data. This could be the start of an entity.
     const lastAmp = data.lastIndexOf('&');
+
     // Check if there is a ';' after the last '&'. If not, the entity is incomplete.
     const semicolonAfterLastAmp = data.indexOf(';', lastAmp);
 
@@ -40,6 +41,7 @@ export default class EntityReplace extends Transform {
     // Replace all complete entities in the current data
     const replaced = data.replace(/&([a-zA-Z0-9\-]+);/g, (entity, code) => {
       const replacement = entityMap[entity] ?? code;
+
       return replacement;
     });
 
@@ -52,11 +54,13 @@ export default class EntityReplace extends Transform {
     if (this.leftover) {
       const flushed = this.leftover.replace(/&([a-zA-Z0-9\-]+);/g, (entity, code) => {
         const replacement = entityMap[entity] ?? code;
+
         return replacement;
       });
+
       this.push(flushed);
     }
+
     callback();
   }
 }
-

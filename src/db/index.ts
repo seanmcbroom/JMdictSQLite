@@ -53,7 +53,7 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
     this.insertEntryStmt.run(
       entry.ent_seq,
       entry.kanji && entry.kanji.length > 0 ? JSON.stringify(entry.kanji) : null,
-      JSON.stringify(entry.kana)
+      JSON.stringify(entry.kana),
     );
 
     for (const sense of entry.senses ?? []) {
@@ -63,7 +63,11 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
   }
 
   insertSense(sense: Sense) {
-    this.insertSenseStmt.run(sense.ent_seq, JSON.stringify(sense.glosses), JSON.stringify(sense.pos));
+    this.insertSenseStmt.run(
+      sense.ent_seq,
+      JSON.stringify(sense.glosses),
+      JSON.stringify(sense.pos),
+    );
   }
 
   close() {

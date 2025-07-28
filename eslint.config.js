@@ -1,5 +1,6 @@
 import tsParser from '@typescript-eslint/parser';
-import prettier from 'eslint-config-prettier';
+import prettierConfig from 'eslint-config-prettier';
+import eslintPluginPrettier from 'eslint-plugin-prettier';
 import eslintPluginImport from 'eslint-plugin-import';
 import eslintPluginUnusedImports from 'eslint-plugin-unused-imports';
 import tseslint from 'typescript-eslint';
@@ -19,10 +20,45 @@ export default [
     plugins: {
       import: eslintPluginImport,
       'unused-imports': eslintPluginUnusedImports,
+      prettier: eslintPluginPrettier,
     },
     rules: {
-      // Your custom rule
-      '@/indent': ['error', 2],
+      // Prettier formatting rules as ESLint errors
+      'prettier/prettier': 'error',
+
+      // Custom rule (you probably meant '@typescript-eslint/indent')
+      '@typescript-eslint/indent': ['error', 2],
+
+      'padding-line-between-statements': [
+        'error',
+        // Require blank lines after directives like 'use strict'
+        { blankLine: 'always', prev: 'directive', next: '*' },
+
+        // Require blank lines before return statements
+        { blankLine: 'always', prev: '*', next: 'return' },
+
+        // Require blank lines before and after if/for/while blocks
+        { blankLine: 'always', prev: '*', next: ['if', 'for', 'while', 'switch', 'try'] },
+        { blankLine: 'always', prev: ['if', 'for', 'while', 'switch', 'try'], next: '*' },
+
+        // Require blank lines before function declarations
+        { blankLine: 'always', prev: '*', next: 'function' },
+        { blankLine: 'always', prev: 'function', next: '*' },
+
+        // Require blank lines before and after class declarations
+        { blankLine: 'always', prev: '*', next: 'class' },
+        { blankLine: 'always', prev: 'class', next: '*' },
+
+        // No blank lines between variable declarations
+        { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
+
+        // Require blank line after variable declarations if followed by anything else
+        { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
+        { blankLine: 'always', prev: '*', next: ['const', 'let', 'var'] },
+
+        // Blank line after break
+        { blankLine: 'always', prev: '*', next: 'break' },
+      ],
 
       // Unused imports
       'unused-imports/no-unused-imports': 'error',
@@ -40,11 +76,7 @@ export default [
       'import/order': [
         'warn',
         {
-          groups: [
-            ['builtin', 'external'],
-            ['internal'],
-            ['parent', 'sibling', 'index'],
-          ],
+          groups: [['builtin', 'external'], ['internal'], ['parent', 'sibling', 'index']],
           'newlines-between': 'always',
           alphabetize: {
             order: 'asc',
@@ -53,13 +85,12 @@ export default [
         },
       ],
 
-      // Require .js extension for internal files
       'import/extensions': [
         'error',
         'ignorePackages',
         {
           js: 'always',
-          ts: 'never', // TypeScript will resolve .ts, but we write .js in imports
+          ts: 'never',
         },
       ],
       'import/no-unresolved': [
@@ -69,24 +100,19 @@ export default [
         },
       ],
 
-      // Additional recommended TS rules
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/consistent-type-imports': 'error',
-      '@typescript-eslint/no-unused-vars': 'off', // handled by unused-imports
+      '@typescript-eslint/no-unused-vars': 'off',
     },
   },
 
-  // Prettier integration to turn off formatting conflicts
   {
     rules: {
-      ...prettier.rules,
+      ...prettierConfig.rules,
     },
   },
 
   {
-    ignores: [
-      'dist/**/*',
-      'eslint.config.js'
-    ]
+    ignores: ['dist/**/*', 'eslint.config.js'],
   },
 ];

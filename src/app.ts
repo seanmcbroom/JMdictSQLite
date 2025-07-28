@@ -17,6 +17,7 @@ export class JmdictProcessor {
 
   public process(): Promise<void> {
     const startTime = Date.now();
+
     const dbParser = createParser(this.db);
 
     return new Promise((resolve, reject) => {
@@ -25,12 +26,12 @@ export class JmdictProcessor {
         .pipe(dbParser)
         .on('end', () => {
           console.log(
-            `✅ Done parsing XML. Time elapsed: ${((Date.now() - startTime) / 1000).toFixed(2)}s`
+            `✅ Done parsing XML. Time elapsed: ${((Date.now() - startTime) / 1000).toFixed(2)}s`,
           );
           this.db.close();
           resolve();
         })
-        .on('error', (err) => {
+        .on('error', err => {
           this.db.close();
           reject(err);
         });
