@@ -42,10 +42,18 @@ jobs:
           git tag -f latest
           git push origin -f latest
 
-      - name: GitHub Release Upload
+      - name: GitHub Release Upload for date
         uses: softprops/action-gh-release@v2.3.2
         with:
           tag_name: release-${{ steps.date.outputs.date }}
           name: JMDict SQLite - ${{ steps.date.outputs.date }}
+          files: ./data/jmdict.sqlite
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Github Release Upload for latest
+        uses: softprops/action-gh-release@v2.3.2
+        with:
+          tag_name: latest
+          name: JMDict SQLite - Latest
           files: ./data/jmdict.sqlite
           token: ${{ secrets.GITHUB_TOKEN }}
