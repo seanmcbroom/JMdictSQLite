@@ -1,8 +1,16 @@
-Automatic daily releases.<br>
-Download: https://github.com/seanmcbroom/JMdictSQLite/releases/download/latest/jmdict.sqlite
+# JMdictSQLite
+A lightweight, SQLite-compatible version of the JMdict Japanese-English dictionary.<br>
+*Automatic daily releases @ 5AM UTC.*
 
+**Download latest:** https://github.com/seanmcbroom/JMdictSQLite/releases/download/latest/jmdict.sqlite
 
-# _Database Schema Diagram_
+## What is the purpose?
+This project transforms the JMdict XML dataset into a normalized, developer-friendly SQLite format for use in apps, browser extensions, or any application needing a fast, local Japanese-English dictionary.
+- Designed for easy integration into apps and tools
+- Compact schema with JSON-encoded kanji, kana, and sense data
+- Ideal for full-text search, filtering, and offline usage
+
+## _Database Schema Diagram_
 **⚠️[WARNING]: NOT FINAL**<br>
 PK = Primary Key<br>
 FK = Foreign Key<br>
@@ -22,7 +30,7 @@ FK = Foreign Key<br>
 ```
 ```ts
 interface entry {
-  ent_seq: number PK
+  ent_seq: number // PK
   kanji?: kanji[]
   kana: kana[]
 }
@@ -36,23 +44,22 @@ interface kana {
   kana: string
   tags?: []
 }
-_______________________
 
 interface sense {
-  id: number  PK
-  ent_seq: number FK
+  id: number // PK
+  ent_seq: number // FK
   gloss: string[]
   pos: string[]
-  misc?: string[] !!not yet implemented!!
-  field?: string[] !!not yet implemented!!
+  misc?: string[]  // !!not yet implemented!!
+  field?: string[] // !!not yet implemented!!
 }
 ```
 
 # Example Query
-This SQL query retrieves all entries that contain at least one of the specified tags (ichi1 or spec1) in any of their associated kanji objects.
+This SQL query retrieves all entries that contain at least one of the specified tags (`ichi1` or `spec1`) in any of their associated `kanji` objects.
 It works by iterating through the kanji array of each entry using json_each, and then checking whether the tags array within each kanji object contains any of the target tags.
 
-To perform an inclusive (AND) search, where all specified tags must be present, change >= 1 to = 2 (or however many tags you're searching for).
+To perform an inclusive (AND) search, where all specified tags must be present, change `>= 1` to `= 2` (or however many tags you're searching for).
 ```sql
 SELECT *
 FROM entries
