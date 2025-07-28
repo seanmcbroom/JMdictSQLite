@@ -10,14 +10,17 @@
     "yarn": "yarn is not supported. Please use npm"
   },
   "scripts": {
-    "start": "node ./dist/src/index.js",
-    "build": "tsc && tsc-alias",
-    "dev": "tsx ./src/index.ts",
-    "test": "tsx --test",
+    "start": "node dist/src/index.js",
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc && tsc-alias && npm run copy:resources",
+    "copy:resources": "copyfiles -u 1 \"test/**/*.{xml}\" dist/test",
+    "dev": "tsx src/index.ts",
+    "test": "npm run build && node --test dist/test/**/*.test.js",
+    "test:dev": "tsx --test test/**/*.test.ts",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "github:parse-jmdict": "npm run download-jmdict && npm run build && npm run start",
-    "download-jmdict": "tsx ./scripts/download-jmdict.ts"
+    "download-jmdict": "tsx scripts/download-jmdict.ts",
+    "github:parse-jmdict": "npm run download-jmdict && npm run build && npm run start"
   },
   "keywords": [
     "JMdict",
@@ -30,10 +33,12 @@
     "@types/node": "^24.1.0",
     "@types/sax": "^1.2.7",
     "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "copyfiles": "^2.4.1",
     "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-unused-imports": "^4.1.4",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.20.3",

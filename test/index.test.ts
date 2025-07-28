@@ -3,11 +3,15 @@ import Database from 'better-sqlite3';
 import fs from 'fs/promises';
 import { describe, it, before } from 'node:test';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { JmdictProcessor } from '@/app.js';
 
-const xmlPath = path.resolve('./test/data/jmdict-sample.xml');
-const outPath = path.resolve('./test/data/jmdict-test.sqlite');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const xmlPath = path.resolve(`${__dirname}/data/jmdict-sample.xml`); 
+const outPath = path.resolve(`${__dirname}/data/jmdict-test.sqlite`);  
 
 describe('JMDict Processor Suite', () => {
   before(async () => {
