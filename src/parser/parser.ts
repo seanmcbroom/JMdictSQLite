@@ -30,10 +30,11 @@ export function createParser(db: JmdictDatabase) {
           currentEntry.senses.push({
             id: 0, // Placeholder, will be set by DB
             ent_seq: 0,
+            note: undefined,
             glosses: [],
             pos: [],
+            fields: [],
             misc: [],
-            field: [],
           });
         }
 
@@ -114,6 +115,14 @@ export function createParser(db: JmdictDatabase) {
         break;
       }
 
+      case 's_inf': {
+        const lastSense = currentEntry.senses.at(-1);
+
+        if (lastSense) lastSense.note = text;
+
+        break;
+      }
+
       // Glossary entry
       case 'gloss': {
         const lastSense = currentEntry.senses.at(-1);
@@ -145,7 +154,7 @@ export function createParser(db: JmdictDatabase) {
       case 'field': {
         const lastSense = currentEntry.senses.at(-1);
 
-        if (lastSense) lastSense.field?.push(text);
+        if (lastSense) lastSense.fields?.push(text);
 
         break;
       }

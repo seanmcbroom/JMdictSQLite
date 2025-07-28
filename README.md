@@ -22,10 +22,11 @@ FK = Foreign Key<br>
 ├────────────────────────────────────┤            ├───────────────────────────────────────────────────┤
 │ ent_seq   INTEGER       PK         │◄────┐      │ id       INTEGER     PK AUTOINC                   │
 │ kanji?    TEXT                     │     └────▶│ ent_seq  INTEGER      FK → entries.ent_seq        │
-│          – JSON-encoded            │            │ gloss    TEXT        (JSON-encoded)               │
-│ kana      TEXT                     │            │ pos      TEXT        (JSON-encoded)               │
-│          – JSON-encoded            │            | misc?    TEXT        (JSON-encoded)               |
-└────────────────────────────────────┘            | field?   TEXT        (JSON-encoded)               |
+│          – JSON-encoded            │            | note?    TEXT                                     | 
+│ kana      TEXT                     │            │ gloss    TEXT        (JSON-encoded)               │
+│          – JSON-encoded            │            │ pos      TEXT        (JSON-encoded)               │
+└────────────────────────────────────┘            | misc?    TEXT        (JSON-encoded)               |
+                                                  | field?   TEXT        (JSON-encoded)               |
                                                   └───────────────────────────────────────────────────┘
 ```
 ```ts
@@ -48,10 +49,11 @@ interface kana {
 interface sense {
   id: number // PK
   ent_seq: number // FK
+  note?: string
   gloss: string[]
   pos: string[]
-  misc?: string[]  // !!not yet implemented!!
-  field?: string[] // !!not yet implemented!!
+  misc?: string[]
+  field?: string[]
 }
 ```
 

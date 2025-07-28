@@ -14,14 +14,15 @@ export interface Kanji {
 // entry -> kanji (one-to-many)
 export interface Kana {
   kana: string;
-  tags?: string[]; // array; semi-colon delimited
+  tags?: string[];
 }
 
 export interface Sense {
   id: number; // PK
   ent_seq: number; // FK
-  glosses: string[]; // array; semi-colon delimited
-  pos: string[]; // array; semi-colon delimited
-  misc?: string[]; // array; semi-colon delimited
-  field?: string[]; // array; semi-colon delimited
+  note?: string;
+  glosses: string[];
+  pos: string[];
+  fields?: string[];
+  misc?: string[];
 }
