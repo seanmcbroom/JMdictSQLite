@@ -20,7 +20,7 @@ FK = Foreign Key<br>
 └────────────────────────────────────┘            | field?   TEXT        (JSON-encoded)               |
                                                   └───────────────────────────────────────────────────┘
 ```
-```
+```ts
 interface entry {
   ent_seq: number PK
   kanji?: kanji[]
@@ -46,6 +46,25 @@ interface sense {
   misc?: string[] !!not yet implemented!!
   field?: string[] !!not yet implemented!!
 }
+```
+
+# Example Query
+This SQL query retrieves all entries that contain at least one of the specified tags (ichi1 or spec1) in any of their associated kanji objects.
+It works by iterating through the kanji array of each entry using json_each, and then checking whether the tags array within each kanji object contains any of the target tags.
+
+To perform an inclusive (AND) search, where all specified tags must be present, change >= 1 to = 2 (or however many tags you're searching for).
+```sql
+SELECT *
+FROM entries
+WHERE EXISTS (
+  SELECT 1
+  FROM json_each(entries.kanji) AS kanji_obj
+  WHERE (
+    SELECT COUNT(DISTINCT tag.value)
+    FROM json_each(json_extract(kanji_obj.value, '$.tags')) AS tag
+    WHERE tag.value IN ('ichi1', 'spec1')
+  ) >= 1
+);
 ```
 
 ## License
