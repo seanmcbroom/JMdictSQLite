@@ -8,6 +8,7 @@ import tseslint from 'typescript-eslint';
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   ...tseslint.configs.recommended,
+  ...tseslint.configs.stylistic,
 
   {
     files: ['**/*.{ts,tsx,js,jsx,mjs,cjs}'],
@@ -31,7 +32,8 @@ export default [
 
       'padding-line-between-statements': [
         'error',
-        { blankLine: 'always', prev: 'directive', next: '*' },
+        { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
+        { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
 
         { blankLine: 'always', prev: '*', next: 'return' },
 
@@ -43,8 +45,6 @@ export default [
 
         { blankLine: 'always', prev: '*', next: 'class' },
         { blankLine: 'always', prev: 'class', next: '*' },
-
-        { blankLine: 'never', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
 
         { blankLine: 'always', prev: 'break', next: '*' },
       ],

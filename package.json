@@ -2,6 +2,7 @@
   "name": "jmdict-sqlite",
   "description": "Read-only SQLite database for JMDict, a Japanese-English dictionary.",
   "author": "Sean McBroom (sean.mcbroom@outlook.com)",
+  "license": "GPLv2",
   "version": "0.5.0",
   "type": "module",
   "engines": {
@@ -27,7 +28,6 @@
     "Japanese",
     "日本語"
   ],
-  "license": "ISC",
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^24.1.0",

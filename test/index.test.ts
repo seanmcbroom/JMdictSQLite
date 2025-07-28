@@ -53,6 +53,7 @@ describe('JMDict Processor Suite', () => {
     // Arrange
     const expectedTables = ['entries', 'senses'];
     const db = new Database(outPath);
+
     // Act
     const rows = db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all() as {
       name: string;
