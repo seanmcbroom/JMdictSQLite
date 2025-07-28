@@ -1,7 +1,7 @@
 import sax from 'sax';
 
 import type { JmdictDatabase } from '@/db/index.js';
-import type Entry from '@/types/entry.js';
+import type { Entry } from '@/types/database.js';
 
 /**
  * Creates a SAX parser stream to parse JMDict XML.
@@ -11,27 +11,45 @@ import type Entry from '@/types/entry.js';
 export function createParser(db: JmdictDatabase) {
   const parser = sax.createStream(true, { trim: true });
 
-  let currentEntry: Entry | undefined; // undefined until an <entry> tag is opened
+  let currentEntry: Entry | undefined;
   let currentText = '';
-
+  
   parser.on('opentag', (node) => {
-    if (node.name === 'entry') {
+    switch (node.name) {
+    case 'entry':
       currentEntry = {
-        ent_seq: undefined,
+        ent_seq: 0,
         kanji: [],
         kana: [],
         senses: [],
       };
-    }
+      break;
 
-    if (node.name === 'sense' && currentEntry) {
-      currentEntry.senses.push({
-        ent_seq: 0,
-        glosses: [],
-        pos: [],
-        misc: [],
-        field: [],
-      });
+    case 'sense':
+      if (currentEntry) {
+        currentEntry.senses.push({
+          id: 0, // Placeholder, will be set by DB
+          ent_seq: 0,
+          glosses: [],
+          pos: [],
+          misc: [],
+          field: [],
+        });
+      }
+      break;
+
+    case 'k_ele':
+      if (currentEntry) {
+        currentEntry.kanji?.push({ kanji: "", tags: [] });
+      }
+      
+      break;
+
+    case 'r_ele':
+      if (currentEntry) {
+        currentEntry.kana.push({ kana: "", tags: [] });
+      }
+      break;
     }
   });
 
@@ -48,9 +66,6 @@ export function createParser(db: JmdictDatabase) {
 
     switch (name) {
 
-    case 'r_ele':
-      break;
-    
     // Entry sequence number tag
     case 'ent_seq': {
       const parsed = parseInt(text, 10);
@@ -61,15 +76,31 @@ export function createParser(db: JmdictDatabase) {
     }
 
     // Kanji reading tag
-    case 'keb':
-      currentEntry.kanji.push(text);
+    case 'keb': {
+      const lastKanji = currentEntry.kanji?.at(-1);
+      if (lastKanji) lastKanji.kanji = text
       break;
+    }
+      
+    case 'ke_pri': {
+      const lastKanji = currentEntry.kanji?.at(-1);
+      if (lastKanji) lastKanji.tags?.push(text)
+      break;
+    }
 
     // Kana reading tag
-    case 'reb':
-      currentEntry.kana.push(text);
+    case 'reb': {
+      const lastKana = currentEntry.kana.at(-1);
+      if (lastKana) lastKana.kana = text
       break;
-
+    }
+      
+    case 're_pri': {
+      const lastKana = currentEntry.kana.at(-1);
+      if (lastKana) lastKana.tags?.push(text)
+      break;
+    }
+      
     // Glossary entry
     case 'gloss': {
       const lastSense = currentEntry.senses.at(-1);
@@ -105,7 +136,7 @@ export function createParser(db: JmdictDatabase) {
         currentEntry = undefined;
         return;
       }
-
+      
       db.insertEntry(currentEntry);
 
       currentEntry = undefined; // Reset for the next entry

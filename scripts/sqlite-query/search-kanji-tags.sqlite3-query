@@ -1,0 +1,13 @@
+-- database: ../../data/jmdict.sqlite
+
+SELECT *
+FROM entries
+WHERE EXISTS (
+  SELECT 1
+  FROM json_each(entries.kanji) AS kanji_obj
+  WHERE (
+    SELECT COUNT(DISTINCT tag.value)
+    FROM json_each(json_extract(kanji_obj.value, '$.tags')) AS tag
+    WHERE tag.value IN ('ichi1', 'spec1')
+  ) >= 1
+);
