@@ -13,7 +13,7 @@
     "start": "node dist/src/index.js",
     "clean": "rimraf dist",
     "build": "npm run clean && tsc && tsc-alias && npm run copy:resources",
-    "copy:resources": "copyfiles -u 1 \"test/**/*.{xml}\" dist/test",
+    "copy:resources": "copyfiles -u 1 \"test/**/*.xml\" dist/test",
     "dev": "tsx src/index.ts",
     "test": "npm run build && node --test dist/test/**/*.test.js",
     "test:dev": "tsx --test test/**/*.test.ts",
