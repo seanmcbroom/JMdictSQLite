@@ -25,8 +25,8 @@ FK = Foreign Key<br>
 │          – JSON-encoded            │            | note?    TEXT                                     | 
 │ kana      TEXT                     │            │ gloss    TEXT        (JSON-encoded)               │
 │          – JSON-encoded            │            │ pos      TEXT        (JSON-encoded)               │
-└────────────────────────────────────┘            | misc?    TEXT        (JSON-encoded)               |
-                                                  | field?   TEXT        (JSON-encoded)               |
+└────────────────────────────────────┘            | field?   TEXT        (JSON-encoded)               |
+                                                  | tags?    TEXT        (JSON-encoded)               |
                                                   └───────────────────────────────────────────────────┘
 ```
 ```ts
@@ -52,8 +52,8 @@ interface sense {
   note?: string
   gloss: string[]
   pos: string[]
-  misc?: string[]
   field?: string[]
+  tags?: string[]
 }
 ```
 

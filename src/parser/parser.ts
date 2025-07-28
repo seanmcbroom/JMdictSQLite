@@ -34,7 +34,7 @@ export function createParser(db: JmdictDatabase) {
             glosses: [],
             pos: [],
             fields: [],
-            misc: [],
+            tags: [],
           });
         }
 
@@ -145,7 +145,7 @@ export function createParser(db: JmdictDatabase) {
       case 'misc': {
         const lastSense = currentEntry.senses.at(-1);
 
-        if (lastSense) lastSense.misc?.push(text);
+        if (lastSense) lastSense.tags?.push(text);
 
         break;
       }

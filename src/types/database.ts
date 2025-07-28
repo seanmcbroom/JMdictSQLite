@@ -24,5 +24,5 @@ export interface Sense {
   glosses: string[];
   pos: string[];
   fields?: string[];
-  misc?: string[];
+  tags?: string[];
 }
