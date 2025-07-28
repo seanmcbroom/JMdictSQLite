@@ -1,8 +1,9 @@
 Automatic daily releases.<br>
 Download: https://github.com/seanmcbroom/JMdictSQLite/releases/download/latest/jmdict.sqlite
 
-**[WARNING]: NOT FINAL**<br>
-_Database Schema Diagram_<br>
+
+# _Database Schema Diagram_
+**⚠️[WARNING]: NOT FINAL**<br>
 PK = Primary Key<br>
 FK = Foreign Key<br>
 `?` = possibly undefined<br>
