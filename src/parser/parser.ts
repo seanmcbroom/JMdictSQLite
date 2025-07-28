@@ -82,7 +82,8 @@ export function createParser(db: JmdictDatabase) {
       break;
     }
       
-    case 'ke_pri': {
+    case 'ke_pri':
+    case 'ke_inf': {
       const lastKanji = currentEntry.kanji?.at(-1);
       if (lastKanji) lastKanji.tags?.push(text)
       break;
@@ -95,7 +96,8 @@ export function createParser(db: JmdictDatabase) {
       break;
     }
       
-    case 're_pri': {
+    case 're_pri':
+    case 're_inf': {
       const lastKana = currentEntry.kana.at(-1);
       if (lastKana) lastKana.tags?.push(text)
       break;
