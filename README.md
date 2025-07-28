@@ -23,7 +23,7 @@ FK = Foreign Key<br>
 │ ent_seq   INTEGER       PK         │◄────┐      │ id       INTEGER     PK AUTOINC                   │
 │ kanji?    TEXT                     │     └────▶│ ent_seq  INTEGER      FK → entries.ent_seq        │
 │          – JSON-encoded            │            | note?    TEXT                                     | 
-│ kana      TEXT                     │            │ gloss    TEXT        (JSON-encoded)               │
+│ kana      TEXT                     │            │ glosses  TEXT        (JSON-encoded)               │
 │          – JSON-encoded            │            │ pos      TEXT        (JSON-encoded)               │
 └────────────────────────────────────┘            | misc?    TEXT        (JSON-encoded)               |
                                                   | field?   TEXT        (JSON-encoded)               |
@@ -50,7 +50,7 @@ interface sense {
   id: number // PK
   ent_seq: number // FK
   note?: string
-  gloss: string[]
+  glosses: string[]
   pos: string[]
   misc?: string[]
   field?: string[]
