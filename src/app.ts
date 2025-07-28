@@ -17,7 +17,6 @@ export class JmdictProcessor {
 
   public process(): Promise<void> {
     const startTime = Date.now();
-
     const dbParser = createParser(this.db);
 
     return new Promise((resolve, reject) => {

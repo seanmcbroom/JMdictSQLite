@@ -31,33 +31,22 @@ export default [
 
       'padding-line-between-statements': [
         'error',
-        // Require blank lines after directives like 'use strict'
         { blankLine: 'always', prev: 'directive', next: '*' },
 
-        // Require blank lines before return statements
         { blankLine: 'always', prev: '*', next: 'return' },
 
-        // Require blank lines before and after if/for/while blocks
         { blankLine: 'always', prev: '*', next: ['if', 'for', 'while', 'switch', 'try'] },
         { blankLine: 'always', prev: ['if', 'for', 'while', 'switch', 'try'], next: '*' },
 
-        // Require blank lines before function declarations
         { blankLine: 'always', prev: '*', next: 'function' },
         { blankLine: 'always', prev: 'function', next: '*' },
 
-        // Require blank lines before and after class declarations
         { blankLine: 'always', prev: '*', next: 'class' },
         { blankLine: 'always', prev: 'class', next: '*' },
 
-        // No blank lines between variable declarations
-        { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
+        { blankLine: 'never', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
 
-        // Require blank line after variable declarations if followed by anything else
-        { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
-        { blankLine: 'always', prev: '*', next: ['const', 'let', 'var'] },
-
-        // Blank line after break
-        { blankLine: 'always', prev: '*', next: 'break' },
+        { blankLine: 'always', prev: 'break', next: '*' },
       ],
 
       // Unused imports

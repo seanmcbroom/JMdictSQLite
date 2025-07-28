@@ -20,10 +20,8 @@ export default class EntityReplace extends Transform {
   _transform(chunk: Buffer, _encoding: BufferEncoding, callback: (error?: Error | null) => void) {
     // Prepend any leftover from the previous chunk to the current chunk
     let data = this.leftover + chunk.toString();
-
     // Find the last '&' in the data. This could be the start of an entity.
     const lastAmp = data.lastIndexOf('&');
-
     // Check if there is a ';' after the last '&'. If not, the entity is incomplete.
     const semicolonAfterLastAmp = data.indexOf(';', lastAmp);
 

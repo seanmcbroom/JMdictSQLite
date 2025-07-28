@@ -10,9 +10,7 @@ import type { Entry } from '@/types/database.js';
  */
 export function createParser(db: JmdictDatabase) {
   const parser = sax.createStream(true, { trim: true });
-
   let currentEntry: Entry | undefined;
-
   let currentText = '';
 
   parser.on('opentag', node => {
