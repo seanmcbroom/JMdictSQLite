@@ -52,7 +52,7 @@ export class JmdictParser {
           glosses: [],
           pos: [],
           verb_data: {
-            verb_group: undefined,
+            verb_group: '',
             transivity: undefined,
           },
           fields: [],
