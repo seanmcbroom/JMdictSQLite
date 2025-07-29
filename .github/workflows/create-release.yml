@@ -54,7 +54,7 @@ jobs:
         uses: softprops/action-gh-release@v2.3.2
         with:
           tag_name: latest
-          name: JMDict SQLite - ${{ steps.date.outputs.date }}
+          name: JMdictSQLite - ${{ steps.date.outputs.date }}
           files: |
             ./data/jmdict.sqlite
             manifest.json
