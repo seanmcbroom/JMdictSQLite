@@ -65,6 +65,16 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
     }
   }
 
+  insertEntries(entries: Entry[]) {
+    const insertMany = this.db.transaction((entries: Entry[]) => {
+      for (const entry of entries) {
+        this.insertEntry(entry);
+      }
+    });
+
+    insertMany(entries);
+  }
+
   insertSense(sense: Sense) {
     this.insertSenseStmt.run(
       sense.ent_seq,

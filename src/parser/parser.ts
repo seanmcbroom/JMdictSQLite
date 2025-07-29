@@ -4,185 +4,148 @@ import type { JmdictDatabase } from '@/db/index.js';
 import type { Entry } from '@/types/database.js';
 
 /**
- * Creates a SAX parser stream to parse JMDict XML.
- *
- * @returns SAX parser stream
+ * SAX-based JMDict parser using a class to encapsulate state and logic.
  */
-export function createParser(db: JmdictDatabase) {
-  const parser = sax.createStream(true, { trim: true });
-  let currentEntry: Entry | undefined;
-  let currentText = '';
+export class JmdictParser {
+  private readonly parser = sax.createStream(true, { trim: true });
+  private currentEntry: Entry | undefined;
+  private currentText = '';
+  private readonly buffer: Entry[] = [];
+  private readonly batchSize = 500;
 
-  parser.on('opentag', node => {
+  constructor(private readonly db: JmdictDatabase) {
+    this.parser.on('opentag', this.onOpenTag.bind(this));
+    this.parser.on('text', this.onText.bind(this));
+    this.parser.on('closetag', this.onCloseTag.bind(this));
+    this.parser.on('error', this.onError.bind(this));
+    this.parser.on('end', this.flushBuffer.bind(this)); // flush remaining
+  }
+
+  getStream() {
+    return this.parser;
+  }
+
+  private flushBuffer() {
+    if (this.buffer.length > 0) {
+      this.db.insertEntries(this.buffer);
+      this.buffer.length = 0;
+    }
+  }
+
+  private onOpenTag(node: sax.Tag) {
     switch (node.name) {
       case 'entry':
-        currentEntry = {
+        this.currentEntry = {
           ent_seq: 0,
           kanji: [],
           kana: [],
           senses: [],
         };
-
         break;
 
       case 'sense':
-        if (currentEntry) {
-          currentEntry.senses.push({
-            id: 0, // Placeholder, will be set by DB
-            ent_seq: 0,
-            note: undefined,
-            glosses: [],
-            pos: [],
-            fields: [],
-            tags: [],
-          });
-        }
-
+        this.currentEntry?.senses.push({
+          id: 0,
+          ent_seq: 0,
+          note: undefined,
+          glosses: [],
+          pos: [],
+          fields: [],
+          tags: [],
+        });
         break;
 
       case 'k_ele':
-        if (currentEntry) {
-          currentEntry.kanji?.push({ written: '', tags: [] });
-        }
-
+        this.currentEntry?.kanji?.push({ written: '', tags: [] });
         break;
 
       case 'r_ele':
-        if (currentEntry) {
-          currentEntry.kana.push({ written: '', tags: [] });
-        }
-
+        this.currentEntry?.kana.push({ written: '', tags: [] });
         break;
     }
-  });
+  }
 
-  parser.on('text', text => {
-    currentText += text;
-  });
+  private onText(text: string) {
+    this.currentText += text;
+  }
 
-  parser.on('closetag', name => {
-    const text = currentText.trim();
+  private onCloseTag(name: string) {
+    const entry = this.currentEntry;
+    const text = this.currentText.trim();
 
-    currentText = '';
+    this.currentText = '';
 
-    if (!currentEntry) return;
+    if (!entry) return;
+
+    const lastKanji = entry.kanji?.at(-1);
+    const lastKana = entry.kana.at(-1);
+    const lastSense = entry.senses.at(-1);
 
     switch (name) {
-      // Entry sequence number tag
+      case 'entry': {
+        this.buffer.push(entry);
+
+        if (this.buffer.length >= this.batchSize) {
+          this.flushBuffer();
+        }
+
+        this.currentEntry = undefined;
+
+        return;
+      }
+
       case 'ent_seq': {
         const parsed = parseInt(text, 10);
 
-        if (!isNaN(parsed)) {
-          currentEntry.ent_seq = parsed;
-        }
+        if (!isNaN(parsed)) entry.ent_seq = parsed;
 
         break;
       }
 
-      // Kanji reading tag
-      case 'keb': {
-        const lastKanji = currentEntry.kanji?.at(-1);
-
+      case 'keb':
         if (lastKanji) lastKanji.written = text;
 
         break;
-      }
 
       case 'ke_pri':
-      case 'ke_inf': {
-        const lastKanji = currentEntry.kanji?.at(-1);
-
-        if (lastKanji) lastKanji.tags?.push(text);
-
+      case 'ke_inf':
+        lastKanji?.tags?.push(text);
         break;
-      }
 
-      // Kana reading tag
-      case 'reb': {
-        const lastKana = currentEntry.kana.at(-1);
-
+      case 'reb':
         if (lastKana) lastKana.written = text;
 
         break;
-      }
 
       case 're_pri':
-      case 're_inf': {
-        const lastKana = currentEntry.kana.at(-1);
-
-        if (lastKana) lastKana.tags?.push(text);
-
+      case 're_inf':
+        lastKana?.tags?.push(text);
         break;
-      }
 
-      case 's_inf': {
-        const lastSense = currentEntry.senses.at(-1);
-
+      case 's_inf':
         if (lastSense) lastSense.note = text;
 
         break;
-      }
 
-      // Glossary entry
-      case 'gloss': {
-        const lastSense = currentEntry.senses.at(-1);
-
-        if (lastSense) lastSense.glosses.push(text);
-
+      case 'gloss':
+        lastSense?.glosses.push(text);
         break;
-      }
 
-      // Part of speech tags
-      case 'pos': {
-        const lastSense = currentEntry.senses.at(-1);
-
-        if (lastSense) lastSense.pos.push(text);
-
+      case 'pos':
+        lastSense?.pos.push(text);
         break;
-      }
 
-      // Miscellaneous tags
-      case 'misc': {
-        const lastSense = currentEntry.senses.at(-1);
-
-        if (lastSense) lastSense.tags?.push(text);
-
+      case 'field':
+        lastSense?.fields?.push(text);
         break;
-      }
 
-      // Field tags
-      case 'field': {
-        const lastSense = currentEntry.senses.at(-1);
-
-        if (lastSense) lastSense.fields?.push(text);
-
+      case 'misc':
+        lastSense?.tags?.push(text);
         break;
-      }
-
-      // Closing entry tag
-      case 'entry': {
-        if (typeof currentEntry.ent_seq !== 'number') {
-          console.warn(
-            '⚠️ Skipping entry with missing ent_seq:',
-            JSON.stringify(currentEntry, null, 2),
-          );
-          currentEntry = undefined;
-
-          return;
-        }
-
-        db.insertEntry(currentEntry);
-
-        currentEntry = undefined; // Reset for the next entry
-
-        break;
-      }
     }
-  });
+  }
 
-  parser.on('error', err => {
+  private onError(err: Error) {
     console.warn('❌ SAX Parser Error:', err);
-  });
-
-  return parser;
+  }
 }
