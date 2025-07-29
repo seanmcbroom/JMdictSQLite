@@ -141,10 +141,11 @@ export class JmdictParser {
 
         if (category === 'verbGroup') {
           lastSense.verb_group = text;
+          lastSense.pos.push('v');
         } else if (category === 'transitivity') {
           lastSense.transivity = text;
         } else {
-          lastSense?.pos.push(text);
+          lastSense.pos.push(text);
         }
 
         break;
