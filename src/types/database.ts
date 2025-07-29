@@ -22,6 +22,6 @@ export interface Sense {
 }
 
 export interface VerbData {
-  verb_group?: string;
+  verb_group: string;
   transivity?: string;
 }
