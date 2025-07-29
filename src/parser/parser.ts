@@ -140,14 +140,14 @@ export class JmdictParser {
         if (!lastSense) break;
 
         const category = tagCategoryMap[text];
-        const verbData = (lastSense.verb_data ??= {});
+        const verbData = lastSense.verb_data;
         const isVerb = category === 'verbGroup';
         const isTransitivity = category === 'transitivity';
 
-        if (isVerb) {
+        if (verbData && isVerb) {
           verbData.verb_group = text;
           lastSense.pos.push('v');
-        } else if (isTransitivity) {
+        } else if (verbData && isTransitivity) {
           verbData.transivity = text;
         } else {
           lastSense.pos.push(text);
