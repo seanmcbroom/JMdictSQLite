@@ -72,6 +72,7 @@ WHERE EXISTS (
 ```
 
 ## How to run locally
+Requires: node 22.11.00+, npm 10.9.0+
 ```bash
 git clone https://github.com/seanmcbroom/JMdictSQLite
 cd JMdictSQLite
