@@ -3,20 +3,16 @@ name: Release Latest JMDict SQLite
 on:
   schedule:
     - cron: '35 4 * * *'  # Every day at 4:35 AM UTC
-  workflow_dispatch:      # Optional: allows manual runs
+  workflow_dispatch:
 
 permissions:
-  contents: write  # Required to push tags and create releases
+  contents: write
 
 jobs:
   parse:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set release date
-        id: date
-        run: echo "date=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -29,6 +25,34 @@ jobs:
       - name: Parse
         run: npm run github:parse-jmdict
 
+      - name: Set release date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
+
+      - name: Generate SHA-256 and manifest files
+        id: generate-manifest
+        run: |
+          DB_PATH=./data/jmdict.sqlite
+          CHECKSUM=$(sha256sum "$DB_PATH" | cut -d ' ' -f1)
+          DATE="${{ steps.date.outputs.date }}"
+          REPO_URL="https://github.com/${{ github.repository }}"
+
+          cat <<EOF > latest.json
+          {
+            "version": "$DATE",
+            "url": "$REPO_URL/releases/download/latest/jmdict.sqlite",
+            "sha256": "$CHECKSUM"
+          }
+          EOF
+
+          cat <<EOF > manifest-$DATE.json
+          {
+            "version": "$DATE",
+            "url": "$REPO_URL/releases/download/release-$DATE/jmdict.sqlite",
+            "sha256": "$CHECKSUM"
+          }
+          EOF
+
       - name: Create and push date-based tag
         run: |
           git config --global user.name "github-actions[bot]"
@@ -37,23 +61,27 @@ jobs:
           git tag "release-${{ steps.date.outputs.date }}"
           git push origin "release-${{ steps.date.outputs.date }}"
 
-      - name: Update 'latest' tag
-        run: |
-          git tag -f latest
-          git push origin -f latest
-
       - name: GitHub Release Upload for date
         uses: softprops/action-gh-release@v2.3.2
         with:
           tag_name: release-${{ steps.date.outputs.date }}
           name: JMDict SQLite - ${{ steps.date.outputs.date }}
-          files: ./data/jmdict.sqlite
+          files: |
+            ./data/jmdict.sqlite
+            manifest-${{ steps.date.outputs.date }}.json
           token: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Github Release Upload for latest
+
+      - name: Update 'latest' tag
+        run: |
+          git tag -f latest
+          git push origin -f latest
+
+      - name: GitHub Release Upload for latest
         uses: softprops/action-gh-release@v2.3.2
         with:
           tag_name: latest
           name: JMDict SQLite - Latest
-          files: ./data/jmdict.sqlite
+          files: |
+            ./data/jmdict.sqlite
+            latest.json
           token: ${{ secrets.GITHUB_TOKEN }}
