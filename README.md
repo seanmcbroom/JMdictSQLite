@@ -32,17 +32,12 @@ FK = Foreign Key<br>
 ```ts
 interface entry {
   ent_seq: number // PK
-  kanji?: kanji[]
-  kana: kana[]
+  kanji?: WrittenElement[]
+  kana: WrittenElement[]
 }
 
-interface kanji {
-  kanji: string
-  tags?: []
-}
-
-interface kana {
-  kana: string
+interface WrittenElement {
+  written: string
   tags?: []
 }
 

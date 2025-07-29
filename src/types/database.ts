@@ -1,19 +1,12 @@
 export interface Entry {
   ent_seq: number; // PK
-  kanji?: Kanji[];
-  kana: Kana[];
+  kanji?: WrittenElement[];
+  kana: WrittenElement[];
   senses: Sense[];
 }
 
-// entry -> kanji (one-to-many)
-export interface Kanji {
-  kanji: string;
-  tags?: string[]; // array; semi-colon delimited
-}
-
-// entry -> kanji (one-to-many)
-export interface Kana {
-  kana: string;
+export interface WrittenElement {
+  written: string;
   tags?: string[];
 }
 

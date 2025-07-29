@@ -42,14 +42,14 @@ export function createParser(db: JmdictDatabase) {
 
       case 'k_ele':
         if (currentEntry) {
-          currentEntry.kanji?.push({ kanji: '', tags: [] });
+          currentEntry.kanji?.push({ written: '', tags: [] });
         }
 
         break;
 
       case 'r_ele':
         if (currentEntry) {
-          currentEntry.kana.push({ kana: '', tags: [] });
+          currentEntry.kana.push({ written: '', tags: [] });
         }
 
         break;
@@ -83,7 +83,7 @@ export function createParser(db: JmdictDatabase) {
       case 'keb': {
         const lastKanji = currentEntry.kanji?.at(-1);
 
-        if (lastKanji) lastKanji.kanji = text;
+        if (lastKanji) lastKanji.written = text;
 
         break;
       }
@@ -101,7 +101,7 @@ export function createParser(db: JmdictDatabase) {
       case 'reb': {
         const lastKana = currentEntry.kana.at(-1);
 
-        if (lastKana) lastKana.kana = text;
+        if (lastKana) lastKana.written = text;
 
         break;
       }
