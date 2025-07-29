@@ -1,0 +1,34 @@
+tests:
+- changed-files:
+  - any-glob-to-any-file:
+    - '**/*.test.*'
+
+ci:
+- changed-files:
+  - any-glob-to-any-file:
+    - '.github/workflows/**/**'
+
+ts:
+- changed-files:
+  - any-glob-to-any-file:
+    - '**/*.ts'
+
+db:
+- changed-files:
+  - any-glob-to-any-file:
+    - '/src/db/**/*.ts'
+
+parser:
+- changed-files:
+  - any-glob-to-any-file:
+    - '/src/parser/**/*.ts'
+
+types:
+- changed-files:
+  - any-glob-to-any-file:
+    - '/src/types/**/*.ts'
+
+tags:
+- changed-files:
+  - any-glob-to-any-file:
+    - '/src/constants/tags.ts'
