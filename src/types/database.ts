@@ -18,4 +18,6 @@ export interface Sense {
   pos: string[];
   fields?: string[];
   tags?: string[];
+  verb_group?: string;
+  transivity?: string;
 }

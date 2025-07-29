@@ -1,5 +1,6 @@
 import sax from 'sax';
 
+import { tagCategoryMap } from '@/constants/tags.js';
 import type { JmdictDatabase } from '@/db/index.js';
 import type { Entry } from '@/types/database.js';
 
@@ -52,6 +53,8 @@ export class JmdictParser {
           pos: [],
           fields: [],
           tags: [],
+          verb_group: undefined,
+          transivity: undefined,
         });
         break;
 
@@ -132,7 +135,18 @@ export class JmdictParser {
         break;
 
       case 'pos':
-        lastSense?.pos.push(text);
+        if (!lastSense) break;
+
+        const category = tagCategoryMap[text];
+
+        if (category === 'verbGroup') {
+          lastSense.verb_group = text;
+        } else if (category === 'transitivity') {
+          lastSense.transivity = text;
+        } else {
+          lastSense?.pos.push(text);
+        }
+
         break;
 
       case 'field':
