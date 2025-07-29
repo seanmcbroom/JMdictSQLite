@@ -52,8 +52,8 @@ interface sense {
 }
 ```
 
-# Example Query
-This SQL query retrieves all entries that contain at least one of the specified tags (`ichi1` or `spec1`) in any of their associated `kanji` objects.
+## Example Query
+This SQL query retrieves all entries that contain at least one of the specified tags (`ichi1` or `nf01`) in any of their associated `kanji` objects.
 It works by iterating through the kanji array of each entry using json_each, and then checking whether the tags array within each kanji object contains any of the target tags.
 
 To perform an inclusive (AND) search, where all specified tags must be present, change `>= 1` to `= 2` (or however many tags you're searching for).
@@ -66,10 +66,24 @@ WHERE EXISTS (
   WHERE (
     SELECT COUNT(DISTINCT tag.value)
     FROM json_each(json_extract(kanji_obj.value, '$.tags')) AS tag
-    WHERE tag.value IN ('ichi1', 'spec1')
+    WHERE tag.value IN ('ichi1', 'nf01')
   ) >= 1
 );
 ```
+
+## How to run locally
+```bash
+git clone https://github.com/seanmcbroom/JMdictSQLite
+cd JMdictSQLite
+```
+```bash
+npm install
+```
+```bash
+npm run github:parse-jmdict
+```
+The resulting SQLite file will be generated at: `/data/jmdict.sqlite`<br>
+You are free to use or distribute the file in accordance with the terms of the [GPLv2 license](./LICENSE).
 
 ## License
 This project contains components originally created by the **Electronic Dictionary Research and Development Group (EDRDG)**. These components are derived from data licensed under the **GNU General Public License Version 2 (GPLv2)**.

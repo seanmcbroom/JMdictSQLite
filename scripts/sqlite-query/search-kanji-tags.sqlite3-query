@@ -8,6 +8,6 @@ WHERE EXISTS (
   WHERE (
     SELECT COUNT(DISTINCT tag.value)
     FROM json_each(json_extract(kanji_obj.value, '$.tags')) AS tag
-    WHERE tag.value IN ('ichi1', 'spec1')
+    WHERE tag.value IN ('ichi1', 'nf01')
   ) >= 1
 );
