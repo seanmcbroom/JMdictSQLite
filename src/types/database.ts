@@ -16,8 +16,12 @@ export interface Sense {
   note?: string;
   glosses: string[];
   pos: string[];
+  verb_data?: VerbData;
   fields?: string[];
   tags?: string[];
+}
+
+export interface VerbData {
   verb_group?: string;
   transivity?: string;
 }

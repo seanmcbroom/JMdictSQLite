@@ -51,10 +51,12 @@ export class JmdictParser {
           note: undefined,
           glosses: [],
           pos: [],
+          verb_data: {
+            verb_group: undefined,
+            transivity: undefined,
+          },
           fields: [],
           tags: [],
-          verb_group: undefined,
-          transivity: undefined,
         });
         break;
 
@@ -138,12 +140,15 @@ export class JmdictParser {
         if (!lastSense) break;
 
         const category = tagCategoryMap[text];
+        const verbData = (lastSense.verb_data ??= {});
+        const isVerb = category === 'verbGroup';
+        const isTransitivity = category === 'transitivity';
 
-        if (category === 'verbGroup') {
-          lastSense.verb_group = text;
+        if (isVerb) {
+          verbData.verb_group = text;
           lastSense.pos.push('v');
-        } else if (category === 'transitivity') {
-          lastSense.transivity = text;
+        } else if (isTransitivity) {
+          verbData.transivity = text;
         } else {
           lastSense.pos.push(text);
         }
