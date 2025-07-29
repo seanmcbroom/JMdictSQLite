@@ -35,6 +35,7 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
         note TEXT,
         glosses TEXT,
         pos TEXT,
+        verb_data TEXT,
         fields TEXT,
         tags TEXT,
         FOREIGN KEY (ent_seq) REFERENCES entries(ent_seq)
@@ -48,7 +49,7 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
     `);
 
     this.insertSenseStmt = this.db.prepare(`
-      INSERT INTO senses (ent_seq, note, glosses, pos, fields, tags) VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO senses (ent_seq, note, glosses, pos, verb_data, fields, tags) VALUES (?, ?, ?, ?, ?, ?, ?)
     `);
   }
 
@@ -81,6 +82,7 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
       sense.note,
       JSON.stringify(sense.glosses),
       JSON.stringify(sense.pos),
+      sense.verb_data && sense.verb_data.verb_group ? JSON.stringify(sense.verb_data) : null,
       sense.fields && sense.fields.length > 0 ? JSON.stringify(sense.fields) : null,
       sense.tags && sense.tags.length > 0 ? JSON.stringify(sense.tags) : null,
     );

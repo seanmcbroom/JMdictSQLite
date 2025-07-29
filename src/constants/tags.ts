@@ -1,5 +1,11 @@
+/**
+ * Tag categories used in JMdict-based parsing.
+ *
+ * @see https://www.edrdg.org/jmwsgi/srchform.py?svc=jmdict
+ */
 export const tags = {
   pos: [
+    'v', // Custom tag representing all verb entires, verb info is split (See https://github.com/seanmcbroom/JMdictSQLite/issues/5)
     'adj-f',
     'adj-i',
     'adj-ix',
@@ -33,7 +39,9 @@ export const tags = {
     'prt',
     'suf',
     'unc',
-    'v-unspec',
+  ],
+
+  verbGroup: [
     'v1',
     'v1-s',
     'v2a-s',
@@ -82,17 +90,19 @@ export const tags = {
     'v5u',
     'v5u-s',
     'v5uru',
-    'vi',
     'vk',
     'vn',
     'vr',
+    'vz',
+    'v-unspec',
     'vs',
     'vs-c',
     'vs-i',
     'vs-s',
-    'vt',
-    'vz',
   ],
+
+  transitivity: ['vt', 'vi'],
+
   misc: [
     'abbr',
     'aphorism',
@@ -151,6 +161,7 @@ export const tags = {
     'X',
     'yoji',
   ],
+
   field: [
     'agric',
     'anat',
@@ -249,7 +260,79 @@ export const tags = {
     'vidg',
     'zool',
   ],
-  priority: ['news1', 'news2', 'spec1', 'spec2', 'nf01', 'ichi1', 'ichi2', 'gai1', 'gai2'],
+
+  priority: [
+    'news1',
+    'news2',
+    'spec1',
+    'spec2',
+    'ichi1',
+    'ichi2',
+    'gai1',
+    'gai2',
+    'nf01',
+    'nf02',
+    'nf03',
+    'nf04',
+    'nf05',
+    'nf06',
+    'nf07',
+    'nf08',
+    'nf09',
+    'nf10',
+    'nf11',
+    'nf12',
+    'nf13',
+    'nf14',
+    'nf15',
+    'nf16',
+    'nf17',
+    'nf18',
+    'nf19',
+    'nf20',
+    'nf21',
+    'nf22',
+    'nf23',
+    'nf24',
+    'nf25',
+    'nf26',
+    'nf27',
+    'nf28',
+    'nf29',
+    'nf30',
+    'nf31',
+    'nf32',
+    'nf33',
+    'nf34',
+    'nf35',
+    'nf36',
+    'nf37',
+    'nf38',
+    'nf39',
+    'nf40',
+    'nf41',
+    'nf42',
+    'nf43',
+    'nf44',
+    'nf45',
+    'nf46',
+    'nf47',
+    'nf48',
+  ],
+
   dialect: ['ksb', 'hob', 'bra', 'ktb', 'kyb', 'kyu', 'nab', 'osb', 'rkb', 'tsb', 'thb', 'tsug'],
-  kanji: ['ateji', 'ik', 'iK', 'io', 'oK', 'ok', 'rK', 'sK', 'sk', 'rk'],
+
+  kanji: ['ateji', 'iK', 'ik', 'io', 'oK', 'rK', 'sK'],
+
+  reading: ['gikun', 'ik', 'ok', 'rk', 'sk'],
 } as const;
+
+/**
+ * Returns the category of a given tag string.
+ * If unknown, returns `undefined`.
+ */
+export const tagCategoryMap = Object.fromEntries(
+  Object.entries(tags).flatMap(([category, values]) =>
+    values.map(tag => [tag, category as keyof typeof tags]),
+  ),
+);

@@ -20,17 +20,18 @@ FK = Foreign Key<br>
 ┌────────────────────────────────────┐            ┌───────────────────────────────────────────────────┐
 │              entries               │◄───────────│                    senses                         │
 ├────────────────────────────────────┤            ├───────────────────────────────────────────────────┤
-│ ent_seq   INTEGER       PK         │◄────┐      │ id       INTEGER     PK AUTOINC                   │
-│ kanji?    TEXT                     │     └────▶│ ent_seq  INTEGER      FK → entries.ent_seq        │
-│          – JSON-encoded            │            | note?    TEXT                                     | 
-│ kana      TEXT                     │            │ glosses  TEXT        (JSON-encoded)               │
-│          – JSON-encoded            │            │ pos      TEXT        (JSON-encoded)               │
-└────────────────────────────────────┘            | field?   TEXT        (JSON-encoded)               |
-                                                  | tags?    TEXT        (JSON-encoded)               |
+│ ent_seq   INTEGER       PK         │◄────┐      │ id          INTEGER  PK AUTOINC                   │
+│ kanji?    TEXT                     │     └────► │ ent_seq     INTEGER  FK → entries.ent_seq         │
+│          – JSON-encoded            │            | note?       TEXT                                  | 
+│ kana      TEXT                     │            │ glosses     TEXT     (JSON-encoded)               │
+│          – JSON-encoded            │            │ pos         TEXT     (JSON-encoded)               │
+└────────────────────────────────────┘            | verb_data?  TEXT     (JSON-encoded)               |
+                                                  | field?      TEXT     (JSON-encoded)               |
+                                                  | tags?       TEXT     (JSON-encoded)               |
                                                   └───────────────────────────────────────────────────┘
 ```
 ```ts
-interface entry {
+interface Entry {
   ent_seq: number // PK
   kanji?: WrittenElement[]
   kana: WrittenElement[]
@@ -41,14 +42,20 @@ interface WrittenElement {
   tags?: []
 }
 
-interface sense {
+interface Sense {
   id: number // PK
   ent_seq: number // FK
   note?: string
   glosses: string[]
   pos: string[]
+  verb_data?: VerbData;
   field?: string[]
   tags?: string[]
+}
+
+interface VerbData {
+  verb_group: string;
+  transivity?: string;
 }
 ```
 
