@@ -37,39 +37,13 @@ jobs:
           DATE="${{ steps.date.outputs.date }}"
           REPO_URL="https://github.com/${{ github.repository }}"
 
-          cat <<EOF > latest.json
+          cat <<EOF > manifest.json
           {
             "version": "$DATE",
             "url": "$REPO_URL/releases/download/latest/jmdict.sqlite",
             "sha256": "$CHECKSUM"
           }
           EOF
-
-          cat <<EOF > manifest-$DATE.json
-          {
-            "version": "$DATE",
-            "url": "$REPO_URL/releases/download/release-$DATE/jmdict.sqlite",
-            "sha256": "$CHECKSUM"
-          }
-          EOF
-
-      - name: Create and push date-based tag
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git fetch origin
-          git tag "release-${{ steps.date.outputs.date }}"
-          git push origin "release-${{ steps.date.outputs.date }}"
-
-      - name: GitHub Release Upload for date
-        uses: softprops/action-gh-release@v2.3.2
-        with:
-          tag_name: release-${{ steps.date.outputs.date }}
-          name: JMDict SQLite - ${{ steps.date.outputs.date }}
-          files: |
-            ./data/jmdict.sqlite
-            manifest-${{ steps.date.outputs.date }}.json
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update 'latest' tag
         run: |
@@ -80,8 +54,8 @@ jobs:
         uses: softprops/action-gh-release@v2.3.2
         with:
           tag_name: latest
-          name: JMDict SQLite - Latest
+          name: JMDict SQLite - ${{ steps.date.outputs.date }}
           files: |
             ./data/jmdict.sqlite
-            latest.json
+            manifest.json
           token: ${{ secrets.GITHUB_TOKEN }}
