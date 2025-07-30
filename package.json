@@ -14,7 +14,7 @@
     "1": "🚀 Main commands",
     "start": "node dist/src/index.js",
     "dev": "npm run clean:data-sqlite && tsx src/index.ts",
-    "build": "npm run clean:all && tsc && tsc-alias && npm run copy:test-files-to-dist",
+    "build": "npm run clean:build && tsc && tsc-alias && npm run copy:test-files-to-dist",
 
     "2": "🧹 Linting",
     "lint": "eslint . --ext .ts,.tsx",
@@ -32,7 +32,8 @@
     "clean:dist": "rimraf dist",
     "clean:data-sqlite": "rimraf /data/jmdict.sqlite",
     "clean:data-jmdict": "rimraf /data/jmdict.xml",
-    "clean:all": "npm run clean:dist && npm run clean:data-sqlite && clean:data-jmdict",
+    "clean:build": "npm run clean:dist && npm run clean:data-sqlite",
+    "clean:all": "npm run clean:dist && npm run clean:data-sqlite && npm run clean:data-jmdict",
     "copy:test-files-to-dist": "copyfiles -u 1 \"test/**/*.xml\" dist/test"
   },
   "devDependencies": {
