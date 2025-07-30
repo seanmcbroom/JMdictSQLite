@@ -1,6 +1,8 @@
 import Database from 'better-sqlite3';
 import type { Database as DatabaseType, Statement } from 'better-sqlite3';
 
+import pkg from '#/package.json' assert { type: 'json' };
+
 import type { Entry, Sense } from '@/types/database.js';
 
 export interface JmdictDatabaseInterface {
@@ -19,10 +21,20 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
     this.db.pragma('foreign_keys = ON');
     this._initializeTables();
     this._prepareStatements();
+
+    this.setMeta('version', pkg.version);
+    this.setMeta('language', 'en');
+    this.setMeta('license', 'GPLv2');
+    this.setMeta('compiled_at', new Date().toISOString());
   }
 
   private _initializeTables() {
     this.db.exec(`
+      CREATE TABLE IF NOT EXISTS meta (
+        key TEXT PRIMARY KEY,
+        value TEXT
+      );
+
       CREATE TABLE IF NOT EXISTS entries (
         ent_seq INTEGER PRIMARY KEY,
         kanji TEXT DEFAULT NULL,
@@ -51,6 +63,22 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
     this.insertSenseStmt = this.db.prepare(`
       INSERT INTO senses (ent_seq, note, glosses, pos, verb_data, fields, tags) VALUES (?, ?, ?, ?, ?, ?, ?)
     `);
+  }
+
+  getTableCount(tableName: string): number {
+    const stmt = this.db.prepare(`SELECT COUNT(*) as count FROM ${tableName}`);
+    const row = stmt.get() as { count: number };
+
+    return row.count;
+  }
+
+  setMeta(key: string, value: string) {
+    const stmt = this.db.prepare(`
+      INSERT INTO meta (key, value) VALUES (?, ?)
+      ON CONFLICT(key) DO UPDATE SET value=excluded.value
+    `);
+
+    stmt.run(key, value);
   }
 
   insertEntry(entry: Entry) {
@@ -82,13 +110,15 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
       sense.note,
       JSON.stringify(sense.glosses),
       JSON.stringify(sense.pos),
-      sense.verb_data && sense.verb_data.verb_group ? JSON.stringify(sense.verb_data) : null,
+      sense.verb_data?.verb_group ? JSON.stringify(sense.verb_data) : null,
       sense.fields && sense.fields.length > 0 ? JSON.stringify(sense.fields) : null,
       sense.tags && sense.tags.length > 0 ? JSON.stringify(sense.tags) : null,
     );
   }
 
   close() {
+    this.setMeta('entry_count', this.getTableCount('entries').toString());
+    this.setMeta('sense_count', this.getTableCount('senses').toString());
     this.db.close();
   }
 }

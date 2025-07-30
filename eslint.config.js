@@ -27,7 +27,6 @@ export default [
       // Prettier formatting rules as ESLint errors
       'prettier/prettier': 'error',
 
-      // Custom rule (you probably meant '@typescript-eslint/indent')
       '@typescript-eslint/indent': ['error', 2],
 
       'padding-line-between-statements': [
@@ -85,7 +84,7 @@ export default [
       'import/no-unresolved': [
         'error',
         {
-          ignore: ['\\.js$'],
+          ignore: ['\\.js$', '\\.json$'],
         },
       ],
 
