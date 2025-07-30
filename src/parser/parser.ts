@@ -136,7 +136,7 @@ export class JmdictParser {
         lastSense?.glosses.push(text);
         break;
 
-      case 'pos':
+      case 'pos': {
         if (!lastSense) break;
 
         const category = tagCategoryMap[text];
@@ -154,6 +154,7 @@ export class JmdictParser {
         }
 
         break;
+      }
 
       case 'field':
         lastSense?.fields?.push(text);
