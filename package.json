@@ -26,7 +26,7 @@
 
     "4": "📦📘 JMdict/Packaging",
     "download-jmdict": "tsx scripts/download-jmdict.ts",
-    "github:create-release": "npm run download-jmdict && npm run build && npm run start",
+    "create-release": "npm run download-jmdict && npm run build && npm run start",
 
     "5": "📁 File handling",
     "clean:dist": "rimraf dist",
