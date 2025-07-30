@@ -32,7 +32,7 @@
     "clean:dist": "rimraf dist",
     "clean:data-sqlite": "rimraf /data/jmdict.sqlite",
     "clean:data-jmdict": "rimraf /data/jmdict.xml",
-    "clean:all": "npm run clean:dist && npm run clean:data && clean:data-jmdict",
+    "clean:all": "npm run clean:dist && npm run clean:data-sqlite && clean:data-jmdict",
     "copy:test-files-to-dist": "copyfiles -u 1 \"test/**/*.xml\" dist/test"
   },
   "devDependencies": {
