@@ -1,8 +1,6 @@
 import Database from 'better-sqlite3';
 import type { Database as DatabaseType, Statement } from 'better-sqlite3';
 
-import pkg from '#/package.json' assert { type: 'json' };
-
 import type { Entry, Sense } from '@/types/database.js';
 
 export interface JmdictDatabaseInterface {
@@ -22,7 +20,7 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
     this._initializeTables();
     this._prepareStatements();
 
-    this.setMeta('version', pkg.version);
+    this.setMeta('version', process.env.npm_package_version ?? 'unknown');
     this.setMeta('language', 'en');
     this.setMeta('license', 'GPLv2');
     this.setMeta('compiled_at', new Date().toISOString());
