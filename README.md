@@ -90,7 +90,7 @@ cd JMdictSQLite
 npm install
 ```
 ```bash
-npm run github:parse-jmdict
+npm run github:create-release
 ```
 The resulting SQLite file will be generated at: `/data/jmdict.sqlite`<br>
 You are free to use or distribute the file in accordance with the terms of the [GPLv2 license](./LICENSE).

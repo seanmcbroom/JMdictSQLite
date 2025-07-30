@@ -11,23 +11,30 @@
     "yarn": "yarn is not supported. Please use npm"
   },
   "scripts": {
+    "1": "🚀 Main commands",
     "start": "node dist/src/index.js",
-    "clean": "rimraf dist",
-    "build": "npm run clean && tsc && tsc-alias && npm run copy:resources",
-    "copy:resources": "copyfiles -u 1 \"test/**/*.xml\" dist/test",
-    "dev": "tsx src/index.ts",
-    "test": "npm run build && node --test dist/test/**/*.test.js",
-    "test:dev": "tsx --test test/**/*.test.ts",
+    "dev": "npm run clean:data-sqlite && tsx src/index.ts",
+    "build": "npm run clean:all && tsc && tsc-alias && npm run copy:test-files-to-dist",
+
+    "2": "🧹 Linting",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
+
+    "3": "🧪 Testing",
+    "test": "npm run build && node --test \"dist/test/**/*.test.js\"",
+    "test:dev": "tsx --test test/**/*.test.ts",
+
+    "4": "📦📘 JMdict/Packaging",
     "download-jmdict": "tsx scripts/download-jmdict.ts",
-    "github:parse-jmdict": "npm run download-jmdict && npm run build && npm run start"
+    "github:create-release": "npm run download-jmdict && npm run build && npm run start",
+
+    "5": "📁 File handling",
+    "clean:dist": "rimraf dist",
+    "clean:data-sqlite": "rimraf /data/jmdict.sqlite",
+    "clean:data-jmdict": "rimraf /data/jmdict.xml",
+    "clean:all": "npm run clean:dist && npm run clean:data && clean:data-jmdict",
+    "copy:test-files-to-dist": "copyfiles -u 1 \"test/**/*.xml\" dist/test"
   },
-  "keywords": [
-    "JMdict",
-    "Japanese",
-    "日本語"
-  ],
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^24.1.0",
