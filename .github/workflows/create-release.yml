@@ -4,9 +4,6 @@ on:
   schedule:
     - cron: '35 4 * * *'  # Every day at 4:35 AM UTC
   workflow_dispatch:
-  push:
-    tags:
-      - 'v*'  # Trigger on version tags like v1.0.0
 
 permissions:
   contents: write
