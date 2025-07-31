@@ -65,12 +65,12 @@ jobs:
           tag_name: latest
           name: JMdictSQLite-${{ steps.date.outputs.date }}-${{steps.version.outputs.version}}
           body: |
-            Automatic Release
+            ## Automatic Release
 
             - 📅 Released on: ${{ steps.date.outputs.date }}
             - 🧩 Version: v${{ steps.version.outputs.version }}
-            - 
-            - This is an automatic release not reviewed by a human.
+            
+            > This is an automatic release not reviewed by a human.
           files: |
             ./data/jmdict.sqlite
             manifest.json
