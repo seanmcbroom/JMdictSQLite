@@ -47,7 +47,7 @@ jobs:
 
           cat <<EOF > manifest.json
           {
-            "version": 
+            "version": $VERSION,
             "date": "$DATE",
             "url": "$REPO_URL/releases/download/latest/jmdict.sqlite",
             "sha256": "$CHECKSUM"
