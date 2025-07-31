@@ -29,18 +29,26 @@ jobs:
       - name: Set release date
         id: date
         run: echo "date=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
+      
+      - name: Read version from package.json
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Generate SHA-256 and manifest files
         id: generate-manifest
         run: |
           DB_PATH=./data/jmdict.sqlite
           CHECKSUM=$(sha256sum "$DB_PATH" | cut -d ' ' -f1)
+          VERSION="${{ steps.version.outputs.version }}"
           DATE="${{ steps.date.outputs.date }}"
           REPO_URL="https://github.com/${{ github.repository }}"
 
           cat <<EOF > manifest.json
           {
-            "version": "$DATE",
+            "version": 
+            "date": "$DATE",
             "url": "$REPO_URL/releases/download/latest/jmdict.sqlite",
             "sha256": "$CHECKSUM"
           }
@@ -55,7 +63,14 @@ jobs:
         uses: softprops/action-gh-release@v2.3.2
         with:
           tag_name: latest
-          name: JMdictSQLite - ${{ steps.date.outputs.date }}
+          name: JMdictSQLite-${{ steps.date.outputs.date }}-${{steps.version.outputs.version}}
+          body: |
+            Automatic Release
+
+            - 📅 Released on: ${{ steps.date.outputs.date }}
+            - 🧩 Version: v${{ steps.version.outputs.version }}
+            - 
+            - This is an automatic release not reviewed by a human.
           files: |
             ./data/jmdict.sqlite
             manifest.json
