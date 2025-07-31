@@ -3,8 +3,11 @@ name: Release Latest JMDict SQLite
 on:
   schedule:
     - cron: '35 4 * * *'  # Every day at 4:35 AM UTC
-  workflow_dispatch:
-
+  workflow_dispatch: # On manual run
+  push:
+    tags:
+      - 'v*'  # On new version tag created
+      
 permissions:
   contents: write
 
