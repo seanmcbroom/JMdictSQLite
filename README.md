@@ -12,6 +12,7 @@ This project transforms the JMdict XML dataset into a normalized, developer-frie
 
 ## _Database Schema Diagram_
 **⚠️[WARNING]: NOT FINAL**<br>
+**TODO: add `language`, `ant`, `see`, etc. fields**<br><br>
 PK = Primary Key<br>
 FK = Foreign Key<br>
 `?` = possibly undefined<br>
