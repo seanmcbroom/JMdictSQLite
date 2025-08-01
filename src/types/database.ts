@@ -25,3 +25,20 @@ export interface VerbData {
   verb_group: string;
   transivity?: string;
 }
+
+export interface EntryDb {
+  ent_seq: number; // PK
+  kanji?: string; // JSON.stringify(WrittenElement[])
+  kana: string; // JSON.stringify(WrittenElement[])
+}
+
+export interface SenseDb {
+  id: number; // PK
+  ent_seq: number; // FK
+  note?: string;
+  glosses: string; // JSON.stringify(string[])
+  pos: string; // JSON.stringify(string[])
+  verb_data?: string; // JSON.stringify(VerbData)
+  fields?: string; // JSON.stringify(VerbData)
+  tags?: string; // JSON.stringify(VerbData)
+}
