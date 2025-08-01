@@ -31,7 +31,7 @@ FK = Foreign Key<br>
                                                   | tags?       TEXT     (JSON-encoded)               |
                                                   └───────────────────────────────────────────────────┘
 ```
-### SQLite Types (TypeScript)
+### SQLite Query Types (TypeScript)
 ```ts
 export interface Entry {
   ent_seq: number; // PK
