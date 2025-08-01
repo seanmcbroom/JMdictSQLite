@@ -31,26 +31,26 @@ FK = Foreign Key<br>
                                                   └───────────────────────────────────────────────────┘
 ```
 ```ts
-interface Entry {
-  ent_seq: number // PK
-  kanji?: WrittenElement[]
-  kana: WrittenElement[]
+export interface EntryDb {
+  ent_seq: number; // PK
+  kanji?: string; // JSON.stringify(WrittenElement[])
+  kana: string; // JSON.stringify(WrittenElement[])
+}
+
+export interface SenseDb {
+  id: number; // PK
+  ent_seq: number; // FK
+  note?: string;
+  glosses: string; // JSON.stringify(string[])
+  pos: string; // JSON.stringify(string[])
+  verb_data?: string; // JSON.stringify(VerbData)
+  fields?: string; // JSON.stringify(VerbData)
+  tags?: string; // JSON.stringify(VerbData)
 }
 
 interface WrittenElement {
   written: string
   tags?: []
-}
-
-interface Sense {
-  id: number // PK
-  ent_seq: number // FK
-  note?: string
-  glosses: string[]
-  pos: string[]
-  verb_data?: VerbData;
-  field?: string[]
-  tags?: string[]
 }
 
 interface VerbData {
