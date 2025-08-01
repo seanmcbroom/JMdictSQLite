@@ -31,14 +31,15 @@ FK = Foreign Key<br>
                                                   | tags?       TEXT     (JSON-encoded)               |
                                                   └───────────────────────────────────────────────────┘
 ```
+### SQLite Types (TypeScript)
 ```ts
-export interface EntryDb {
+export interface Entry {
   ent_seq: number; // PK
   kanji?: string; // JSON.stringify(Written[])
   kana: string; // JSON.stringify(Written[])
 }
 
-export interface SenseDb {
+export interface Sense {
   id: number; // PK
   ent_seq: number; // FK
   note?: string;
@@ -49,12 +50,12 @@ export interface SenseDb {
   tags?: string; // JSON.stringify(string[])
 }
 
-interface Written {
+export interface Written {
   written: string
   tags?: []
 }
 
-interface VerbData {
+export interface VerbData {
   verb_group: string;
   transivity?: string;
 }
