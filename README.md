@@ -33,8 +33,8 @@ FK = Foreign Key<br>
 ```ts
 export interface EntryDb {
   ent_seq: number; // PK
-  kanji?: string; // JSON.stringify(WrittenElement[])
-  kana: string; // JSON.stringify(WrittenElement[])
+  kanji?: string; // JSON.stringify(Written[])
+  kana: string; // JSON.stringify(Written[])
 }
 
 export interface SenseDb {
@@ -44,11 +44,11 @@ export interface SenseDb {
   glosses: string; // JSON.stringify(string[])
   pos: string; // JSON.stringify(string[])
   verb_data?: string; // JSON.stringify(VerbData)
-  fields?: string; // JSON.stringify(VerbData)
-  tags?: string; // JSON.stringify(VerbData)
+  fields?: string; // JSON.stringify(string[])
+  tags?: string; // JSON.stringify(string[])
 }
 
-interface WrittenElement {
+interface Written {
   written: string
   tags?: []
 }

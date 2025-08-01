@@ -1,11 +1,11 @@
 export interface Entry {
   ent_seq: number; // PK
-  kanji?: WrittenElement[];
-  kana: WrittenElement[];
+  kanji?: Written[];
+  kana: Written[];
   senses: Sense[];
 }
 
-export interface WrittenElement {
+export interface Written {
   written: string;
   tags?: string[];
 }
