@@ -3,7 +3,7 @@
   "description": "Read-only SQLite database for JMDict, a Japanese-English dictionary.",
   "author": "Sean McBroom (sean.mcbroom@outlook.com)",
   "license": "GPLv2",
-  "version": "0.6.6",
+  "version": "0.6.8",
   "type": "module",
   "engines": {
     "node": ">=22.11.0 <23.0.0",
