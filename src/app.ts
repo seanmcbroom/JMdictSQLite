@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 import { JmdictDatabase } from '@/db/index.js';
-import EntityReplace from '@/parser/entityReplace.js';
+import EntityReplace from '@/util/entityReplace.js';
 import { JmdictParser } from '@/parser/parser.js';
 
 export class JmdictProcessor {

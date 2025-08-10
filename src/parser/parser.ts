@@ -1,12 +1,10 @@
 import sax from 'sax';
 
-import { tagCategoryMap } from '@/constants/tags.js';
 import type { JmdictDatabase } from '@/db/index.js';
+import closeTagHandlers from '@/parser/handlers/close/index.js';
+import openTagHandlers from '@/parser/handlers/open/index.js';
 import type { Entry } from '@/types/database.js';
 
-/**
- * SAX-based JMDict parser using a class to encapsulate state and logic.
- */
 export class JmdictParser {
   private readonly parser = sax.createStream(true, { trim: true });
   private currentEntry: Entry | undefined;
@@ -19,7 +17,7 @@ export class JmdictParser {
     this.parser.on('text', this.onText.bind(this));
     this.parser.on('closetag', this.onCloseTag.bind(this));
     this.parser.on('error', this.onError.bind(this));
-    this.parser.on('end', this.flushBuffer.bind(this)); // flush remaining
+    this.parser.on('end', this.flushBuffer.bind(this));
   }
 
   getStream() {
@@ -34,39 +32,10 @@ export class JmdictParser {
   }
 
   private onOpenTag(node: sax.Tag) {
-    switch (node.name) {
-      case 'entry':
-        this.currentEntry = {
-          ent_seq: 0,
-          kanji: [],
-          kana: [],
-          senses: [],
-        };
-        break;
+    const handler = openTagHandlers[node.name];
 
-      case 'sense':
-        this.currentEntry?.senses.push({
-          id: 0,
-          ent_seq: 0,
-          note: undefined,
-          glosses: [],
-          pos: [],
-          verb_data: {
-            verb_group: '',
-            transivity: undefined,
-          },
-          fields: [],
-          tags: [],
-        });
-        break;
-
-      case 'k_ele':
-        this.currentEntry?.kanji?.push({ written: '', tags: [] });
-        break;
-
-      case 'r_ele':
-        this.currentEntry?.kana.push({ written: '', tags: [] });
-        break;
+    if (handler) {
+      handler(this);
     }
   }
 
@@ -75,98 +44,35 @@ export class JmdictParser {
   }
 
   private onCloseTag(name: string) {
-    const entry = this.currentEntry;
-    const text = this.currentText.trim();
+    const handler = closeTagHandlers[name];
+
+    if (handler) {
+      handler(this, this.currentText.trim());
+    }
 
     this.currentText = '';
-
-    if (!entry) return;
-
-    const lastKanji = entry.kanji?.at(-1);
-    const lastKana = entry.kana.at(-1);
-    const lastSense = entry.senses.at(-1);
-
-    switch (name) {
-      case 'entry': {
-        this.buffer.push(entry);
-
-        if (this.buffer.length >= this.batchSize) {
-          this.flushBuffer();
-        }
-
-        this.currentEntry = undefined;
-
-        return;
-      }
-
-      case 'ent_seq': {
-        const parsed = parseInt(text, 10);
-
-        if (!isNaN(parsed)) entry.ent_seq = parsed;
-
-        break;
-      }
-
-      case 'keb':
-        if (lastKanji) lastKanji.written = text;
-
-        break;
-
-      case 'ke_pri':
-      case 'ke_inf':
-        lastKanji?.tags?.push(text);
-        break;
-
-      case 'reb':
-        if (lastKana) lastKana.written = text;
-
-        break;
-
-      case 're_pri':
-      case 're_inf':
-        lastKana?.tags?.push(text);
-        break;
-
-      case 's_inf':
-        if (lastSense) lastSense.note = text;
-
-        break;
-
-      case 'gloss':
-        lastSense?.glosses.push(text);
-        break;
-
-      case 'pos': {
-        if (!lastSense) break;
-
-        const category = tagCategoryMap[text];
-        const verbData = lastSense.verb_data;
-        const isVerb = category === 'verbGroup';
-        const isTransitivity = category === 'transitivity';
-
-        if (verbData && isVerb) {
-          verbData.verb_group = text;
-          lastSense.pos.push('v');
-        } else if (verbData && isTransitivity) {
-          verbData.transivity = text;
-        } else {
-          lastSense.pos.push(text);
-        }
-
-        break;
-      }
-
-      case 'field':
-        lastSense?.fields?.push(text);
-        break;
-
-      case 'misc':
-        lastSense?.tags?.push(text);
-        break;
-    }
   }
 
   private onError(err: Error) {
     console.warn('❌ SAX Parser Error:', err);
   }
+
+  // expose internal state so handlers can modify
+  public get entry() {
+    return this.currentEntry;
+  }
+
+  public set entry(value: Entry | undefined) {
+    this.currentEntry = value;
+  }
+
+  public get bufferRef() {
+    return this.buffer;
+  }
+
+  public get batchSizeRef() {
+    return this.batchSize;
+  }
+
+  public flush = this.flushBuffer.bind(this);
 }
