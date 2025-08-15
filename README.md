@@ -12,7 +12,7 @@ This project transforms the JMdict XML dataset into a normalized, developer-frie
 
 ## _Database Schema Diagram_
 **⚠️[WARNING]: NOT FINAL**<br>
-**TODO: add `language`, `ant`, `see`, etc. fields**<br><br>
+**TODO: add `ant`, `see`, etc. fields**<br><br>
 PK = Primary Key<br>
 FK = Foreign Key<br>
 `?` = possibly undefined<br>
@@ -23,10 +23,11 @@ FK = Foreign Key<br>
 ├────────────────────────────────────┤            ├───────────────────────────────────────────────────┤
 │ ent_seq   INTEGER       PK         │◄────┐      │ id          INTEGER  PK AUTOINC                   │
 │ kanji?    TEXT                     │     └────► │ ent_seq     INTEGER  FK → entries.ent_seq         │
-│          – JSON-encoded            │            | note?       TEXT                                  | 
-│ kana      TEXT                     │            │ glosses     TEXT     (JSON-encoded)               │
-│          – JSON-encoded            │            │ pos         TEXT     (JSON-encoded)               │
-└────────────────────────────────────┘            | verb_data?  TEXT     (JSON-encoded)               |
+│          – JSON-encoded            │            | lang?       TEXT                                  |
+│ kana      TEXT                     │            | note?       TEXT                                  | 
+│          – JSON-encoded            │            │ glosses     TEXT     (JSON-encoded)               │
+└────────────────────────────────────┘            │ pos         TEXT     (JSON-encoded)               │
+                                                  | verb_data?  TEXT     (JSON-encoded)               |
                                                   | field?      TEXT     (JSON-encoded)               |
                                                   | tags?       TEXT     (JSON-encoded)               |
                                                   └───────────────────────────────────────────────────┘
