@@ -1,6 +1,6 @@
 import sax from 'sax';
 
-import type { JmdictDatabase } from '@/db/index.js';
+import type { JmdictDatabase } from '@/database/index.js';
 import closeTagHandlers from '@/parser/handlers/close/index.js';
 import openTagHandlers from '@/parser/handlers/open/index.js';
 import type { Entry } from '@/types/database.js';
