@@ -89,7 +89,7 @@ git clone https://github.com/seanmcbroom/JMdictSQLite
 cd JMdictSQLite
 ```
 ```bash
-npm install
+npm ci
 ```
 ```bash
 npm run create-release
