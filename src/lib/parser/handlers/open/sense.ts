@@ -1,4 +1,4 @@
-import type { JmdictParser } from '@/parser/index.js';
+import type { JmdictParser } from '@/lib/parser/index.js';
 
 export default function sense(parser: JmdictParser) {
   parser.entry?.senses.push({

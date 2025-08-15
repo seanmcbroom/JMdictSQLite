@@ -1,4 +1,4 @@
-import type { JmdictParser } from '@/parser/index.js';
+import type { JmdictParser } from '@/lib/parser/index.js';
 
 export default function s_inf(parser: JmdictParser, text: string) {
   const lastSense = parser.entry?.senses.at(-1);

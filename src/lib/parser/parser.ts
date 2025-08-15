@@ -1,9 +1,9 @@
 import sax from 'sax';
 
-import type { JmdictDatabase } from '@/database/index.js';
-import closeTagHandlers from '@/parser/handlers/close/index.js';
-import openTagHandlers from '@/parser/handlers/open/index.js';
-import type { Entry } from '@/types/database.js';
+import type { JmdictDatabase } from '@/lib/database/index.js';
+import closeTagHandlers from '@/lib/parser/handlers/close/index.js';
+import openTagHandlers from '@/lib/parser/handlers/open/index.js';
+import type { Entry } from '@/lib/types/database.js';
 
 export class JmdictParser {
   private readonly parser = sax.createStream(true, { trim: true });

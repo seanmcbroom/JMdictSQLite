@@ -1,8 +1,8 @@
 import fs from 'fs';
 
-import { JmdictDatabase } from '@/database/index.js';
-import EntityReplace from '@/util/entityReplace.js';
-import { JmdictParser } from '@/parser/parser.js';
+import { JmdictDatabase } from '@/lib/database/index.js';
+import EntityReplace from '@/lib/parser/entityReplace.js';
+import { JmdictParser } from '@/lib/parser/parser.js';
 
 export class JmdictProcessor {
   private readonly inputPath: string;

@@ -2,7 +2,7 @@
 // that cannot be read by the parser directly.
 import { Transform } from 'stream';
 
-import { tags } from '@/constants/tags.js';
+import { tags } from '@/lib/constants/tags.js';
 
 const entityMap: Record<string, string> = {};
 

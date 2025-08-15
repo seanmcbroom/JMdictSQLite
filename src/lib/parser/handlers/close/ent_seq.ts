@@ -1,4 +1,4 @@
-import type { JmdictParser } from '@/parser/index.js';
+import type { JmdictParser } from '@/lib/parser/index.js';
 
 export default function ent_seq(parser: JmdictParser, text: string) {
   const parsed = parseInt(text, 10);

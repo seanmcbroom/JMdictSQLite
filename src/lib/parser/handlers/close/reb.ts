@@ -1,4 +1,4 @@
-import type { JmdictParser } from '@/parser/index.js';
+import type { JmdictParser } from '@/lib/parser/index.js';
 
 export default function reb(parser: JmdictParser, text: string) {
   const lastKana = parser.entry?.kana.at(-1);

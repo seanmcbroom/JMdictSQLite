@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3';
 import type { Database as DatabaseType, Statement } from 'better-sqlite3';
 
-import type { Entry, Sense } from '@/types/database.js';
+import type { Entry, Sense } from '@/lib/types/database.js';
 
 export interface JmdictDatabaseInterface {
   insertEntry(entry: Entry): void;
