@@ -13,6 +13,7 @@ export interface Written {
 export interface Sense {
   id: number; // PK
   ent_seq: number; // FK
+  lang: string;
   note?: string;
   glosses: string[];
   pos: string[];

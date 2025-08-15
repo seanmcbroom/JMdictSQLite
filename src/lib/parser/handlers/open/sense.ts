@@ -4,6 +4,7 @@ export default function sense(parser: JmdictParser) {
   parser.entry?.senses.push({
     id: 0,
     ent_seq: 0,
+    lang: '',
     note: undefined,
     glosses: [],
     pos: [],

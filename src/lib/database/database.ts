@@ -42,6 +42,7 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
       CREATE TABLE IF NOT EXISTS senses (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         ent_seq INTEGER,
+        lang TEXT,
         note TEXT,
         glosses TEXT,
         pos TEXT,
@@ -59,7 +60,7 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
     `);
 
     this.insertSenseStmt = this.db.prepare(`
-      INSERT INTO senses (ent_seq, note, glosses, pos, verb_data, fields, tags) VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO senses (ent_seq, lang, note, glosses, pos, verb_data, fields, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
   }
 
@@ -105,6 +106,7 @@ export class JmdictDatabase implements JmdictDatabaseInterface {
   insertSense(sense: Sense) {
     this.insertSenseStmt.run(
       sense.ent_seq,
+      sense.lang,
       sense.note,
       JSON.stringify(sense.glosses),
       JSON.stringify(sense.pos),

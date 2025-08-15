@@ -35,7 +35,7 @@ export class JmdictParser {
     const handler = openTagHandlers[node.name];
 
     if (handler) {
-      handler(this);
+      handler(this, node.attributes);
     }
   }
 
@@ -64,6 +64,10 @@ export class JmdictParser {
 
   public set entry(value: Entry | undefined) {
     this.currentEntry = value;
+  }
+
+  public get lastSense() {
+    return this.currentEntry?.senses.at(-1);
   }
 
   public get bufferRef() {
