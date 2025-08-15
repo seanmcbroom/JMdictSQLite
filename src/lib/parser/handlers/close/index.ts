@@ -12,9 +12,7 @@ import re_pri from './re_pri.js';
 import reb from './reb.js';
 import s_inf from './s_inf.js';
 
-import type { JmdictParser } from '@/lib/parser/index.js';
-
-type CloseHandler = (parser: JmdictParser, text: string) => void;
+import { type CloseHandler } from '@/lib/types/parser.js';
 
 export default {
   entry,
