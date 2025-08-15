@@ -3,7 +3,7 @@ import { type Tag } from 'sax';
 import type { JmdictParser } from '@/lib/parser/index.js';
 
 export default function lsource(parser: JmdictParser, attributes: Tag['attributes']) {
-  const lastSense = parser.entry?.senses.at(-1);
+  const lastSense = parser.lastSense;
 
   if (!lastSense) return;
 
