@@ -88,7 +88,37 @@ WHERE EXISTS (
   ) >= 1
 );
 ```
+## Optimization Tip
+This database relies heavily on JSON blobs to store data. While this keeps the schema simple, it is not optimal for rapid searches. If you frequently need to perform text searches, you can use STORED generated columns to precompute and index these values for fast, efficient lookups.
 
+For example, you need to constantly index the main kana or kanji.
+```sql
+-- Temporarily disable foreign key checks to speed up the table rebuild
+PRAGMA foreign_keys = OFF;
+
+-- Create a new table with STORED generated columns
+CREATE TABLE entries_new (
+  ent_seq INTEGER PRIMARY KEY,
+  kanji TEXT,
+  kana TEXT,
+  main_kana TEXT GENERATED ALWAYS AS (json_extract(kana, '$[0].written')) STORED,
+  main_kanji TEXT GENERATED ALWAYS AS (json_extract(kanji, '$[0].written')) STORED
+);
+
+-- Copy existing data into the new table
+INSERT INTO entries_new (ent_seq, kanji, kana)
+SELECT ent_seq, kanji, kana FROM entries;
+
+-- Replace the old table with the new one
+DROP TABLE entries;
+ALTER TABLE entries_new RENAME TO entries;
+
+-- Re-enable foreign key checks
+PRAGMA foreign_keys = ON;
+
+-- Example query: fast lookup using the precomputed main kana
+SELECT * FROM entries WHERE main_kana = 'ねこ';
+```
 ## How to run locally
 Requires: node 22.11.00+, npm 10.9.0+
 ```bash
