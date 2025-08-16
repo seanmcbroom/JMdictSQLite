@@ -11,8 +11,7 @@ This project transforms the JMdict XML dataset into a normalized, developer-frie
 - Ideal for full-text search, filtering, and offline usage
 
 ## _Database Schema Diagram_
-**⚠️[WARNING]: NOT FINAL**<br>
-**TODO: add `ant`, `see`, etc. fields**<br><br>
+**⚠️[WARNING]: May be changed**<br>
 PK = Primary Key<br>
 FK = Foreign Key<br>
 `?` = possibly undefined<br>
@@ -89,7 +88,6 @@ WHERE EXISTS (
   ) >= 1
 );
 ```
-
 ## How to run locally
 Requires: node 22.11.00+, npm 10.9.0+
 ```bash
