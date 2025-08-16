@@ -1,39 +1,9 @@
-import fs from 'fs';
+import path from 'path';
 
-import { JmdictDatabase } from '@/lib/database/index.js';
-import EntityReplace from '@/lib/parser/entityReplace.js';
-import { JmdictParser } from '@/lib/parser/parser.js';
+import { JmdictProcessor } from '@/lib/processor/index.js';
 
-export class JmdictProcessor {
-  private readonly inputPath: string;
-  private readonly outputPath: string;
-  private readonly db: JmdictDatabase;
+const xmlPath = path.resolve('./data/jmdict.xml');
+const outPath = path.resolve('./data/jmdict.sqlite');
+const jmdictProcessor = new JmdictProcessor(xmlPath, outPath);
 
-  constructor(inputPath: string, outputPath: string) {
-    this.inputPath = inputPath;
-    this.outputPath = outputPath;
-    this.db = new JmdictDatabase(this.outputPath);
-  }
-
-  public process(): Promise<void> {
-    const startTime = Date.now();
-    const JMdictParserStream = new JmdictParser(this.db).getStream();
-
-    return new Promise((resolve, reject) => {
-      fs.createReadStream(this.inputPath, { encoding: 'utf8' })
-        .pipe(new EntityReplace())
-        .pipe(JMdictParserStream)
-        .on('end', () => {
-          console.log(
-            `✅ Done parsing XML. Time elapsed: ${((Date.now() - startTime) / 1000).toFixed(2)}s`,
-          );
-          this.db.close();
-          resolve();
-        })
-        .on('error', err => {
-          this.db.close();
-          reject(err);
-        });
-    });
-  }
-}
+jmdictProcessor.process();
