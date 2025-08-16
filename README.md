@@ -44,6 +44,7 @@ export interface Entry {
 export interface Sense {
   id: number; // PK
   ent_seq: number; // FK
+  lang?: string;
   note?: string;
   glosses: string; // JSON.stringify(string[])
   pos: string; // JSON.stringify(string[])
