@@ -1,23 +1,23 @@
 import fs from 'fs';
 
-import { JmdictDatabase } from '@/lib/database/index.js';
+import { JMdictDatabase } from '@/lib/database/index.js';
 import EntityReplace from '@/lib/parser/entityReplace.js';
-import { JmdictParser } from '@/lib/parser/parser.js';
+import { JMdictParser } from '@/lib/parser/parser.js';
 
-export class JmdictProcessor {
+export class JMdictProcessor {
   private readonly inputPath: string;
   private readonly outputPath: string;
-  private readonly db: JmdictDatabase;
+  private readonly db: JMdictDatabase;
 
   constructor(inputPath: string, outputPath: string) {
     this.inputPath = inputPath;
     this.outputPath = outputPath;
-    this.db = new JmdictDatabase(this.outputPath);
+    this.db = new JMdictDatabase(this.outputPath);
   }
 
   public process(): Promise<void> {
     const startTime = Date.now();
-    const JMdictParserStream = new JmdictParser(this.db).getStream();
+    const JMdictParserStream = new JMdictParser(this.db).getStream();
 
     return new Promise((resolve, reject) => {
       fs.createReadStream(this.inputPath, { encoding: 'utf8' })

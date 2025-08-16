@@ -1,6 +1,6 @@
-import type { JmdictParser } from '@/lib/parser/index.js';
+import type { JMdictParser } from '@/lib/parser/index.js';
 
-export default function ant(parser: JmdictParser, text: string) {
+export default function ant(parser: JMdictParser, text: string) {
   const lastSense = parser.lastSense;
 
   if (!lastSense) return;

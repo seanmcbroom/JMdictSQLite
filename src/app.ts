@@ -1,9 +1,8 @@
 import path from 'path';
 
-import { JmdictProcessor } from '@/lib/processor/index.js';
+import { JMdictProcessor } from '@/lib/processor/index.js';
 
-const xmlPath = path.resolve('./data/jmdict.xml');
-const outPath = path.resolve('./data/jmdict.sqlite');
-const jmdictProcessor = new JmdictProcessor(xmlPath, outPath);
+const xmlPath = path.resolve('./data/JMdict.xml');
+const outPath = path.resolve('./data/JMdict.sqlite');
 
-jmdictProcessor.process();
+new JMdictProcessor(xmlPath, outPath).process();

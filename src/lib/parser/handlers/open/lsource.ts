@@ -1,8 +1,8 @@
 import { type Tag } from 'sax';
 
-import type { JmdictParser } from '@/lib/parser/index.js';
+import type { JMdictParser } from '@/lib/parser/index.js';
 
-export default function lsource(parser: JmdictParser, attributes: Tag['attributes']) {
+export default function lsource(parser: JMdictParser, attributes: Tag['attributes']) {
   const lastSense = parser.lastSense;
 
   if (!lastSense) return;

@@ -1,18 +1,18 @@
 import sax from 'sax';
 
-import type { JmdictDatabase } from '@/lib/database/index.js';
+import type { JMdictDatabase } from '@/lib/database/index.js';
 import closeTagHandlers from '@/lib/parser/handlers/close/index.js';
 import openTagHandlers from '@/lib/parser/handlers/open/index.js';
 import type { Entry } from '@/lib/types/database.js';
 
-export class JmdictParser {
+export class JMdictParser {
   private readonly parser = sax.createStream(true, { trim: true });
   private currentEntry: Entry | undefined;
   private currentText = '';
   private readonly buffer: Entry[] = [];
   private readonly batchSize = 500;
 
-  constructor(private readonly db: JmdictDatabase) {
+  constructor(private readonly db: JMdictDatabase) {
     this.parser.on('opentag', this.onOpenTag.bind(this));
     this.parser.on('text', this.onText.bind(this));
     this.parser.on('closetag', this.onCloseTag.bind(this));

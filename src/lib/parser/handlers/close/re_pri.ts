@@ -1,5 +1,5 @@
-import type { JmdictParser } from '@/lib/parser/index.js';
+import type { JMdictParser } from '@/lib/parser/index.js';
 
-export default function re_pri(parser: JmdictParser, text: string) {
+export default function re_pri(parser: JMdictParser, text: string) {
   parser.entry?.kana?.at(-1)?.tags?.push(text);
 }

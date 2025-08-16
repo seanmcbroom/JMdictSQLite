@@ -1,6 +1,6 @@
-import type { JmdictParser } from '@/lib/parser/index.js';
+import type { JMdictParser } from '@/lib/parser/index.js';
 
-export default function sense(parser: JmdictParser) {
+export default function sense(parser: JMdictParser) {
   parser.entry?.senses.push({
     id: 0,
     ent_seq: 0,

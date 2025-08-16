@@ -1,7 +1,7 @@
 import { tagCategoryMap } from '@/lib/constants/tags.js';
-import type { JmdictParser } from '@/lib/parser/index.js';
+import type { JMdictParser } from '@/lib/parser/index.js';
 
-export default function pos(parser: JmdictParser, text: string) {
+export default function pos(parser: JMdictParser, text: string) {
   const lastSense = parser.lastSense;
 
   if (!lastSense) return;

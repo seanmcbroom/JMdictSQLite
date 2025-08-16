@@ -7,11 +7,11 @@ import * as zlib from 'zlib';
 
 const pipe = promisify(pipeline);
 
-async function downloadJmdict() {
+async function downloadJMdict() {
   const ftpUrl = 'ftp.edrdg.org';
   const ftpPath = '/pub/Nihongo/JMdict_e.gz';
   const localGzPath = path.join('data', 'JMdict_e.gz');
-  const localXmlPath = path.join('data', 'jmdict.xml');
+  const localXmlPath = path.join('data', 'JMdict.xml');
 
   // Ensure data directory exists
   fs.mkdirSync('data', { recursive: true });
@@ -58,4 +58,4 @@ async function downloadJmdict() {
   console.log('Cleanup complete.');
 }
 
-downloadJmdict();
+downloadJMdict();

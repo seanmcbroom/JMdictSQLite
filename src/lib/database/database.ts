@@ -3,13 +3,13 @@ import type { Database as DatabaseType, Statement } from 'better-sqlite3';
 
 import type { Entry, Sense } from '@/lib/types/database.js';
 
-export interface JmdictDatabaseInterface {
+export interface JMdictDatabaseInterface {
   insertEntry(entry: Entry): void;
   insertSense(sense: Sense): void;
   close(): void;
 }
 
-export class JmdictDatabase implements JmdictDatabaseInterface {
+export class JMdictDatabase implements JMdictDatabaseInterface {
   db: DatabaseType;
   insertEntryStmt!: Statement;
   insertSenseStmt!: Statement;

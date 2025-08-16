@@ -1,6 +1,6 @@
-import type { JmdictParser } from '@/lib/parser/index.js';
+import type { JMdictParser } from '@/lib/parser/index.js';
 
-export default function entry(parser: JmdictParser) {
+export default function entry(parser: JMdictParser) {
   const current = parser.entry;
 
   if (!current) return;
