@@ -1,7 +1,7 @@
 /**
  * Tag categories used in JMdict-based parsing.
  *
- * @see https://www.edrdg.org/jmwsgi/edhelp.py?svc=JMdict#kwabbr
+ * @see https://www.edrdg.org/jmwsgi/edhelp.py?svc=jmdict#kwabbr
  */
 export const tags = {
   pos: [
