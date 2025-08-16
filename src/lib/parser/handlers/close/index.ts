@@ -1,3 +1,4 @@
+import ant from './ant.js';
 import ent_seq from './ent_seq.js';
 import entry from './entry.js';
 import field from './field.js';
@@ -11,10 +12,12 @@ import re_inf from './re_inf.js';
 import re_pri from './re_pri.js';
 import reb from './reb.js';
 import s_inf from './s_inf.js';
+import xref from './xref.js';
 
 import { type CloseHandler } from '@/lib/types/parser.js';
 
 export default {
+  ant,
   entry,
   ent_seq,
   keb,
@@ -28,4 +31,5 @@ export default {
   pos,
   field,
   misc,
+  xref,
 } as Record<string, CloseHandler>;

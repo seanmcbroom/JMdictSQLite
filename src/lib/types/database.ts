@@ -1,3 +1,4 @@
+// Database Types
 export interface Entry {
   ent_seq: number; // PK
   kanji?: Written[];
@@ -20,6 +21,13 @@ export interface Sense {
   verb_data?: VerbData;
   fields?: string[];
   tags?: string[];
+  ant?: Ref[];
+  see?: Ref[];
+}
+
+export interface Ref {
+  written: string;
+  index?: string;
 }
 
 export interface VerbData {
@@ -27,6 +35,7 @@ export interface VerbData {
   transivity?: string;
 }
 
+// SQL Query Types
 export interface EntryDb {
   ent_seq: number; // PK
   kanji?: string; // JSON.stringify(WrittenElement[])
@@ -40,6 +49,8 @@ export interface SenseDb {
   glosses: string; // JSON.stringify(string[])
   pos: string; // JSON.stringify(string[])
   verb_data?: string; // JSON.stringify(VerbData)
-  fields?: string; // JSON.stringify(VerbData)
-  tags?: string; // JSON.stringify(VerbData)
+  fields?: string; // JSON.stringify(string[])
+  tags?: string; // JSON.stringify(string[])
+  ant?: string; // JSON.stringify(Ref[])
+  see?: string; // JSON.stringify(Ref[])
 }

@@ -14,5 +14,7 @@ export default function sense(parser: JmdictParser) {
     },
     fields: [],
     tags: [],
+    ant: [],
+    see: [],
   });
 }
