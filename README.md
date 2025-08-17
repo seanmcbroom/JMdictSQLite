@@ -29,8 +29,7 @@ FK = Foreign Key<br>
                                                   | verb_data?  TEXT     (JSON-encoded)               |
                                                   | field?      TEXT     (JSON-encoded)               |
                                                   | tags?       TEXT     (JSON-encoded)               |
-                                                  | ant?        TEXT     (JSON-encoded)               |
-                                                  | see?        TEXT     (JSON-encoded)               |
+                                                  | refs?       TEXT     (JSON-encoded)               |
                                                   └───────────────────────────────────────────────────┘
 ```
 ### SQLite Query Types (TypeScript)
@@ -50,8 +49,7 @@ export interface Sense {
   verb_data?: string; // JSON.stringify(VerbData)
   fields?: string; // JSON.stringify(string[])
   tags?: string; // JSON.stringify(string[])
-  ant?: string; // JSON.stringify(Ref[])
-  see?: string; // JSON.stringify(Ref[])
+  refs?: string; // JSON.stringify(Ref[])
 }
 
 export interface Written {
@@ -60,8 +58,9 @@ export interface Written {
 }
 
 export interface Ref {
-  written: string;
-  index?: string;
+  type: "see" | "ant";
+  ent_seq: number;
+  sense_id: number;
 }
 
 export interface VerbData {

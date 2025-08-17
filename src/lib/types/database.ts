@@ -51,6 +51,5 @@ export interface SenseDb {
   verb_data?: string; // JSON.stringify(VerbData)
   fields?: string; // JSON.stringify(string[])
   tags?: string; // JSON.stringify(string[])
-  ant?: string; // JSON.stringify(Ref[])
-  see?: string; // JSON.stringify(Ref[])
+  ref?: string; // JSON.stringify(string[])
 }
