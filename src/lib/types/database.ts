@@ -1,16 +1,21 @@
 // Database Types
+// Types used for parsing data from JMdict.
+// Do not use these types in your SQL querys.
+// Instead use the types from database-sql.ts
+
+// Entry Types
 export interface Entry {
   ent_seq: number; // PK
   kanji?: Written[];
   kana: Written[];
   senses: Sense[];
 }
-
 export interface Written {
   written: string;
   tags?: string[];
 }
 
+// Sense Types
 export interface Sense {
   id: number; // PK
   ent_seq: number; // FK
@@ -33,23 +38,4 @@ export interface Ref {
 export interface VerbData {
   verb_group: string;
   transivity?: string;
-}
-
-// SQL Query Types
-export interface EntryDb {
-  ent_seq: number; // PK
-  kanji?: string; // JSON.stringify(WrittenElement[])
-  kana: string; // JSON.stringify(WrittenElement[])
-}
-
-export interface SenseDb {
-  id: number; // PK
-  ent_seq: number; // FK
-  note?: string;
-  glosses: string; // JSON.stringify(string[])
-  pos: string; // JSON.stringify(string[])
-  verb_data?: string; // JSON.stringify(VerbData)
-  fields?: string; // JSON.stringify(string[])
-  tags?: string; // JSON.stringify(string[])
-  ref?: string; // JSON.stringify(string[])
 }
