@@ -6,7 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { JMdictProcessor } from '@/lib/processor/index.js';
-import type { EntryDb as Entry, SenseDb as Sense } from '@/lib/types/database';
+import type { EntrySQL as Entry, SenseSQL as Sense } from '@/lib/types/database';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
