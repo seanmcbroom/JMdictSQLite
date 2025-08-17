@@ -11,7 +11,7 @@ async function downloadJMdict() {
   const ftpUrl = 'ftp.edrdg.org';
   const ftpPath = '/pub/Nihongo/JMdict_e.gz';
   const localGzPath = path.join('data', 'JMdict_e.gz');
-  const localXmlPath = path.join('data', 'JMdict.xml');
+  const localXmlPath = path.join('data', 'jmdict.xml');
 
   // Ensure data directory exists
   fs.mkdirSync('data', { recursive: true });
