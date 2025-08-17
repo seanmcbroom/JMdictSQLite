@@ -1,5 +1,7 @@
 import type { Database as DatabaseType } from 'better-sqlite3';
 
+import { type RefSQL } from '@/lib/types/database-sql.js';
+
 export async function postProcessRefs(db: DatabaseType) {
   const updateStmt = db.prepare(`UPDATE senses SET refs = ? WHERE id = ?`);
 
@@ -38,7 +40,7 @@ export async function postProcessRefs(db: DatabaseType) {
   const refsToUpdate: { id: number; refs: string | null }[] = [];
 
   for (const sense of allSenses) {
-    const refs: { type: 'see' | 'ant'; ent_seq: number; sense_id: number }[] = [];
+    const refs: RefSQL[] = [];
 
     const processField = (field: 'see' | 'ant', jsonStr: string | null) => {
       if (!jsonStr) return;
@@ -52,7 +54,7 @@ export async function postProcessRefs(db: DatabaseType) {
           const targetSenses = entrySensesMap.get(ent_seq) || [];
 
           for (const ts of targetSenses) {
-            refs.push({ type: field, ent_seq, sense_id: ts.id });
+            refs.push({ type: field, ent_seq, sense_id: ts.id, written: obj.written });
           }
         }
       }

@@ -30,6 +30,7 @@ export interface RefSQL {
   type: 'see' | 'ant';
   ent_seq: number;
   sense_id: number;
+  written: string;
 }
 
 // Represents verb-specific metadata (after JSON.parse)

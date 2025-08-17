@@ -62,6 +62,7 @@ export interface Ref {
   type: "see" | "ant";
   ent_seq: number;
   sense_id: number;
+  written: string;
 }
 
 export interface VerbData {
