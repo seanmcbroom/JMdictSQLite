@@ -13,6 +13,9 @@ const __dirname = path.dirname(__filename);
 const xmlPath = path.resolve(`${__dirname}/data/jmdict-sample.xml`);
 const outPath = path.resolve(`${__dirname}/data/jmdict-test.sqlite`);
 
+type EntryOnlySearchResult = Pick<Entry, 'ent_seq' | 'kanji' | 'kana'>;
+type GlossSearchResult = Entry & Pick<Sense, 'id' | 'glosses' | 'pos' | 'tags'>;
+
 function validateJsonField(
   fieldName: string,
   jsonStr: string | null | undefined,
@@ -119,25 +122,96 @@ describe('JMDict Processor Suite', () => {
 
   it('should have valid JSON in senses fields', () => {
     const db = new Database(outPath);
-    const row = db
-      .prepare('SELECT glosses, pos, verb_data, fields, tags FROM senses LIMIT 1')
-      .get() as Sense;
+    const row = db.prepare('SELECT * FROM senses LIMIT 1').get() as Sense;
 
     validateJsonField('glosses', row.glosses);
     validateJsonField('pos', row.pos);
     validateJsonField('verb_data', row.verb_data, false);
     validateJsonField('fields', row.fields);
     validateJsonField('tags', row.tags);
+    validateJsonField('refs', row.ref, false);
 
     db.close();
   });
 
   it('should have valid JSON in entry fields', () => {
     const db = new Database(outPath);
-    const row = db.prepare('SELECT kana, kanji FROM entries LIMIT 1').get() as Entry;
+    const row = db
+      .prepare('SELECT kana, kanji FROM entries LIMIT 1')
+      .get() as EntryOnlySearchResult;
 
     validateJsonField('kana', row.kana, true);
     validateJsonField('kanji', row.kanji, true);
+
+    db.close();
+  });
+
+  it('should find entries containing the gloss "house"', () => {
+    const db = new Database(outPath);
+
+    const rows = db
+      .prepare(
+        `
+        SELECT e.ent_seq, e.kanji, e.kana, s.id AS id, s.glosses, s.pos, s.tags
+        FROM entries e
+        JOIN senses s ON e.ent_seq = s.ent_seq
+        WHERE EXISTS (
+          SELECT 1
+          FROM json_each(s.glosses) AS g
+          WHERE g.value LIKE '%house%'
+        )
+        ORDER BY e.ent_seq;
+      `,
+      )
+      .all() as GlossSearchResult[];
+
+    // Assert that at least one result exists
+    equal(rows.length > 0, true, 'No entries found for gloss "house"');
+
+    // Optional: validate structure of the first result
+    const first = rows[0];
+
+    equal(typeof first.ent_seq, 'number', 'ent_seq should be a number');
+    equal(typeof first.kana, 'string', 'kana should be a string');
+
+    if (first.kanji !== null) {
+      equal(typeof first.kanji, 'string', 'kanji should be a string if defined');
+    }
+
+    db.close();
+  });
+
+  it('should handle rapid repeated queries', () => {
+    const db = new Database(outPath);
+
+    const iterations = 100;
+    const start = performance.now();
+
+    for (let i = 0; i < iterations; i++) {
+      db.prepare(
+        `
+        SELECT *
+        FROM entries e
+        JOIN senses s ON e.ent_seq = s.ent_seq
+        WHERE EXISTS (
+          SELECT *
+          FROM json_each(s.glosses) AS g
+          WHERE g.value LIKE '%house%'
+        )
+      `,
+      ).all();
+    }
+
+    const end = performance.now();
+    const duration = end - start;
+    const avgTime = duration / iterations;
+
+    console.log(
+      `Ran ${iterations} queries in ${duration.toFixed(2)} ms (avg ${avgTime.toFixed(2)} ms per query)`,
+    );
+
+    // Each query should be reasonably fast (<50ms avg)
+    equal(avgTime < 50, true, `Average query time too long: ${avgTime.toFixed(2)}ms`);
 
     db.close();
   });
