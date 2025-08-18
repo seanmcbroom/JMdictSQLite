@@ -16,8 +16,27 @@ export class JMdictDatabase {
     this.db.pragma('foreign_keys = ON');
     this.db.exec(CREATE_TABLES_SQL);
 
+    this._setMeta('version', process.env.npm_package_version ?? 'unknown');
+    this._setMeta('language', 'en');
+    this._setMeta('license', 'GPLv2');
+
     this.insertEntryStmt = this.db.prepare(INSERT_ENTRY_SQL);
     this.insertSenseStmt = this.db.prepare(INSERT_SENSE_SQL);
+  }
+
+  _setMeta(key: string, value: string) {
+    const stmt = this.db.prepare(`
+
+
+      INSERT INTO meta (key, value) VALUES (?, ?)
+
+
+      ON CONFLICT(key) DO UPDATE SET value=excluded.value
+
+
+    `);
+
+    stmt.run(key, value);
   }
 
   insertEntry(entry: Entry) {
