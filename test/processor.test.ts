@@ -6,15 +6,15 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { JMdictProcessor } from '@/lib/processor/index.js';
-import type { EntrySQL as Entry, SenseSQL as Sense } from '@/lib/types/database-sql.js';
+import type { EntryQuery, SenseQuery } from '@/lib/types/database-query.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const xmlPath = path.resolve(`${__dirname}/data/jmdict-sample.xml`);
 const outPath = path.resolve(`${__dirname}/data/jmdict-test.sqlite`);
 
-type EntryOnlySearchResult = Pick<Entry, 'ent_seq' | 'kanji' | 'kana'>;
-type GlossSearchResult = Entry & Pick<Sense, 'id' | 'glosses' | 'pos' | 'tags'>;
+type EntryOnlySearchResult = Pick<EntryQuery, 'ent_seq' | 'kanji' | 'kana'>;
+type GlossSearchResult = EntryQuery & Pick<SenseQuery, 'id' | 'glosses' | 'pos' | 'tags'>;
 
 function validateJsonField(
   fieldName: string,
@@ -96,7 +96,7 @@ describe('JMDict Processor Suite', () => {
   it('should contain entries with expected structure', () => {
     // Assert
     const db = new Database(outPath);
-    const row = db.prepare('SELECT * FROM entries LIMIT 1').get() as Entry;
+    const row = db.prepare('SELECT * FROM entries LIMIT 1').get() as EntryQuery;
 
     equal(typeof row.ent_seq, 'number', 'ent_seq should be a number');
     equal(typeof row.kana, 'string', 'kana should be a string');
@@ -110,7 +110,7 @@ describe('JMDict Processor Suite', () => {
 
   it('should contain senses with expected structure', () => {
     const db = new Database(outPath);
-    const row = db.prepare('SELECT * FROM senses LIMIT 1').get() as Sense;
+    const row = db.prepare('SELECT * FROM senses LIMIT 1').get() as SenseQuery;
 
     equal(typeof row.id, 'number', 'id should be a number');
     equal(typeof row.ent_seq, 'number', 'ent_seq should be a number');
@@ -122,7 +122,7 @@ describe('JMDict Processor Suite', () => {
 
   it('should have valid JSON in senses fields', () => {
     const db = new Database(outPath);
-    const row = db.prepare('SELECT * FROM senses LIMIT 1').get() as Sense;
+    const row = db.prepare('SELECT * FROM senses LIMIT 1').get() as SenseQuery;
 
     validateJsonField('glosses', row.glosses);
     validateJsonField('pos', row.pos);
