@@ -8,7 +8,7 @@ export default function lsource(parser: JMdictParser, attributes: Tag['attribute
   if (!lastSense) return;
 
   if (attributes['xml:lang']) {
-    lastSense.lang = `${attributes['ls_type'] && 'semi-'}${attributes['xml:lang']}`;
+    lastSense.lang = `${attributes['ls_type'] ? 'semi-' : ''}${attributes['xml:lang']}`;
   } else if (attributes['ls_wasei']) {
     lastSense.lang = 'wasei';
   }
