@@ -40,9 +40,9 @@
     "@types/better-sqlite3": "7.6.13",
     "@types/node": "24.3.0",
     "@types/sax": "1.2.7",
-    "@typescript-eslint/eslint-plugin": "8.39.0",
+    "@typescript-eslint/eslint-plugin": "8.41.0",
     "copyfiles": "2.4.1",
-    "eslint": "9.33.0",
+    "eslint": "9.34.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-prettier": "5.5.4",
@@ -53,7 +53,7 @@
     "tsc-alias": "1.8.16",
     "tsx": "4.20.5",
     "typescript": "5.9.2",
-    "typescript-eslint": "8.39.1"
+    "typescript-eslint": "8.41.0"
   },
   "dependencies": {
     "basic-ftp": "5.0.5",
