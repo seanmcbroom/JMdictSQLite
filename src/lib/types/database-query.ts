@@ -3,8 +3,8 @@
 
 export interface EntryQuery {
   ent_seq: number; // PK
-  kanji?: string; // JSON.stringify(WrittenElement[])
-  kana: string; // JSON.stringify(WrittenElement[])
+  kanji?: string; // JSON.stringify(WrittenQuery[])
+  kana: string; // JSON.stringify(WrittenQuery[])
 }
 
 export interface SenseQuery {
@@ -23,6 +23,7 @@ export interface SenseQuery {
 export interface WrittenQuery {
   written: string;
   tags?: [];
+  restr?: [];
 }
 
 // Represents a reference to another sense (after JSON.parse)

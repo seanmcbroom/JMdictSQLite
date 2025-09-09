@@ -13,6 +13,7 @@ export interface Entry {
 export interface Written {
   written: string;
   tags?: string[];
+  restr?: string[];
 }
 
 // Sense Types

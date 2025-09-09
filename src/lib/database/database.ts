@@ -26,14 +26,8 @@ export class JMdictDatabase {
 
   _setMeta(key: string, value: string) {
     const stmt = this.db.prepare(`
-
-
       INSERT INTO meta (key, value) VALUES (?, ?)
-
-
       ON CONFLICT(key) DO UPDATE SET value=excluded.value
-
-
     `);
 
     stmt.run(key, value);
