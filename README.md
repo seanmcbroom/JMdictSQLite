@@ -11,11 +11,13 @@ This project transforms the JMdict XML dataset into a normalized, developer-frie
 - Ideal for full-text search, filtering, and offline usage
 
 ## _Database Schema Diagram_
-**⚠️[WARNING]: May be changed**<br>
-PK = Primary Key<br>
-FK = Foreign Key<br>
-`?` = possibly undefined<br>
-`entries.ent_seq` → `senses.ent_seq` (one-to-many)
+*`PK`* — Primary Key: uniquely identifies a row in the table.<br>
+*`FK`* — Foreign Key: links a row to another table’s primary key.<br>
+*`?`* — Possibly Undefined: the field may be NULL or omitted.<br>
+*`JSON-encoded`* — The column stores JSON data (arrays or objects).<br>
+*`AUTOINC`* — Auto-increment: the database automatically assigns a unique number.<br>
+*`entries.ent_seq → senses.ent_seq`* — One-to-Many relationship:<br>
+Each entry can have multiple senses, but each sense belongs to exactly one entry.<br>
 ```
 ┌────────────────────────────────────┐            ┌───────────────────────────────────────────────────┐
 │              entries               │◄───────────│                    senses                         │
@@ -54,8 +56,9 @@ export interface Sense {
 }
 
 export interface Written {
-  written: string
-  tags?: []
+  written: string;
+  tags?: [];
+  restr?: [];
 }
 
 export interface Ref {
