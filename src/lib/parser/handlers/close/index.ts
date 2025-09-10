@@ -10,6 +10,7 @@ import misc from './misc.js';
 import pos from './pos.js';
 import re_inf from './re_inf.js';
 import re_pri from './re_pri.js';
+import re_restr from './re_restr.js';
 import reb from './reb.js';
 import s_inf from './s_inf.js';
 import xref from './xref.js';
@@ -26,6 +27,7 @@ export default {
   reb,
   re_pri,
   re_inf,
+  re_restr,
   s_inf,
   gloss,
   pos,
