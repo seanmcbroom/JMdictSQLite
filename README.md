@@ -95,7 +95,7 @@ WHERE EXISTS (
 
 ## 🤝 Contributing
 
-I welcome anyone with interest to contribute! Please read the [Contributing Guide](./github/CONTRIBUTING.md) for details on how to get started.
+I welcome anyone with interest to contribute! Please read the [Contributing Guide](./.github/CONTRIBUTING.md) for details on how to get started.
 
 ## 📜 License
 This project contains components originally created by the **Electronic Dictionary Research and Development Group (EDRDG)**. These components are derived from data licensed under the **GNU General Public License Version 2 (GPLv2)**.
