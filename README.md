@@ -1,8 +1,8 @@
-# JMdictSQLite
+# 🇯🇵📘 JMdictSQLite
 A lightweight, SQLite-compatible version of the JMdict Japanese-English dictionary.<br>
 *Automatic daily releases @ 5AM UTC.*
 
-**Download latest:** https://github.com/seanmcbroom/JMdictSQLite/releases/download/latest/jmdict.sqlite
+**⬇️ Download latest:** [jmdict.sqlite](https://github.com/seanmcbroom/JMdictSQLite/releases/download/latest/jmdict.sqlite)
 
 ## What is the purpose?
 This project transforms the JMdict XML dataset into a normalized, developer-friendly SQLite format for use in apps, browser extensions, or any application needing a fast, local Japanese-English dictionary.
@@ -10,7 +10,7 @@ This project transforms the JMdict XML dataset into a normalized, developer-frie
 - Compact schema with JSON-encoded kanji, kana, and sense data
 - Ideal for full-text search, filtering, and offline usage
 
-## _Database Schema Diagram_
+## 🗂️ _Database Schema Diagram_
 *`PK`* — Primary Key: uniquely identifies a row in the table.<br>
 *`FK`* — Foreign Key: links a row to another table’s primary key.<br>
 *`?`* — Possibly Undefined: the field may be NULL or omitted.<br>
@@ -34,7 +34,7 @@ Each entry can have multiple senses, but each sense belongs to exactly one entry
                                                   | refs?       TEXT     (JSON-encoded)               |
                                                   └───────────────────────────────────────────────────┘
 ```
-### SQLite Query Types (TypeScript)
+### 📝 SQLite Query Types (TypeScript)
 ```ts
 export interface Entry {
   ent_seq: number; // PK
@@ -92,23 +92,11 @@ WHERE EXISTS (
   ) >= 1
 );
 ```
-## How to run locally
-Requires: node 22.11.00+, npm 10.9.0+
-```bash
-git clone https://github.com/seanmcbroom/JMdictSQLite
-```
-```bash
-cd JMdictSQLite
-```
-```bash
-npm ci
-```
-```bash
-npm run create-release
-```
-The resulting SQLite file will be generated at: `/data/jmdict.sqlite`<br>
-You are free to use or distribute the file in accordance with the terms of the [GPLv2 license](./LICENSE).
 
-## License
+## 🤝 Contributing
+
+I welcome anyone with interest to contribute! Please read the [Contributing Guide](./CONTRIBUTING.md) for details on how to get started.
+
+## 📜 License
 This project contains components originally created by the **Electronic Dictionary Research and Development Group (EDRDG)**. These components are derived from data licensed under the **GNU General Public License Version 2 (GPLv2)**.
 You are free to use, modify, and distribute this software under the terms of the GPLv2. A copy of the full license is included in the `LICENSE` file.
