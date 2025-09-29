@@ -38,11 +38,11 @@
   },
   "devDependencies": {
     "@types/better-sqlite3": "7.6.13",
-    "@types/node": "24.4.0",
+    "@types/node": "24.5.2",
     "@types/sax": "1.2.7",
     "@typescript-eslint/eslint-plugin": "8.44.0",
     "copyfiles": "2.4.1",
-    "eslint": "9.35.0",
+    "eslint": "9.36.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-prettier": "5.5.4",
@@ -51,13 +51,13 @@
     "rimraf": "6.0.1",
     "ts-node": "10.9.2",
     "tsc-alias": "1.8.16",
-    "tsx": "4.20.5",
+    "tsx": "4.20.6",
     "typescript": "5.9.2",
-    "typescript-eslint": "8.43.0"
+    "typescript-eslint": "8.44.1"
   },
   "dependencies": {
     "basic-ftp": "5.0.5",
-    "better-sqlite3": "12.2.0",
+    "better-sqlite3": "12.4.1",
     "sax": "1.4.1"
   }
 }
