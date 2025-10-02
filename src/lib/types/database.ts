@@ -38,5 +38,6 @@ export interface Ref {
 
 export interface VerbData {
   verb_group: string;
-  transivity?: string;
+  transitive?: true;
+  auxiliary?: true;
 }

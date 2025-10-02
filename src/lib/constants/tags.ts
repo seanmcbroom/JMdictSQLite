@@ -19,9 +19,6 @@ export const tags = {
     'adj-t',
     'adv',
     'adv-to',
-    'aux',
-    'aux-adj',
-    'aux-v',
     'conj',
     'cop',
     'ctr',
@@ -102,6 +99,8 @@ export const tags = {
   ],
 
   transitivity: ['vt', 'vi'],
+
+  auxiliary: ['aux', 'aux-adj', 'aux-v'],
 
   misc: [
     'abbr',

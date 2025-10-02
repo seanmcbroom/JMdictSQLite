@@ -10,12 +10,15 @@ export default function pos(parser: JMdictParser, text: string) {
   const verbData = lastSense.verb_data;
   const isVerb = category === 'verbGroup';
   const isTransitivity = category === 'transitivity';
+  const isAuxiliary = category == 'auxiliary';
 
   if (verbData && isVerb) {
     verbData.verb_group = text;
     lastSense.pos.push('v');
   } else if (verbData && isTransitivity) {
-    verbData.transivity = text;
+    verbData.transitive = true;
+  } else if (verbData && isAuxiliary) {
+    verbData.auxiliary = true;
   } else {
     lastSense.pos.push(text);
   }

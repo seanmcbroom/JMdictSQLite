@@ -37,5 +37,6 @@ export interface RefQuery {
 // Represents verb-specific metadata (after JSON.parse)
 export interface VerbDataSQL {
   verb_group: string;
-  transivity?: string;
+  transitive?: boolean;
+  auxiliary?: boolean;
 }
