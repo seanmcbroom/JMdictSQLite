@@ -1,4 +1,4 @@
-# 🇯🇵📘 JMdictSQLite
+# JMdictSQLite
 A lightweight, SQLite-compatible version of the JMdict Japanese-English dictionary.<br>
 *Automatic daily releases @ 5AM UTC.*
 
