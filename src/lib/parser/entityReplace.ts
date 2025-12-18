@@ -1,16 +1,16 @@
 // The purpose for string replacement is to replace elements in the XML file
 // that cannot be read by the parser directly.
-import { Transform } from 'stream';
+import { Transform } from 'node:stream';
 
 import { tags } from '@/lib/constants/tags.js';
 
 const entityMap: Record<string, string> = {};
 
-Object.values(tags).forEach(codes => {
+for (const codes of Object.values(tags)) {
   for (const code of codes) {
     entityMap[`&${code};`] = code;
   }
-});
+}
 
 // Transform stream to replace XML entities with their codes.
 // Handles edge cases where an entity (e.g., &adj-i;) might be split across chunks.
@@ -37,7 +37,7 @@ export default class EntityReplace extends Transform {
     }
 
     // Replace all complete entities in the current data
-    const replaced = data.replace(/&([a-zA-Z0-9\-]+);/g, (entity, code) => {
+    const replaced = data.replaceAll(/&([a-zA-Z0-9-]+);/g, (entity, code) => {
       const replacement = entityMap[entity] ?? code;
 
       return replacement;
@@ -50,7 +50,7 @@ export default class EntityReplace extends Transform {
   _flush(callback: (error?: Error | null) => void) {
     // At the end of the stream, process any remaining leftover data
     if (this.leftover) {
-      const flushed = this.leftover.replace(/&([a-zA-Z0-9\-]+);/g, (entity, code) => {
+      const flushed = this.leftover.replaceAll(/&([a-zA-Z0-9-]+);/g, (entity, code) => {
         const replacement = entityMap[entity] ?? code;
 
         return replacement;

@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'node:fs';
 
 import { JMdictDatabase } from '@/lib/database/index.js';
 import EntityReplace from '@/lib/parser/entityReplace.js';
