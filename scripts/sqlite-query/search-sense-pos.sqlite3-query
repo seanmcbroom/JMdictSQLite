@@ -1,9 +1,0 @@
--- database: ../../data/jmdict.sqlite
-
-SELECT *
-FROM senses
-WHERE (
-  SELECT COUNT(DISTINCT pos_tag.value)
-  FROM json_each(senses.pos) AS pos_tag
-  WHERE pos_tag.value IN ('prt', 'conj')
-) = 2;

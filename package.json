@@ -25,8 +25,7 @@
     "test:dev": "tsx --test test/**/*.test.ts",
 
     "4": "📦📘 JMdict/Packaging",
-    "download-jmdict": "tsx scripts/download-jmdict.ts",
-    "create-release": "npm run download-jmdict && npm run build && npm run start",
+    "create-release": "npm run build && npm run start",
 
     "5": "📁 File handling",
     "clean:dist": "rimraf dist",
