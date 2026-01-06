@@ -5,7 +5,7 @@ import { describe, it, before } from 'node:test';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { JMdictProcessor } from '@/lib/processor/index.js';
+import { Processor } from '@/lib/processor/index.js';
 import type { EntryQuery, SenseQuery } from '@/lib/types/database-query.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -39,7 +39,7 @@ function validateJsonField(
 
 describe('JMDict Processor Suite', () => {
   before(async () => {
-    const jmdictProcessor = new JMdictProcessor(xmlPath, outPath);
+    const jmdictProcessor = new Processor(xmlPath, '', outPath);
 
     await jmdictProcessor.process();
   });
