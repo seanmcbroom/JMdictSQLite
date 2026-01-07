@@ -1,13 +1,17 @@
-import type { tags } from '@/lib/constants/JMdictTags.js';
+import type { JMdictTags } from '@/lib/constants/JMdictTags.js';
 
-export type PosTag = (typeof tags.pos)[number];
-export type VerbGroupTag = (typeof tags.verbGroup)[number];
-export type TransivityTag = (typeof tags.transitivity)[number];
-export type MiscTag = (typeof tags.misc)[number];
-export type FieldTag = (typeof tags.field)[number];
-export type PriorityTag = (typeof tags.priority)[number];
-export type DialectTag = (typeof tags.dialect)[number];
-export type KanjiTag = (typeof tags.kanji)[number];
+export type TagDictionary = {
+  readonly [category: string]: readonly string[];
+};
+
+export type PosTag = (typeof JMdictTags.pos)[number];
+export type VerbGroupTag = (typeof JMdictTags.verbGroup)[number];
+export type TransivityTag = (typeof JMdictTags.transitivity)[number];
+export type MiscTag = (typeof JMdictTags.misc)[number];
+export type FieldTag = (typeof JMdictTags.field)[number];
+export type PriorityTag = (typeof JMdictTags.priority)[number];
+export type DialectTag = (typeof JMdictTags.dialect)[number];
+export type KanjiTag = (typeof JMdictTags.kanji)[number];
 
 export type AllTag =
   | PosTag

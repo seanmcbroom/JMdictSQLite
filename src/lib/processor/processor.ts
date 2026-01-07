@@ -1,14 +1,11 @@
 import fs from 'node:fs';
 
+import { JMdictTags } from '@/lib/constants/JMdictTags.js';
+import { KanjidicTags } from '@/lib/constants/KanjidicTags.js';
 import { JMDictSQLiteDatabase } from '@/lib/database/index.js';
-import {
-  JMdictParser,
-  EntityReplace as JMdictEntityReplace,
-} from '@/lib/parsers/JMdictParser/index.js';
-import {
-  KanjidicParser,
-  EntityReplace as KanjidicEntityReplace,
-} from '@/lib/parsers/KanjidicParser/index.js';
+import { JMdictParser } from '@/lib/parsers/JMdictParser/index.js';
+import { KanjidicParser } from '@/lib/parsers/KanjidicParser/index.js';
+import { EntityReplace } from '@/lib/util/EntityReplace.js';
 
 export class Processor {
   private readonly jmdictXMLPath: string;
@@ -42,7 +39,7 @@ export class Processor {
         .createReadStream(this.jmdictXMLPath, {
           encoding: 'utf8',
         })
-        .pipe(new JMdictEntityReplace()),
+        .pipe(new EntityReplace(JMdictTags)),
     );
 
     console.log(
@@ -56,7 +53,7 @@ export class Processor {
         .createReadStream(this.kanjidicXMLPath, {
           encoding: 'utf8',
         })
-        .pipe(new KanjidicEntityReplace()),
+        .pipe(new EntityReplace(KanjidicTags)),
     );
 
     console.log(`Done parsing Kanjidic.`);

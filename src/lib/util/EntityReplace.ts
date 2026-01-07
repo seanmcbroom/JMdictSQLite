@@ -2,20 +2,23 @@
 // that cannot be read by the parser directly.
 import { Transform } from 'node:stream';
 
-import { tags } from '@/lib/constants/JMdictTags.js';
-
-const entityMap: Record<string, string> = {};
-
-for (const codes of Object.values(tags)) {
-  for (const code of codes) {
-    entityMap[`&${code};`] = code;
-  }
-}
+import type { TagDictionary } from '@/lib/types/tags';
 
 // Transform stream to replace XML entities with their codes.
 // Handles edge cases where an entity (e.g., &adj-i;) might be split across chunks.
 export class EntityReplace extends Transform {
   private leftover = '';
+  private readonly entityMap: Record<string, string> = {};
+
+  constructor(tags: TagDictionary) {
+    super();
+
+    for (const codes of Object.values(tags)) {
+      for (const code of codes) {
+        this.entityMap[`&${code};`] = code;
+      }
+    }
+  }
 
   _transform(
     chunk: Buffer,
@@ -42,7 +45,7 @@ export class EntityReplace extends Transform {
 
     // Replace all complete entities in the current data
     const replaced = data.replaceAll(/&([a-zA-Z0-9-]+);/g, (entity, code) => {
-      const replacement = entityMap[entity] ?? code;
+      const replacement = this.entityMap[entity] ?? code;
 
       return replacement;
     });
@@ -57,7 +60,7 @@ export class EntityReplace extends Transform {
       const flushed = this.leftover.replaceAll(
         /&([a-zA-Z0-9-]+);/g,
         (entity, code) => {
-          const replacement = entityMap[entity] ?? code;
+          const replacement = this.entityMap[entity] ?? code;
 
           return replacement;
         },

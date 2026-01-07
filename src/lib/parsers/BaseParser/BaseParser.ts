@@ -44,7 +44,7 @@ export abstract class BaseParser<P extends BaseParser<P>> {
       inputStream.pipe(this.parser);
 
       this.parser.once('end', () => resolve());
-      this.parser.once('error', (err) => reject(err));
+      this.parser.once('error', err => reject(err));
     });
   }
 
