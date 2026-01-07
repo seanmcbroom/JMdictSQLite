@@ -7,28 +7,61 @@ import { JMdictParser } from '@/lib/parsers/JMdictParser/index.js';
 import { KanjidicParser } from '@/lib/parsers/KanjidicParser/index.js';
 import { EntityReplace } from '@/lib/util/EntityReplace.js';
 
+/**
+ * Orchestrates parsing of JMdict and Kanjidic XML files and
+ * persists the parsed data into a SQLite database.
+ *
+ * This class is responsible for:
+ * - Creating and managing the database connection
+ * - Streaming XML files from disk
+ * - Replacing XML entities using predefined tag mappings
+ * - Delegating parsing logic to the appropriate parser
+ */
 export class Processor {
   private readonly jmdictXMLPath: string;
   private readonly kanjidicXMLPath: string;
   private readonly outputPath: string;
   private readonly db: JMDictSQLiteDatabase;
+  private readonly verbose: boolean;
 
+  /**
+   * Creates a new Processor instance.
+   *
+   * @param params - Configuration options for the processor
+   * @param params.jmdictXMLPath - Path to the JMdict XML file
+   * @param params.kanjidicXMLPath - Path to the Kanjidic XML file
+   * @param params.outputPath - Path where the SQLite database will be created
+   */
   constructor({
     jmdictXMLPath,
     kanjidicXMLPath,
     outputPath,
+    verbose = true,
   }: {
     jmdictXMLPath: string;
     kanjidicXMLPath: string;
     outputPath: string;
+    verbose?: boolean;
   }) {
     this.jmdictXMLPath = jmdictXMLPath;
     this.kanjidicXMLPath = kanjidicXMLPath;
     this.outputPath = outputPath;
+    this.verbose = verbose;
 
     this.db = new JMDictSQLiteDatabase(this.outputPath);
   }
 
+  /**
+   * Executes the full parsing pipeline.
+   *
+   * This method:
+   * 1. Streams and parses the JMdict XML file
+   * 2. Streams and parses the Kanjidic XML file
+   * 3. Logs timing information for each stage
+   * 4. Closes the database connection when complete
+   *
+   * @returns A promise that resolves when processing is finished
+   */
   public async process(): Promise<void> {
     const startTime = Date.now();
 
@@ -42,9 +75,10 @@ export class Processor {
         .pipe(new EntityReplace(JMdictTags)),
     );
 
-    console.log(
-      `Done parsing JMdict. ${((Date.now() - startTime) / 1000).toFixed(2)}s elapsed.`,
-    );
+    if (this.verbose)
+      console.log(
+        `Done parsing JMdict. ${((Date.now() - startTime) / 1000).toFixed(2)}s elapsed.`,
+      );
 
     const kanjidicParser = new KanjidicParser(this.db);
 
@@ -56,12 +90,13 @@ export class Processor {
         .pipe(new EntityReplace(KanjidicTags)),
     );
 
-    console.log(`Done parsing Kanjidic.`);
+    if (this.verbose) console.log(`Done parsing Kanjidic.`);
 
     this.db.close();
 
-    console.log(
-      `All done. Time elapsed: ${((Date.now() - startTime) / 1000).toFixed(2)}s`,
-    );
+    if (this.verbose)
+      console.log(
+        `All done. Time elapsed: ${((Date.now() - startTime) / 1000).toFixed(2)}s`,
+      );
   }
 }

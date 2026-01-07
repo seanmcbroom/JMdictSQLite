@@ -11,4 +11,12 @@ export class KanjidicParser extends BaseParser<KanjidicParser> {
       closeTagHandlers,
     });
   }
+
+  protected flush() {
+    if (this.buffer.length === 0) return;
+
+    // this.db.insertEntries(this.buffer);
+
+    this.buffer.length = 0;
+  }
 }
