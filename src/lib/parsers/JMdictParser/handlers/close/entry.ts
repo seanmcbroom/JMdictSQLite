@@ -7,9 +7,5 @@ export default function entry(parser: JMdictParser) {
 
   parser.bufferRef.push(current);
 
-  if (parser.bufferRef.length >= parser.batchSizeRef) {
-    parser.flush();
-  }
-
   parser.entry = undefined;
 }
