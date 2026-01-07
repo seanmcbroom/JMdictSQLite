@@ -319,7 +319,20 @@ export const tags = {
     'nf48',
   ],
 
-  dialect: ['ksb', 'hob', 'bra', 'ktb', 'kyb', 'kyu', 'nab', 'osb', 'rkb', 'tsb', 'thb', 'tsug'],
+  dialect: [
+    'ksb',
+    'hob',
+    'bra',
+    'ktb',
+    'kyb',
+    'kyu',
+    'nab',
+    'osb',
+    'rkb',
+    'tsb',
+    'thb',
+    'tsug',
+  ],
 
   kanji: ['ateji', 'iK', 'ik', 'io', 'oK', 'rK', 'sK'],
 

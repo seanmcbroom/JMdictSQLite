@@ -1,12 +1,14 @@
 import fs from 'node:fs';
-import { finished } from 'stream/promises';
 
 import { JMDictSQLiteDatabase } from '@/lib/database/index.js';
-import { JMdictParser, EntityReplace as JMdictEntityReplace } from '@/lib/JMdictParser/index.js';
+import {
+  JMdictParser,
+  EntityReplace as JMdictEntityReplace,
+} from '@/lib/parsers/JMdictParser/index.js';
 import {
   KanjidicParser,
   EntityReplace as KanjidicEntityReplace,
-} from '@/lib/KanjidicParser/index.js';
+} from '@/lib/parsers/KanjidicParser/index.js';
 
 export class Processor {
   private readonly jmdictXMLPath: string;
@@ -33,27 +35,32 @@ export class Processor {
   public async process(): Promise<void> {
     const startTime = Date.now();
 
-    const jmdictStream = fs
-      .createReadStream(this.jmdictXMLPath, { encoding: 'utf8' })
-      .pipe(new JMdictEntityReplace())
-      .pipe(new JMdictParser(this.db).getStream());
+    const jmdictParser = new JMdictParser(this.db);
 
-    const kanjidicStream = fs
-      .createReadStream(this.kanjidicXMLPath, { encoding: 'utf8' })
-      .pipe(new KanjidicEntityReplace())
-      .pipe(new KanjidicParser(this.db).getStream());
+    await jmdictParser.parse(
+      fs
+        .createReadStream(this.jmdictXMLPath, {
+          encoding: 'utf8',
+        })
+        .pipe(new JMdictEntityReplace()),
+    );
 
-    try {
-      await Promise.all([finished(jmdictStream), finished(kanjidicStream)]);
+    console.log(`Done parsing JMdict. ${((Date.now() - startTime) / 1000).toFixed(2)}s elapsed.`);
 
-      console.log(
-        `✅ Done parsing JMdict & Kanjidic. Time elapsed: ${(
-          (Date.now() - startTime) /
-          1000
-        ).toFixed(2)}s`,
-      );
-    } finally {
-      this.db.close();
-    }
+    const kanjidicParser = new KanjidicParser(this.db);
+
+    await kanjidicParser.parse(
+      fs
+        .createReadStream(this.kanjidicXMLPath, {
+          encoding: 'utf8',
+        })
+        .pipe(new KanjidicEntityReplace()),
+    );
+
+    console.log(`Done parsing Kanjidic.`);
+
+    this.db.close();
+
+    console.log(`All done. Time elapsed: ${((Date.now() - startTime) / 1000).toFixed(2)}s`);
   }
 }
