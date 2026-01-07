@@ -7,9 +7,8 @@ import tseslint from 'typescript-eslint';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
+  // TypeScript recommended and stylistic configs
   ...tseslint.configs.recommended,
-  ...tseslint.configs.stylistic,
-
   {
     files: ['**/*.{ts,tsx,js,jsx,mjs,cjs}'],
     languageOptions: {
@@ -24,31 +23,22 @@ export default [
       prettier: eslintPluginPrettier,
     },
     rules: {
-      // Prettier formatting rules as ESLint errors
-      'prettier/prettier': 'error',
+      // -------------------------
+      // Prettier formatting
+      // -------------------------
+      // Prettier handles all code style: line length, indentation, spacing, blank lines
+      'prettier/prettier': ['error', { printWidth: 80 }],
 
-      '@typescript-eslint/indent': ['error', 2],
+      // -------------------------
+      // TypeScript-specific rules
+      // -------------------------
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/no-unused-vars': 'off', // handled by unused-imports
 
-      'padding-line-between-statements': [
-        'error',
-        { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
-        { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
-
-        { blankLine: 'always', prev: '*', next: 'return' },
-
-        { blankLine: 'always', prev: '*', next: ['if', 'for', 'while', 'switch', 'try'] },
-        { blankLine: 'always', prev: ['if', 'for', 'while', 'switch', 'try'], next: '*' },
-
-        { blankLine: 'always', prev: '*', next: 'function' },
-        { blankLine: 'always', prev: 'function', next: '*' },
-
-        { blankLine: 'always', prev: '*', next: 'class' },
-        { blankLine: 'always', prev: 'class', next: '*' },
-
-        { blankLine: 'always', prev: 'break', next: '*' },
-      ],
-
-      // Unused imports
+      // -------------------------
+      // Unused imports / variables
+      // -------------------------
       'unused-imports/no-unused-imports': 'error',
       'unused-imports/no-unused-vars': [
         'warn',
@@ -60,7 +50,9 @@ export default [
         },
       ],
 
-      // Import sorting
+      // -------------------------
+      // Import rules
+      // -------------------------
       'import/order': [
         'warn',
         {
@@ -72,7 +64,6 @@ export default [
           },
         },
       ],
-
       'import/extensions': [
         'error',
         'ignorePackages',
@@ -87,19 +78,21 @@ export default [
           ignore: ['\\.js$', '\\.json$'],
         },
       ],
-
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/consistent-type-imports': 'error',
-      '@typescript-eslint/no-unused-vars': 'off',
     },
   },
 
+  // -------------------------
+  // Prettier rules override
+  // -------------------------
   {
     rules: {
       ...prettierConfig.rules,
     },
   },
 
+  // -------------------------
+  // Ignored files
+  // -------------------------
   {
     ignores: ['dist/**/*', 'eslint.config.js'],
   },

@@ -16,7 +16,10 @@ async function downloadEDRDGArchive(filename: string): Promise<string> {
   const ftpUrl = 'ftp.edrdg.org';
   const ftpPath = `/pub/Nihongo/${filename}.gz`;
   const localGzPath = path.join('data', `${filename}.gz`);
-  const localXmlPath = path.join('data', `${filename}.xml`);
+  const localXmlPath = path.join(
+    'data',
+    `${filename.endsWith('.xml') ? filename.slice(0, -4) : filename}.xml`, // Prevents double file extensions
+  );
 
   // Ensure data directory exists
   fs.mkdirSync('data', { recursive: true });
@@ -68,6 +71,6 @@ async function downloadEDRDGArchive(filename: string): Promise<string> {
 
 const downloadJMdict = () => downloadEDRDGArchive('JMdict_e');
 const downloadJMnedict = () => downloadEDRDGArchive('JMnedict_e');
-const downloadKanjidic = () => downloadEDRDGArchive('kanjidic');
+const downloadKanjidic = () => downloadEDRDGArchive('kanjidic2.xml');
 
 export { downloadJMdict, downloadJMnedict, downloadKanjidic };
