@@ -1,4 +1,4 @@
-import type { tags } from '@/lib/constants/tags.js';
+import type { tags } from '@/lib/constants/JMdictTags.js';
 
 export type PosTag = (typeof tags.pos)[number];
 export type VerbGroupTag = (typeof tags.verbGroup)[number];

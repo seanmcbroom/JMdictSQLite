@@ -6,9 +6,8 @@ import { downloadJMdict, downloadKanjidic } from '@/lib/util/download-edrdg-arch
 const jmdictPath = await downloadJMdict();
 const kanjidicPath = await downloadKanjidic();
 
-const jmdictXMLPath = path.resolve(jmdictPath);
-const kanjidicXMLPath = path.resolve(kanjidicPath);
-
-const outPath = path.resolve('./data/jmdict.sqlite');
-
-new Processor(jmdictXMLPath, kanjidicXMLPath, outPath).process();
+new Processor({
+  jmdictXMLPath: path.resolve(jmdictPath),
+  kanjidicXMLPath: path.resolve(kanjidicPath),
+  outputPath: path.resolve('./data/jmdict.sqlite'),
+}).process();

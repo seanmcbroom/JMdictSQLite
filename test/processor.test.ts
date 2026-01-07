@@ -10,7 +10,7 @@ import type { EntryQuery, SenseQuery } from '@/lib/types/database-query.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const xmlPath = path.resolve(`${__dirname}/data/jmdict-sample.xml`);
+
 const outPath = path.resolve(`${__dirname}/data/jmdict-test.sqlite`);
 
 type EntryOnlySearchResult = Pick<EntryQuery, 'ent_seq' | 'kanji' | 'kana'>;
@@ -39,7 +39,11 @@ function validateJsonField(
 
 describe('JMDict Processor Suite', () => {
   before(async () => {
-    const jmdictProcessor = new Processor(xmlPath, '', outPath);
+    const jmdictProcessor = new Processor({
+      jmdictXMLPath: path.resolve(`${__dirname}/data/jmdict-sample.xml`),
+      kanjidicXMLPath: path.resolve(`${__dirname}/data/kanjidic2-sample.xml`),
+      outputPath: outPath,
+    });
 
     await jmdictProcessor.process();
   });
