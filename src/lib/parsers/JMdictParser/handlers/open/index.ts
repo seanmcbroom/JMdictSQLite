@@ -4,6 +4,7 @@ import lsource from './lsource.js';
 import r_ele from './r_ele.js';
 import sense from './sense.js';
 
+import type { JMdictParser } from '@/lib/parsers/JMdictParser/index.js';
 import { type OpenTagHandlers } from '@/lib/types/parser.js';
 
 export default {
@@ -12,4 +13,4 @@ export default {
   r_ele,
   sense,
   lsource,
-} as OpenTagHandlers;
+} as OpenTagHandlers<JMdictParser>;
