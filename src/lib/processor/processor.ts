@@ -65,7 +65,7 @@ export class Processor {
   public async process(): Promise<void> {
     const startTime = Date.now();
 
-    const jmdictParser = new JMdictParser(this.db);
+    const jmdictParser = await JMdictParser.create(this.db);
 
     await jmdictParser.parse(
       fs
@@ -80,7 +80,7 @@ export class Processor {
         `Done parsing JMdict. ${((Date.now() - startTime) / 1000).toFixed(2)}s elapsed.`,
       );
 
-    const kanjidicParser = new KanjidicParser(this.db);
+    const kanjidicParser = await KanjidicParser.create(this.db);
 
     await kanjidicParser.parse(
       fs

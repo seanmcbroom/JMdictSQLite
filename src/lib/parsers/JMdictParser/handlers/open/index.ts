@@ -1,16 +1,24 @@
-import entry from './entry.js';
-import k_ele from './k_ele.js';
-import lsource from './lsource.js';
-import r_ele from './r_ele.js';
-import sense from './sense.js';
+import fs from 'node:fs';
+import path from 'node:path';
 
 import type { JMdictParser } from '@/lib/parsers/JMdictParser/index.js';
-import { type OpenTagHandlers } from '@/lib/types/parser.js';
+import type { OpenTagHandlers } from '@/lib/types/parser.js';
 
-export default {
-  entry,
-  k_ele,
-  r_ele,
-  sense,
-  lsource,
-} as OpenTagHandlers<JMdictParser>;
+export default async function loadHandlers(): Promise<
+  OpenTagHandlers<JMdictParser>
+> {
+  const dirPath = path.dirname(new URL('./open/', import.meta.url).pathname);
+  const files = fs.readdirSync(dirPath);
+
+  const handlers: Partial<OpenTagHandlers<JMdictParser>> = {};
+
+  for (const file of files) {
+    if (file.endsWith('.ts') || file.endsWith('.js')) {
+      const name = path.basename(file, path.extname(file));
+      const module = await import(path.join(dirPath, file));
+      handlers[name] = module.default;
+    }
+  }
+
+  return handlers as OpenTagHandlers<JMdictParser>;
+}

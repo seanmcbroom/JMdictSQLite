@@ -1,9 +1,10 @@
 import { BaseParser } from '../BaseParser/BaseParser.js';
 
 import type { JMDictSQLiteDatabase } from '@/lib/database/index.js';
-import closeTagHandlers from '@/lib/parsers/JMdictParser/handlers/close/index.js';
-import openTagHandlers from '@/lib/parsers/JMdictParser/handlers/open/index.js';
+import closeTagHandlersPromise from '@/lib/parsers/JMdictParser/handlers/close/index.js';
+import openTagHandlersPromise from '@/lib/parsers/JMdictParser/handlers/open/index.js';
 import type { Entry } from '@/lib/types/database.js';
+import type { CloseTagHandlers, OpenTagHandlers } from '@/lib/types/parser.js';
 
 /**
  * Streaming parser for the JMdict XML dictionary.
@@ -22,16 +23,28 @@ export class JMdictParser extends BaseParser<JMdictParser> {
   protected currentEntry: Entry | undefined;
 
   /**
+   * Async factory method to create a JMdictParser instance.
+   * You can't make `constructor` itself `async` in TS,
+   * so we use a static `create` method instead.
+   */
+  public static async create(db: JMDictSQLiteDatabase) {
+    const openTagHandlers = await openTagHandlersPromise();
+    const closeTagHandlers = await closeTagHandlersPromise();
+
+    return new JMdictParser(db, openTagHandlers, closeTagHandlers);
+  }
+
+  /**
    * Creates a new JMdict parser instance.
    *
    * @param db - SQLite database used to persist parsed entries
    */
-  constructor(db: JMDictSQLiteDatabase) {
-    super({
-      db,
-      openTagHandlers,
-      closeTagHandlers,
-    });
+  private constructor(
+    db: JMDictSQLiteDatabase,
+    openTagHandlers: OpenTagHandlers<JMdictParser>,
+    closeTagHandlers: CloseTagHandlers<JMdictParser>,
+  ) {
+    super({ db, openTagHandlers, closeTagHandlers });
   }
 
   /**
