@@ -90,7 +90,7 @@ describe('JMDict Processor Suite', () => {
       .all() as {
       name: string;
     }[];
-    const actualTables = rows.map(row => row.name);
+    const actualTables = rows.map((row) => row.name);
 
     db.close();
 

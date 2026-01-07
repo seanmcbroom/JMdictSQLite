@@ -345,6 +345,6 @@ export const tags = {
  */
 export const tagCategoryMap = Object.fromEntries(
   Object.entries(tags).flatMap(([category, values]) =>
-    values.map(tag => [tag, category as keyof typeof tags]),
+    values.map((tag) => [tag, category as keyof typeof tags]),
   ),
 );

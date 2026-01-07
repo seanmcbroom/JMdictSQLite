@@ -45,7 +45,9 @@ export class Processor {
         .pipe(new JMdictEntityReplace()),
     );
 
-    console.log(`Done parsing JMdict. ${((Date.now() - startTime) / 1000).toFixed(2)}s elapsed.`);
+    console.log(
+      `Done parsing JMdict. ${((Date.now() - startTime) / 1000).toFixed(2)}s elapsed.`,
+    );
 
     const kanjidicParser = new KanjidicParser(this.db);
 
@@ -61,6 +63,8 @@ export class Processor {
 
     this.db.close();
 
-    console.log(`All done. Time elapsed: ${((Date.now() - startTime) / 1000).toFixed(2)}s`);
+    console.log(
+      `All done. Time elapsed: ${((Date.now() - startTime) / 1000).toFixed(2)}s`,
+    );
   }
 }

@@ -26,32 +26,15 @@ export default [
       // -------------------------
       // Prettier formatting
       // -------------------------
-      'prettier/prettier': 'error',
+      // Prettier handles all code style: line length, indentation, spacing, blank lines
+      'prettier/prettier': ['error', { printWidth: 80 }],
 
       // -------------------------
       // TypeScript-specific rules
       // -------------------------
-      '@typescript-eslint/indent': ['error', 2],
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/no-unused-vars': 'off', // handled by unused-imports
-
-      // -------------------------
-      // Padding between statements
-      // -------------------------
-      'padding-line-between-statements': [
-        'error',
-        { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
-        { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
-        { blankLine: 'always', prev: '*', next: 'return' },
-        { blankLine: 'always', prev: '*', next: ['if', 'for', 'while', 'switch', 'try'] },
-        { blankLine: 'always', prev: ['if', 'for', 'while', 'switch', 'try'], next: '*' },
-        { blankLine: 'always', prev: '*', next: 'function' },
-        { blankLine: 'always', prev: 'function', next: '*' },
-        { blankLine: 'always', prev: '*', next: 'class' },
-        { blankLine: 'always', prev: 'class', next: '*' },
-        { blankLine: 'always', prev: 'break', next: '*' },
-      ],
 
       // -------------------------
       // Unused imports / variables

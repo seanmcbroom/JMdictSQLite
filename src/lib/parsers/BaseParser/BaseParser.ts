@@ -21,7 +21,12 @@ export abstract class BaseParser<P extends BaseParser<P>> {
   protected readonly openTagHandlers: OpenTagHandlers<P>;
   protected readonly closeTagHandlers: CloseTagHandlers<P>;
 
-  constructor({ db, openTagHandlers, closeTagHandlers, batchSize = 500 }: ParserOptions<P>) {
+  constructor({
+    db,
+    openTagHandlers,
+    closeTagHandlers,
+    batchSize = 500,
+  }: ParserOptions<P>) {
     this.db = db;
     this.openTagHandlers = openTagHandlers;
     this.closeTagHandlers = closeTagHandlers;
@@ -39,7 +44,7 @@ export abstract class BaseParser<P extends BaseParser<P>> {
       inputStream.pipe(this.parser);
 
       this.parser.once('end', () => resolve());
-      this.parser.once('error', err => reject(err));
+      this.parser.once('error', (err) => reject(err));
     });
   }
 
