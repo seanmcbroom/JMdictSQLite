@@ -3,10 +3,13 @@ import type { Database as DatabaseType, Statement } from 'better-sqlite3';
 
 import { runPostProcesses } from '@/lib/database/postprocess/index.js';
 import { CREATE_TABLES_SQL } from '@/lib/database/schema.js';
-import { INSERT_ENTRY_SQL, INSERT_SENSE_SQL } from '@/lib/database/statements.js';
+import {
+  INSERT_ENTRY_SQL,
+  INSERT_SENSE_SQL,
+} from '@/lib/database/statements.js';
 import type { Entry, Sense } from '@/lib/types/database';
 
-export class JMdictDatabase {
+export class JMDictSQLiteDatabase {
   db: DatabaseType;
   insertEntryStmt!: Statement;
   insertSenseStmt!: Statement;

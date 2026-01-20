@@ -5,16 +5,17 @@ import { describe, it, before } from 'node:test';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { JMdictProcessor } from '@/lib/processor/index.js';
+import { Processor } from '@/lib/processor/index.js';
 import type { EntryQuery, SenseQuery } from '@/lib/types/database-query.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const xmlPath = path.resolve(`${__dirname}/data/jmdict-sample.xml`);
+
 const outPath = path.resolve(`${__dirname}/data/jmdict-test.sqlite`);
 
 type EntryOnlySearchResult = Pick<EntryQuery, 'ent_seq' | 'kanji' | 'kana'>;
-type GlossSearchResult = EntryQuery & Pick<SenseQuery, 'id' | 'glosses' | 'pos' | 'tags'>;
+type GlossSearchResult = EntryQuery &
+  Pick<SenseQuery, 'id' | 'glosses' | 'pos' | 'tags'>;
 
 function validateJsonField(
   fieldName: string,
@@ -39,7 +40,11 @@ function validateJsonField(
 
 describe('JMDict Processor Suite', () => {
   before(async () => {
-    const jmdictProcessor = new JMdictProcessor(xmlPath, outPath);
+    const jmdictProcessor = new Processor({
+      jmdictXMLPath: path.resolve(`${__dirname}/data/jmdict-sample.xml`),
+      kanjidicXMLPath: path.resolve(`${__dirname}/data/kanjidic2-sample.xml`),
+      outputPath: outPath,
+    });
 
     await jmdictProcessor.process();
   });
@@ -80,7 +85,9 @@ describe('JMDict Processor Suite', () => {
     const db = new Database(outPath);
 
     // Act
-    const rows = db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all() as {
+    const rows = db
+      .prepare("SELECT name FROM sqlite_master WHERE type='table'")
+      .all() as {
       name: string;
     }[];
     const actualTables = rows.map(row => row.name);
@@ -114,7 +121,11 @@ describe('JMDict Processor Suite', () => {
 
     equal(typeof row.id, 'number', 'id should be a number');
     equal(typeof row.ent_seq, 'number', 'ent_seq should be a number');
-    equal(typeof row.glosses, 'string', 'glosses should be a JSON-encoded string');
+    equal(
+      typeof row.glosses,
+      'string',
+      'glosses should be a JSON-encoded string',
+    );
     equal(typeof row.pos, 'string', 'pos should be a JSON-encoded string');
 
     db.close();
@@ -175,7 +186,11 @@ describe('JMDict Processor Suite', () => {
     equal(typeof first.kana, 'string', 'kana should be a string');
 
     if (first.kanji !== null) {
-      equal(typeof first.kanji, 'string', 'kanji should be a string if defined');
+      equal(
+        typeof first.kanji,
+        'string',
+        'kanji should be a string if defined',
+      );
     }
 
     db.close();
@@ -211,7 +226,11 @@ describe('JMDict Processor Suite', () => {
     );
 
     // Each query should be reasonably fast (<50ms avg)
-    equal(avgTime < 50, true, `Average query time too long: ${avgTime.toFixed(2)}ms`);
+    equal(
+      avgTime < 50,
+      true,
+      `Average query time too long: ${avgTime.toFixed(2)}ms`,
+    );
 
     db.close();
   });

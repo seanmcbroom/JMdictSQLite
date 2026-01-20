@@ -1,0 +1,25 @@
+import { tagCategoryMap } from '@/lib/constants/JMdictTags.js';
+import type { JMdictParser } from '@/lib/parsers/JMdictParser/index.js';
+
+export default function pos(parser: JMdictParser, text: string) {
+  const lastSense = parser.lastSense;
+
+  if (!lastSense) return;
+
+  const category = tagCategoryMap[text];
+  const verbData = lastSense.verb_data;
+  const isVerb = category === 'verbGroup';
+  const isTransitivity = category === 'transitivity';
+  const isAuxiliary = category == 'auxiliary';
+
+  if (verbData && isVerb) {
+    verbData.verb_group = text;
+    lastSense.pos.push('v');
+  } else if (verbData && isTransitivity) {
+    verbData.transitive = true;
+  } else if (verbData && isAuxiliary) {
+    verbData.auxiliary = true;
+  } else {
+    lastSense.pos.push(text);
+  }
+}
