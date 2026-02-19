@@ -1,5 +1,7 @@
 import type { KanjidicParser } from '../../KanjidicParser';
 
-export default function litereal(parser: KanjidicParser, text: string) {
-  console.log(text);
+export default function literal(parser: KanjidicParser, text: string) {
+  if (parser.character) {
+    parser.character.literal = text;
+  }
 }

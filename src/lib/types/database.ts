@@ -79,7 +79,7 @@ export interface Codepoint {
 
 export interface CpValue {
   cp_type: string; // Attribute, e.g., "ucs"
-  value: string; // Codepoint value
+  value?: string; // Codepoint value
 }
 
 export interface DicNumber {

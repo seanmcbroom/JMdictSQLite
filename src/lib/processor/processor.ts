@@ -1,7 +1,6 @@
 import fs from 'node:fs';
 
 import { JMdictTags } from '@/lib/constants/JMdictTags.js';
-import { KanjidicTags } from '@/lib/constants/KanjidicTags.js';
 import { JMDictSQLiteDatabase } from '@/lib/database/index.js';
 import { JMdictParser } from '@/lib/parsers/JMdictParser/index.js';
 import { KanjidicParser } from '@/lib/parsers/KanjidicParser/index.js';
@@ -80,15 +79,14 @@ export class Processor {
         `Done parsing JMdict. ${((Date.now() - startTime) / 1000).toFixed(2)}s elapsed.`,
       );
 
-    const kanjidicParser = await KanjidicParser.create(this.db);
-
-    await kanjidicParser.parse(
-      fs
-        .createReadStream(this.kanjidicXMLPath, {
-          encoding: 'utf8',
-        })
-        .pipe(new EntityReplace(KanjidicTags)),
-    );
+    try {
+      const kanjidicParser = await KanjidicParser.create(this.db);
+      await kanjidicParser.parse(
+        fs.createReadStream(this.kanjidicXMLPath, { encoding: 'utf8' }),
+      );
+    } catch (err) {
+      console.error('Kanjidic parsing failed:', err);
+    }
 
     if (this.verbose) console.log(`Done parsing Kanjidic.`);
 
