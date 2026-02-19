@@ -1,9 +1,9 @@
 import type { KanjidicParser } from '../../KanjidicParser';
 
 export default function cp_value(parser: KanjidicParser, text: string) {
-  const cpValue = parser.character?.codepoint?.cp_values.at(-1);
+  const dicRef = parser.character?.dic_number?.dic_refs.at(-1);
 
-  if (cpValue) {
-    cpValue.value = text;
+  if (dicRef) {
+    dicRef.value = text;
   }
 }

@@ -88,7 +88,7 @@ export interface DicNumber {
 
 export interface DicRef {
   dr_type: string; // Dictionary type, e.g., "nelson_c"
-  value: string;
+  value?: string;
   m_vol?: string; // Optional volume info
   m_page?: string; // Optional page info
 }
