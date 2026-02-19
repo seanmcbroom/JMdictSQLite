@@ -82,11 +82,10 @@ export abstract class BaseParser<P extends BaseParser<P>> {
    * @returns A promise that resolves when parsing completes
    */
   parse(inputStream: NodeJS.ReadableStream): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       inputStream.pipe(this.parser);
 
       this.parser.once('end', () => resolve());
-      this.parser.once('error', err => reject(err));
     });
   }
 
@@ -109,9 +108,13 @@ export abstract class BaseParser<P extends BaseParser<P>> {
    * @param node - SAX tag metadata and attributes
    */
   protected onOpenTag(node: sax.Tag) {
-    const handler = this.openTagHandlers[node.name];
+    try {
+      const handler = this.openTagHandlers[node.name];
 
-    if (handler) handler(this as unknown as P, node.attributes);
+      if (handler) handler(this as unknown as P, node.attributes);
+    } catch (err) {
+      console.warn(`Error in open tag handler for <${node.name}>:`, err);
+    }
   }
 
   /**
@@ -120,7 +123,11 @@ export abstract class BaseParser<P extends BaseParser<P>> {
    * @param text - Text content emitted by the SAX parser
    */
   protected onText(text: string) {
-    this.currentText += text;
+    try {
+      this.currentText += text;
+    } catch (err) {
+      console.warn('Error in text handler:', err);
+    }
   }
 
   /**
@@ -131,11 +138,15 @@ export abstract class BaseParser<P extends BaseParser<P>> {
    * @param name - Name of the closing tag
    */
   protected onCloseTag(name: string) {
-    const handler = this.closeTagHandlers[name];
+    try {
+      const handler = this.closeTagHandlers[name];
 
-    if (handler) handler(this as unknown as P, this.currentText.trim());
+      if (handler) handler(this as unknown as P, this.currentText.trim());
 
-    this.currentText = '';
+      this.currentText = '';
+    } catch (err) {
+      console.warn(`Error in close tag handler for </${name}>:`, err);
+    }
   }
 
   /**
