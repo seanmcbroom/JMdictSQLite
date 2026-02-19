@@ -2,7 +2,7 @@ import type { Tag } from 'sax';
 
 import type { KanjidicParser } from '@/lib/parsers/KanjidicParser/index.js';
 
-export default function cp_value(
+export default function dic_ref(
   parser: KanjidicParser,
   attributes: Tag['attributes'],
 ) {
