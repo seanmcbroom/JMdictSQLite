@@ -7,8 +7,9 @@ import type { OpenTagHandlers, CloseTagHandlers } from '@/lib/types/parser.js';
  * Configuration options for {@link BaseParser}.
  *
  * @template P - Concrete parser type extending BaseParser
+ * @template T - Type of items in the buffer
  */
-interface ParserOptions<P extends BaseParser<P>> {
+interface ParserOptions<P extends BaseParser<P, T>, T> {
   /** SQLite database instance used for persisting parsed entries */
   db: JMDictSQLiteDatabase;
 
