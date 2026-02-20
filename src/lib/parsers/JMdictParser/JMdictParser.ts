@@ -13,7 +13,7 @@ import type { CloseTagHandlers, OpenTagHandlers } from '@/lib/types/parser.js';
  * state management and persistence logic. XML tag handling is delegated
  * to handler maps, which mutate the parser's internal state.
  */
-export class JMdictParser extends BaseParser<JMdictParser> {
+export class JMdictParser extends BaseParser<JMdictParser, Entry> {
   /**
    * Currently active dictionary entry being parsed.
    *

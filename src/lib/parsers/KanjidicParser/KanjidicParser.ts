@@ -5,7 +5,7 @@ import openTagHandlersPromise from '@/lib/parsers/KanjidicParser/handlers/open/i
 import type { Character } from '@/lib/types/database';
 import type { CloseTagHandlers, OpenTagHandlers } from '@/lib/types/parser';
 
-export class KanjidicParser extends BaseParser<KanjidicParser> {
+export class KanjidicParser extends BaseParser<KanjidicParser, Character> {
   protected currentCharacter: Character | undefined;
 
   public static async create(db: JMDictSQLiteDatabase) {
@@ -26,7 +26,7 @@ export class KanjidicParser extends BaseParser<KanjidicParser> {
   protected flush() {
     if (this.buffer.length === 0) return;
 
-    // Logic to insert into database here
+    this.db.insertCharacters(this.buffer);
 
     this.buffer.length = 0;
   }

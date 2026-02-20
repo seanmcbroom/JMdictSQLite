@@ -6,13 +6,15 @@ import { CREATE_TABLES_SQL } from '@/lib/database/schema.js';
 import {
   INSERT_ENTRY_SQL,
   INSERT_SENSE_SQL,
+  INSERT_CHARACTER_SQL,
 } from '@/lib/database/statements.js';
-import type { Entry, Sense } from '@/lib/types/database';
+import type { Character, Entry, Sense } from '@/lib/types/database';
 
 export class JMDictSQLiteDatabase {
   db: DatabaseType;
   insertEntryStmt!: Statement;
   insertSenseStmt!: Statement;
+  insertCharacterStmt!: Statement;
 
   constructor(path: string) {
     this.db = new Database(path);
@@ -25,6 +27,7 @@ export class JMDictSQLiteDatabase {
 
     this.insertEntryStmt = this.db.prepare(INSERT_ENTRY_SQL);
     this.insertSenseStmt = this.db.prepare(INSERT_SENSE_SQL);
+    this.insertCharacterStmt = this.db.prepare(INSERT_CHARACTER_SQL);
   }
 
   _setMeta(key: string, value: string) {
@@ -70,6 +73,28 @@ export class JMDictSQLiteDatabase {
       sense.ant?.length ? JSON.stringify(sense.ant) : null,
       sense.see?.length ? JSON.stringify(sense.see) : null,
     );
+  }
+
+  insertCharacter(character: Character) {
+    this.insertCharacterStmt.run(
+      character.literal,
+      JSON.stringify(character.codepoint),
+      JSON.stringify(character.radical),
+      JSON.stringify(character.reading_meaning),
+      character.dic_number ? JSON.stringify(character.dic_number) : null,
+      character.query_code ? JSON.stringify(character.query_code) : null,
+      character.misc ? JSON.stringify(character.misc) : null,
+    );
+  }
+
+  insertCharacters(characters: Character[]) {
+    const insertMany = this.db.transaction((chars: Character[]) => {
+      for (const char of chars) {
+        this.insertCharacter(char);
+      }
+    });
+
+    insertMany(characters);
   }
 
   async close() {

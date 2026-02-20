@@ -1,7 +1,10 @@
 import fs from 'node:fs';
 
+import { JMdictTags } from '@/lib/constants/JMdictTags.js';
 import { JMDictSQLiteDatabase } from '@/lib/database/index.js';
+import { JMdictParser } from '@/lib/parsers/JMdictParser/index.js';
 import { KanjidicParser } from '@/lib/parsers/KanjidicParser/index.js';
+import { EntityReplace } from '@/lib/util/EntityReplace.js';
 
 /**
  * Orchestrates parsing of JMdict and Kanjidic XML files and
@@ -61,20 +64,20 @@ export class Processor {
   public async process(): Promise<void> {
     const startTime = Date.now();
 
-    // const jmdictParser = await JMdictParser.create(this.db);
+    const jmdictParser = await JMdictParser.create(this.db);
 
-    // await jmdictParser.parse(
-    //   fs
-    //     .createReadStream(this.jmdictXMLPath, {
-    //       encoding: 'utf8',
-    //     })
-    //     .pipe(new EntityReplace(JMdictTags)),
-    // );
+    await jmdictParser.parse(
+      fs
+        .createReadStream(this.jmdictXMLPath, {
+          encoding: 'utf8',
+        })
+        .pipe(new EntityReplace(JMdictTags)),
+    );
 
-    // if (this.verbose)
-    //   console.log(
-    //     `Done parsing JMdict. ${((Date.now() - startTime) / 1000).toFixed(2)}s elapsed.`,
-    //   );
+    if (this.verbose)
+      console.log(
+        `Done parsing JMdict. ${((Date.now() - startTime) / 1000).toFixed(2)}s elapsed.`,
+      );
 
     try {
       const kanjidicParser = await KanjidicParser.create(this.db);

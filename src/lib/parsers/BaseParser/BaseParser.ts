@@ -1,7 +1,6 @@
 import sax from 'sax';
 
 import type { JMDictSQLiteDatabase } from '@/lib/database/index.js';
-import type { Entry } from '@/lib/types/database.js';
 import type { OpenTagHandlers, CloseTagHandlers } from '@/lib/types/parser.js';
 
 /**
@@ -38,8 +37,9 @@ interface ParserOptions<P extends BaseParser<P>> {
  * that receive the concrete parser instance.
  *
  * @template P - Concrete parser type extending BaseParser
+ * @template T - Type of items in the buffer
  */
-export abstract class BaseParser<P extends BaseParser<P>> {
+export abstract class BaseParser<P extends BaseParser<P, T>, T> {
   protected readonly db: JMDictSQLiteDatabase;
 
   protected readonly parser = sax.createStream(true, { trim: true });
@@ -49,7 +49,7 @@ export abstract class BaseParser<P extends BaseParser<P>> {
   protected readonly openTagHandlers: OpenTagHandlers<P>;
   protected readonly closeTagHandlers: CloseTagHandlers<P>;
 
-  protected readonly buffer: Entry[] = [];
+  protected readonly buffer: T[] = [];
   protected readonly batchSize: number;
 
   /**
