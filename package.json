@@ -12,8 +12,8 @@
   },
   "scripts": {
     "1": "🚀 Main commands",
-    "start": "node dist/src/app.js",
-    "dev": "npm run clean:data-sqlite && tsx src/app.ts",
+    "start": "node dist/src/index.js",
+    "dev": "npm run clean:data-sqlite && tsx src/index.ts",
     "build": "npm run clean:build && tsc && tsc-alias && npm run copy:test-files-to-dist",
 
     "2": "🧹 Linting",
