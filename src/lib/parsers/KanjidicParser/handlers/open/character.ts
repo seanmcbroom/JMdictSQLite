@@ -6,9 +6,9 @@ export default function entry(parser: KanjidicParser) {
     literal: '',
     codepoint: { cp_values: [] },
     radical: { rad_values: [] },
-    reading_meaning: { rmgroups: [] },
-    dic_number: undefined,
-    query_code: undefined,
-    misc: undefined,
+    reading_meaning: { rmgroups: { readings: [], meanings: [] }, nanori: [] },
+    dic_number: { dic_refs: [] },
+    query_code: { q_codes: [] },
+    misc: {},
   } as Character;
 }

@@ -88,9 +88,9 @@ export interface DicNumber {
 
 export interface DicRef {
   dr_type: string; // Dictionary type, e.g., "nelson_c"
-  value?: string;
   m_vol?: string; // Optional volume info
   m_page?: string; // Optional page info
+  value?: string;
 }
 
 export interface QueryCode {
@@ -99,7 +99,7 @@ export interface QueryCode {
 
 export interface QCode {
   qc_type: string; // Type of query code
-  value: string;
+  value?: string;
 }
 
 export interface Radical {
@@ -108,11 +108,11 @@ export interface Radical {
 
 export interface RadValue {
   rad_type: string; // Radical type, e.g., "classical"
-  value: string; // Radical number or identifier
+  value?: string; // Radical number or identifier
 }
 
 export interface ReadingMeaning {
-  rmgroups: RMGroup[];
+  rmgroups: RMGroup;
   nanori?: string[]; // Name-only readings
 }
 
@@ -123,17 +123,17 @@ export interface RMGroup {
 
 export interface Reading {
   r_type: string; // e.g., "ja_on", "ja_kun"
-  value: string;
+  value?: string;
 }
 
 export interface Meaning {
   m_lang?: string; // Optional language attribute
-  value: string;
+  value?: string;
 }
 
 export interface Misc {
   grade?: string;
-  stroke_count?: number[];
+  stroke_count?: string;
   variant?: Variant[];
   freq?: string;
   rad_name?: string[];
@@ -182,10 +182,10 @@ character {
     misc {
         grade
         stroke_count
-        variant
-        freq
-        rad_name
-        jlpt
+        variant // NOT DONE YET
+        freq // NOT DONE YET
+        rad_name // NOT DONE YET
+        jlpt // NOT DONE YET
     }
 }
 */
