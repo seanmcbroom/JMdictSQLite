@@ -134,7 +134,7 @@ export interface Meaning {
 export interface Misc {
   grade?: string;
   stroke_count?: string;
-  variant?: Variant[];
+  variants?: Variant[];
   freq?: string;
   rad_name?: string[];
   jlpt?: string;
@@ -142,7 +142,7 @@ export interface Misc {
 
 export interface Variant {
   var_type: string;
-  value: string;
+  value?: string;
 }
 
 /**
@@ -182,9 +182,9 @@ character {
     misc {
         grade
         stroke_count
-        variant // NOT DONE YET
-        freq // NOT DONE YET
-        rad_name // NOT DONE YET
+        variant
+        freq
+        rad_name
         jlpt // NOT DONE YET
     }
 }
