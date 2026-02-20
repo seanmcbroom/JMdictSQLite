@@ -7,8 +7,8 @@ export const INSERT_SENSE_SQL = `
   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `;
 
-export const INSERT_CHARACTER_SQL = `
-  INSERT OR REPLACE INTO characters (
+export const INSERT_KANJI_SQL = `
+  INSERT OR REPLACE INTO kanji (
     literal,
     codepoint,
     radical,

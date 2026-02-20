@@ -75,7 +75,7 @@ export class JMDictSQLiteDatabase {
     );
   }
 
-  insertCharacter(character: Character) {
+  insertKanji(character: Character) {
     this.insertCharacterStmt.run(
       character.literal,
       JSON.stringify(character.codepoint),
@@ -87,10 +87,10 @@ export class JMDictSQLiteDatabase {
     );
   }
 
-  insertCharacters(characters: Character[]) {
+  insertManyKanji(characters: Character[]) {
     const insertMany = this.db.transaction((chars: Character[]) => {
       for (const char of chars) {
-        this.insertCharacter(char);
+        this.insertKanji(char);
       }
     });
 

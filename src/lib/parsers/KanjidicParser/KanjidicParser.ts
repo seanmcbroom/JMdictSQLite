@@ -26,7 +26,7 @@ export class KanjidicParser extends BaseParser<KanjidicParser, Character> {
   protected flush() {
     if (this.buffer.length === 0) return;
 
-    this.db.insertCharacters(this.buffer);
+    this.db.insertManyKanji(this.buffer);
 
     this.buffer.length = 0;
   }

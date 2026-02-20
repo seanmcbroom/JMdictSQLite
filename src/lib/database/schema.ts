@@ -32,7 +32,7 @@ export const CREATE_TABLES_SQL = `
     CREATE INDEX IF NOT EXISTS idx_senses_ent_seq ON senses(ent_seq);
 
     -- Kanji characters (KANJIDIC2)
-    CREATE TABLE IF NOT EXISTS characters (
+    CREATE TABLE IF NOT EXISTS kanji (
       literal TEXT PRIMARY KEY,
 
       codepoint     TEXT NOT NULL CHECK (json_valid(codepoint)),
@@ -43,5 +43,5 @@ export const CREATE_TABLES_SQL = `
       misc          TEXT DEFAULT NULL CHECK (misc IS NULL OR json_valid(misc))
     );
 
-    CREATE INDEX IF NOT EXISTS idx_characters_literal ON characters(literal);
+    CREATE INDEX IF NOT EXISTS idx_kanji_literal ON kanji(literal);
 `;
