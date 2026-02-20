@@ -17,8 +17,8 @@ export class KanjidicParser extends BaseParser<KanjidicParser, Character> {
 
   private constructor(
     db: JMDictSQLiteDatabase,
-    openTagHandlers: OpenTagHandlers<KanjidicParser>,
-    closeTagHandlers: CloseTagHandlers<KanjidicParser>,
+    openTagHandlers: OpenTagHandlers<KanjidicParser, Character>,
+    closeTagHandlers: CloseTagHandlers<KanjidicParser, Character>,
   ) {
     super({ db, openTagHandlers, closeTagHandlers });
   }

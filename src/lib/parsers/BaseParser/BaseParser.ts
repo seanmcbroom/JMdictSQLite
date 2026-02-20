@@ -14,10 +14,10 @@ interface ParserOptions<P extends BaseParser<P, T>, T> {
   db: JMDictSQLiteDatabase;
 
   /** Map of XML open-tag names to handler functions */
-  openTagHandlers: OpenTagHandlers<P>;
+  openTagHandlers: OpenTagHandlers<P, T>;
 
   /** Map of XML close-tag names to handler functions */
-  closeTagHandlers: CloseTagHandlers<P>;
+  closeTagHandlers: CloseTagHandlers<P, T>;
 
   /**
    * Number of entries to buffer before flushing to the database.
@@ -47,8 +47,8 @@ export abstract class BaseParser<P extends BaseParser<P, T>, T> {
 
   protected currentText = '';
 
-  protected readonly openTagHandlers: OpenTagHandlers<P>;
-  protected readonly closeTagHandlers: CloseTagHandlers<P>;
+  protected readonly openTagHandlers: OpenTagHandlers<P, T>;
+  protected readonly closeTagHandlers: CloseTagHandlers<P, T>;
 
   protected readonly buffer: T[] = [];
   protected readonly batchSize: number;
@@ -63,7 +63,7 @@ export abstract class BaseParser<P extends BaseParser<P, T>, T> {
     openTagHandlers,
     closeTagHandlers,
     batchSize = 500,
-  }: ParserOptions<P>) {
+  }: ParserOptions<P, T>) {
     this.db = db;
     this.openTagHandlers = openTagHandlers;
     this.closeTagHandlers = closeTagHandlers;

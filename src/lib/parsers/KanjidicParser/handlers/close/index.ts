@@ -2,15 +2,16 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import type { KanjidicParser } from '@/lib/parsers/KanjidicParser/index.js';
+import type { Character } from '@/lib/types/database';
 import type { CloseTagHandlers } from '@/lib/types/parser.js';
 
 export default async function loadHandlers(): Promise<
-  CloseTagHandlers<KanjidicParser>
+  CloseTagHandlers<KanjidicParser, Character>
 > {
   const dirPath = path.dirname(new URL('./close/', import.meta.url).pathname);
   const files = fs.readdirSync(dirPath);
 
-  const handlers: Partial<CloseTagHandlers<KanjidicParser>> = {};
+  const handlers: Partial<CloseTagHandlers<KanjidicParser, Character>> = {};
 
   for (const file of files) {
     if (file.endsWith('.ts') || file.endsWith('.js')) {
@@ -20,5 +21,5 @@ export default async function loadHandlers(): Promise<
     }
   }
 
-  return handlers as CloseTagHandlers<KanjidicParser>;
+  return handlers as CloseTagHandlers<KanjidicParser, Character>;
 }

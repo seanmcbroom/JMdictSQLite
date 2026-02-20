@@ -41,8 +41,8 @@ export class JMdictParser extends BaseParser<JMdictParser, Entry> {
    */
   private constructor(
     db: JMDictSQLiteDatabase,
-    openTagHandlers: OpenTagHandlers<JMdictParser>,
-    closeTagHandlers: CloseTagHandlers<JMdictParser>,
+    openTagHandlers: OpenTagHandlers<JMdictParser, Entry>,
+    closeTagHandlers: CloseTagHandlers<JMdictParser, Entry>,
   ) {
     super({ db, openTagHandlers, closeTagHandlers });
   }
