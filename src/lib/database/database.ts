@@ -6,7 +6,7 @@ import { CREATE_TABLES_SQL } from '@/lib/database/schema.js';
 import {
   INSERT_ENTRY_SQL,
   INSERT_SENSE_SQL,
-  INSERT_CHARACTER_SQL,
+  INSERT_KANJI_SQL,
 } from '@/lib/database/statements.js';
 import type { Character, Entry, Sense } from '@/lib/types/database';
 
@@ -14,7 +14,7 @@ export class JMDictSQLiteDatabase {
   db: DatabaseType;
   insertEntryStmt!: Statement;
   insertSenseStmt!: Statement;
-  insertCharacterStmt!: Statement;
+  insertKanjiStmt!: Statement;
 
   constructor(path: string) {
     this.db = new Database(path);
@@ -27,7 +27,7 @@ export class JMDictSQLiteDatabase {
 
     this.insertEntryStmt = this.db.prepare(INSERT_ENTRY_SQL);
     this.insertSenseStmt = this.db.prepare(INSERT_SENSE_SQL);
-    this.insertCharacterStmt = this.db.prepare(INSERT_CHARACTER_SQL);
+    this.insertKanjiStmt = this.db.prepare(INSERT_KANJI_SQL);
   }
 
   _setMeta(key: string, value: string) {
@@ -76,7 +76,7 @@ export class JMDictSQLiteDatabase {
   }
 
   insertKanji(character: Character) {
-    this.insertCharacterStmt.run(
+    this.insertKanjiStmt.run(
       character.literal,
       JSON.stringify(character.codepoint),
       JSON.stringify(character.radical),
