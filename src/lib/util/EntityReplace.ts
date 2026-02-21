@@ -1,11 +1,17 @@
-// The purpose for string replacement is to replace elements in the XML file
-// that cannot be read by the parser directly.
 import { Transform } from 'node:stream';
 
 import type { TagDictionary } from '@/lib/types/tags';
 
-// Transform stream to replace XML entities with their codes.
-// Handles edge cases where an entity (e.g., &adj-i;) might be split across chunks.
+/**
+ * Transform stream that safely replaces XML entities with their codes.
+ *
+ * This stream handles entities that may be split across chunks (e.g., `&adj-i;`)
+ * by buffering incomplete entities until the next chunk arrives.
+ *
+ * ⚠️ Note: This parser does **not** process DTDs. Automatically handling DTDs
+ * can lead to security risks (XXE attacks), memory/CPU exhaustion (Billion Laughs),
+ * and network issues. Only known entities defined in `tags` are replaced.
+ */
 export class EntityReplace extends Transform {
   private leftover = '';
   private readonly entityMap: Record<string, string> = {};
@@ -13,6 +19,7 @@ export class EntityReplace extends Transform {
   constructor(tags: TagDictionary) {
     super();
 
+    // Build a map of known entities to their replacement codes
     for (const codes of Object.values(tags)) {
       for (const code of codes) {
         this.entityMap[`&${code};`] = code;
@@ -25,21 +32,18 @@ export class EntityReplace extends Transform {
     _encoding: BufferEncoding,
     callback: (error?: Error | null) => void,
   ) {
-    // Prepend any leftover from the previous chunk to the current chunk
+    // Prepend leftover from previous chunk
     let data = this.leftover + chunk.toString();
-    // Find the last '&' in the data. This could be the start of an entity.
+
+    // Check if the chunk ends with an incomplete entity
     const lastAmp = data.lastIndexOf('&');
-    // Check if there is a ';' after the last '&'. If not, the entity is incomplete.
     const semicolonAfterLastAmp = data.indexOf(';', lastAmp);
 
-    // If an entity is split across chunks (e.g., chunk ends with '&adj' and next chunk starts with '-i;')
     if (lastAmp !== -1 && semicolonAfterLastAmp === -1) {
-      // Save the incomplete entity to prepend to the next chunk
+      // Buffer incomplete entity for next chunk
       this.leftover = data.slice(lastAmp);
-      // Only process up to the start of the incomplete entity
       data = data.slice(0, lastAmp);
     } else {
-      // No incomplete entity at the end, clear leftover
       this.leftover = '';
     }
 
@@ -55,7 +59,7 @@ export class EntityReplace extends Transform {
   }
 
   _flush(callback: (error?: Error | null) => void) {
-    // At the end of the stream, process any remaining leftover data
+    // Process any leftover entity at the end of the stream
     if (this.leftover) {
       const flushed = this.leftover.replaceAll(
         /&([a-zA-Z0-9-]+);/g,
