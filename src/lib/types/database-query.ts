@@ -50,7 +50,7 @@ export interface VerbData {
 // -------------------------
 // Kanji (KANJIDIC2)
 // -------------------------
-export interface KanjiRow {
+export interface Character {
   literal: string; // Primary Key
   codepoint: string; // JSON.stringify(Codepoint)
   radical: string; // JSON.stringify(Radical)

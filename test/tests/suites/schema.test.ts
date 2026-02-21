@@ -27,7 +27,9 @@ describe('Database Schema & File', () => {
       .all() as { name: string }[];
     const actualTables = new Set(rows.map(row => row.name));
 
-    ['entries', 'senses', 'kanji', 'meta'].forEach(table =>
+    const expected = ['entries', 'senses', 'kanji', 'meta'];
+
+    expected.forEach(table =>
       equal(actualTables.has(table), true, `Table "${table}" not found`),
     );
 

@@ -65,6 +65,7 @@ export interface Header {
 
 export interface Character {
   literal: string; // The kanji itself
+
   codepoint: Codepoint; // Unicode/codepoint info
   dic_number?: DicNumber; // Optional dictionary numbers
   query_code?: QueryCode; // Optional query codes

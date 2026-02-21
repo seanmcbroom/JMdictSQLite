@@ -13,7 +13,11 @@ export function validateJsonField(
     if (expectArray) {
       equal(Array.isArray(parsed), true, `${fieldName} should be an array`);
     } else {
-      equal(typeof parsed, 'object', `${fieldName} should be an object`);
+      equal(
+        typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed),
+        true,
+        `${fieldName} should be an object`,
+      );
     }
   } catch (e) {
     console.error(`Invalid JSON in ${fieldName}:`, e);

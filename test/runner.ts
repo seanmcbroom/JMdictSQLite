@@ -39,5 +39,4 @@ async function main() {
     .pipe(process.stdout);
 }
 
-console.log('Running tests...');
 await main();
