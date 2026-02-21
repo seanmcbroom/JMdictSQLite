@@ -21,8 +21,8 @@
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
 
     "3": "🧪 Testing",
-    "test": "npm run build && node --test \"dist/test/**/*.test.js\" --no-warnings",
-    "test:dev": "tsx --test test/**/*.test.ts",
+    "test": "npm run build && node dist/test/runner.js",
+    "test:dev": "tsx dist/test/runner.ts",
 
     "4": "📦📘 JMdict/Packaging",
     "create-release": "npm run build && npm run start",
