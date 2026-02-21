@@ -24,16 +24,14 @@ export interface Sense {
   verb_data?: string; // JSON.stringify(VerbData)
   fields?: string; // JSON.stringify(string[])
   tags?: string; // JSON.stringify(string[])
-  ant?: string; // JSON.stringify(Ref[])
-  see?: string; // JSON.stringify(Ref[])
   refs?: string; // JSON.stringify(Ref[])
 }
 
 // JMdict-related JSON helper types
 export interface Written {
   written: string;
-  tags?: string[];
-  restr?: string[];
+  tags?: [];
+  restr?: [];
 }
 
 export interface Ref {
@@ -56,10 +54,10 @@ export interface KanjiRow {
   literal: string; // Primary Key
   codepoint: string; // JSON.stringify(Codepoint)
   radical: string; // JSON.stringify(Radical)
-  reading_meaning?: string | null; // JSON.stringify(ReadingMeaning)
-  dic_number?: string | null; // JSON.stringify(DicNumber)
-  query_code?: string | null; // JSON.stringify(QueryCode)
-  misc?: string | null; // JSON.stringify(Misc)
+  reading_meaning?: string; // JSON.stringify(ReadingMeaning)
+  dic_number?: string; // JSON.stringify(DicNumber)
+  query_code?: string; // JSON.stringify(QueryCode)
+  misc?: string; // JSON.stringify(Misc)
 }
 
 // Kanji-related JSON helper types
