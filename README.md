@@ -59,31 +59,29 @@ Each entry can have multiple senses, but each sense belongs to exactly one entry
 // Entries & Senses
 // -------------------------
 export interface Entry {
-  ent_seq: number;               // Primary Key
-  kanji?: string;                // JSON.stringify(Written[])
-  kana: string;                  // JSON.stringify(Written[])
+  ent_seq: number; // Primary Key
+  kanji?: string; // JSON.stringify(Written[])
+  kana: string; // JSON.stringify(Written[])
 }
 
 export interface Sense {
-  id: number;                    // Primary Key (AUTOINC)
-  ent_seq: number;               // Foreign Key → entries.ent_seq
+  id: number; // Primary Key (AUTOINC)
+  ent_seq: number; // Foreign Key → entries.ent_seq
   lang?: string;
   note?: string;
-  glosses: string;               // JSON.stringify(string[])
-  pos: string;                   // JSON.stringify(string[])
-  verb_data?: string;            // JSON.stringify(VerbData)
-  fields?: string;               // JSON.stringify(string[])
-  tags?: string;                 // JSON.stringify(string[])
-  ant?: string;                  // JSON.stringify(Ref[])
-  see?: string;                  // JSON.stringify(Ref[])
-  refs?: string;                 // JSON.stringify(Ref[])
+  glosses: string; // JSON.stringify(string[])
+  pos: string; // JSON.stringify(string[])
+  verb_data?: string; // JSON.stringify(VerbData)
+  fields?: string; // JSON.stringify(string[])
+  tags?: string; // JSON.stringify(string[])
+  refs?: string; // JSON.stringify(Ref[])
 }
 
 // JMdict-related JSON helper types
 export interface Written {
   written: string;
-  tags?: string[];
-  restr?: string[];
+  tags?: [];
+  restr?: [];
 }
 
 export interface Ref {
@@ -103,13 +101,13 @@ export interface VerbData {
 // Kanji (KANJIDIC2)
 // -------------------------
 export interface KanjiRow {
-  literal: string;               // Primary Key
-  codepoint: string;             // JSON.stringify(Codepoint)
-  radical: string;               // JSON.stringify(Radical)
-  reading_meaning?: string | null; // JSON.stringify(ReadingMeaning)
-  dic_number?: string | null;      // JSON.stringify(DicNumber)
-  query_code?: string | null;      // JSON.stringify(QueryCode)
-  misc?: string | null;            // JSON.stringify(Misc)
+  literal: string; // Primary Key
+  codepoint: string; // JSON.stringify(Codepoint)
+  radical: string; // JSON.stringify(Radical)
+  reading_meaning?: string; // JSON.stringify(ReadingMeaning)
+  dic_number?: string; // JSON.stringify(DicNumber)
+  query_code?: string; // JSON.stringify(QueryCode)
+  misc?: string; // JSON.stringify(Misc)
 }
 
 // Kanji-related JSON helper types
