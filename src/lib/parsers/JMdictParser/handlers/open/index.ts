@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import type { JMdictParser } from '@/lib/parsers/JMdictParser/index.js';
-import type { Entry } from '@/lib/types/database';
+import type { Entry } from '@/lib/types/database.js';
 import type { OpenTagHandlers } from '@/lib/types/parser.js';
 
 export default async function loadHandlers(): Promise<

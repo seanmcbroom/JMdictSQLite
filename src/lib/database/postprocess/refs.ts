@@ -1,13 +1,13 @@
 import type { Database as DatabaseType } from 'better-sqlite3';
 
-import { type RefQuery, type EntryQuery } from '@/lib/types/database-query.js';
+import { type Ref, type Entry } from '@/lib/types/database-query.js';
 
 export async function postProcessRefs(db: DatabaseType) {
   const updateStmt = db.prepare(`UPDATE senses SET refs = ? WHERE id = ?`);
 
   const allEntries = db
     .prepare(`SELECT ent_seq, kanji, kana FROM entries`)
-    .all() as EntryQuery[];
+    .all() as Entry[];
 
   const entryMap = new Map<string, number>();
 
@@ -48,7 +48,7 @@ export async function postProcessRefs(db: DatabaseType) {
   }[] = [];
 
   for (const sense of allSenses) {
-    const refs: RefQuery[] = [];
+    const refs: Ref[] = [];
 
     const processField = (field: 'see' | 'ant', jsonStr: string | null) => {
       if (!jsonStr) return;

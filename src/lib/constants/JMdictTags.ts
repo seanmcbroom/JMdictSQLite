@@ -1,4 +1,4 @@
-import type { TagDictionary } from '@/lib/types/tags';
+import type { TagDictionary } from '@/lib/types/tags.js';
 
 /**
  * Tag categories used in JMdict-based parsing.

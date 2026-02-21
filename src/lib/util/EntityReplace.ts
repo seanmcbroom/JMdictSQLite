@@ -1,6 +1,6 @@
 import { Transform } from 'node:stream';
 
-import type { TagDictionary } from '@/lib/types/tags';
+import type { TagDictionary } from '@/lib/types/tags.js';
 
 /**
  * Transform stream that safely replaces XML entities with their codes.

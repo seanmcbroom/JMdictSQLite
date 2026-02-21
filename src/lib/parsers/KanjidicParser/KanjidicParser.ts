@@ -2,8 +2,8 @@ import type { JMDictSQLiteDatabase } from '@/lib/database/index.js';
 import { BaseParser } from '@/lib/parsers/BaseParser/BaseParser.js';
 import closeTagHandlersPromise from '@/lib/parsers/KanjidicParser/handlers/close/index.js';
 import openTagHandlersPromise from '@/lib/parsers/KanjidicParser/handlers/open/index.js';
-import type { Character } from '@/lib/types/database';
-import type { CloseTagHandlers, OpenTagHandlers } from '@/lib/types/parser';
+import type { Character } from '@/lib/types/database.js';
+import type { CloseTagHandlers, OpenTagHandlers } from '@/lib/types/parser.js';
 
 export class KanjidicParser extends BaseParser<KanjidicParser, Character> {
   protected currentCharacter: Character | undefined;

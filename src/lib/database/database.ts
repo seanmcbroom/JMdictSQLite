@@ -8,7 +8,7 @@ import {
   INSERT_SENSE_SQL,
   INSERT_KANJI_SQL,
 } from '@/lib/database/statements.js';
-import type { Character, Entry, Sense } from '@/lib/types/database';
+import type { Character, Entry, Sense } from '@/lib/types/database.js';
 
 export class JMDictSQLiteDatabase {
   db: DatabaseType;

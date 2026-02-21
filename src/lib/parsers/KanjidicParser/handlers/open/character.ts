@@ -1,5 +1,5 @@
 import type { KanjidicParser } from '@/lib/parsers/KanjidicParser/index.js';
-import type { Character } from '@/lib/types/database';
+import type { Character } from '@/lib/types/database.js';
 
 export default function entry(parser: KanjidicParser) {
   parser.character = {
