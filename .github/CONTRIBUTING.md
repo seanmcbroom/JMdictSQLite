@@ -15,7 +15,7 @@ I welcome anyone with interest to contribute!
 Discussions about bugs and improvements will be held in the **Issues** tab.
 
 ## 💻 How to Run Locally
-Requires: node 22.11.00+, npm 10.9.0+
+Requires: node 22.17.0+, npm 10.9.2+
 ```bash
 git clone https://github.com/seanmcbroom/JMdictSQLite
 ```

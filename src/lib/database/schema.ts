@@ -30,4 +30,18 @@ export const CREATE_TABLES_SQL = `
     );
 
     CREATE INDEX IF NOT EXISTS idx_senses_ent_seq ON senses(ent_seq);
+
+    -- Kanji characters (KANJIDIC2)
+    CREATE TABLE IF NOT EXISTS kanji (
+      literal TEXT PRIMARY KEY,
+
+      codepoint     TEXT NOT NULL CHECK (json_valid(codepoint)),
+      radical       TEXT NOT NULL CHECK (json_valid(radical)),
+      reading_meaning TEXT DEFAULT NULL CHECK (reading_meaning IS NULL OR json_valid(reading_meaning)),
+      dic_number    TEXT DEFAULT NULL CHECK (dic_number IS NULL OR json_valid(dic_number)),
+      query_code    TEXT DEFAULT NULL CHECK (query_code IS NULL OR json_valid(query_code)),
+      misc          TEXT DEFAULT NULL CHECK (misc IS NULL OR json_valid(misc))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_kanji_literal ON kanji(literal);
 `;

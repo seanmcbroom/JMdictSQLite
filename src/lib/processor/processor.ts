@@ -1,39 +1,100 @@
 import fs from 'node:fs';
 
-import { JMdictDatabase } from '@/lib/database/index.js';
-import EntityReplace from '@/lib/parser/entityReplace.js';
-import { JMdictParser } from '@/lib/parser/parser.js';
+import { JMdictTags } from '@/lib/constants/JMdictTags.js';
+import { JMDictSQLiteDatabase } from '@/lib/database/index.js';
+import { JMdictParser } from '@/lib/parsers/JMdictParser/index.js';
+import { KanjidicParser } from '@/lib/parsers/KanjidicParser/index.js';
+import { EntityReplace } from '@/lib/util/EntityReplace.js';
 
-export class JMdictProcessor {
-  private readonly inputPath: string;
+/**
+ * Orchestrates parsing of JMdict and Kanjidic XML files and
+ * persists the parsed data into a SQLite database.
+ *
+ * This class is responsible for:
+ * - Creating and managing the database connection
+ * - Streaming XML files from disk
+ * - Replacing XML entities using predefined tag mappings
+ * - Delegating parsing logic to the appropriate parser
+ */
+export class Processor {
+  private readonly jmdictXMLPath: string;
+  private readonly kanjidicXMLPath: string;
   private readonly outputPath: string;
-  private readonly db: JMdictDatabase;
+  private readonly db: JMDictSQLiteDatabase;
+  private readonly verbose: boolean;
 
-  constructor(inputPath: string, outputPath: string) {
-    this.inputPath = inputPath;
+  /**
+   * Creates a new Processor instance.
+   *
+   * @param params - Configuration options for the processor
+   * @param params.jmdictXMLPath - Path to the JMdict XML file
+   * @param params.kanjidicXMLPath - Path to the Kanjidic XML file
+   * @param params.outputPath - Path where the SQLite database will be created
+   */
+  constructor({
+    jmdictXMLPath,
+    kanjidicXMLPath,
+    outputPath,
+    verbose = true,
+  }: {
+    jmdictXMLPath: string;
+    kanjidicXMLPath: string;
+    outputPath: string;
+    verbose?: boolean;
+  }) {
+    this.jmdictXMLPath = jmdictXMLPath;
+    this.kanjidicXMLPath = kanjidicXMLPath;
     this.outputPath = outputPath;
-    this.db = new JMdictDatabase(this.outputPath);
+    this.verbose = verbose;
+
+    this.db = new JMDictSQLiteDatabase(this.outputPath);
   }
 
-  public process(): Promise<void> {
+  /**
+   * Executes the full parsing pipeline.
+   *
+   * This method:
+   * 1. Streams and parses the JMdict XML file
+   * 2. Streams and parses the Kanjidic XML file
+   * 3. Logs timing information for each stage
+   * 4. Closes the database connection when complete
+   *
+   * @returns A promise that resolves when processing is finished
+   */
+  public async process(): Promise<void> {
     const startTime = Date.now();
-    const JMdictParserStream = new JMdictParser(this.db).getStream();
 
-    return new Promise((resolve, reject) => {
-      fs.createReadStream(this.inputPath, { encoding: 'utf8' })
-        .pipe(new EntityReplace())
-        .pipe(JMdictParserStream)
-        .on('end', () => {
-          console.log(
-            `✅ Done parsing XML. Time elapsed: ${((Date.now() - startTime) / 1000).toFixed(2)}s`,
-          );
-          this.db.close();
-          resolve();
+    const jmdictParser = await JMdictParser.create(this.db);
+
+    await jmdictParser.parse(
+      fs
+        .createReadStream(this.jmdictXMLPath, {
+          encoding: 'utf8',
         })
-        .on('error', err => {
-          this.db.close();
-          reject(err);
-        });
-    });
+        .pipe(new EntityReplace(JMdictTags)),
+    );
+
+    if (this.verbose)
+      console.log(
+        `Done parsing JMdict. ${((Date.now() - startTime) / 1000).toFixed(2)}s elapsed.`,
+      );
+
+    try {
+      const kanjidicParser = await KanjidicParser.create(this.db);
+      await kanjidicParser.parse(
+        fs.createReadStream(this.kanjidicXMLPath, { encoding: 'utf8' }),
+      );
+    } catch (err) {
+      console.error('Kanjidic parsing failed:', err);
+    }
+
+    if (this.verbose) console.log(`Done parsing Kanjidic.`);
+
+    this.db.close();
+
+    if (this.verbose)
+      console.log(
+        `All done. Time elapsed: ${((Date.now() - startTime) / 1000).toFixed(2)}s`,
+      );
   }
 }

@@ -6,3 +6,15 @@ export const INSERT_SENSE_SQL = `
   INSERT INTO senses (ent_seq, lang, note, glosses, pos, verb_data, fields, tags, ant, see) 
   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `;
+
+export const INSERT_KANJI_SQL = `
+  INSERT OR REPLACE INTO kanji (
+    literal,
+    codepoint,
+    radical,
+    reading_meaning,
+    dic_number,
+    query_code,
+    misc
+  ) VALUES (?, ?, ?, ?, ?, ?, ?)
+`;
