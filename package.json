@@ -11,23 +11,23 @@
     "yarn": "yarn is not supported. Please use npm"
   },
   "scripts": {
-    "1": "🚀 Main commands",
+    "1": "Main commands",
     "start": "node dist/src/index.js",
     "dev": "npm run clean:data-sqlite && tsx src/index.ts",
     "build": "npm run clean:build && tsc && tsc-alias && npm run copy:test-files-to-dist",
 
-    "2": "🧹 Linting",
+    "2": "Linting",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
 
-    "3": "🧪 Testing",
+    "3": "Testing",
     "test": "npm run build && node dist/test/runner.js",
     "test:dev": "tsx dist/test/runner.ts",
 
-    "4": "📦📘 JMdict/Packaging",
+    "4": "JMdict/Packaging",
     "create-release": "npm run build && npm run start",
 
-    "5": "📁 File handling",
+    "5": "File handling",
     "clean:dist": "rimraf dist",
     "clean:data-sqlite": "rimraf /data/jmdict.sqlite",
     "clean:data-jmdict": "rimraf /data/jmdict.xml",
