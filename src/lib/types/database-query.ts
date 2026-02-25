@@ -21,7 +21,6 @@ export interface Sense {
   note?: string;
   glosses: string; // JSON.stringify(string[])
   pos: string; // JSON.stringify(string[])
-  verb_data?: string; // JSON.stringify(VerbData)
   fields?: string; // JSON.stringify(string[])
   tags?: string; // JSON.stringify(string[])
   refs?: string; // JSON.stringify(Ref[])
@@ -39,12 +38,6 @@ export interface Ref {
   ent_seq: number;
   sense_id: number;
   written: string;
-}
-
-export interface VerbData {
-  verb_group: string;
-  transitive?: boolean;
-  auxiliary?: boolean;
 }
 
 // -------------------------

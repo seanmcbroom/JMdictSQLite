@@ -28,7 +28,6 @@ Each entry can have multiple senses, but each sense belongs to exactly one entry
 │ kana      TEXT                     │            | note?       TEXT                                  | 
 │          – JSON-encoded            │            │ glosses     TEXT     (JSON-encoded)               │
 └────────────────────────────────────┘            │ pos         TEXT     (JSON-encoded)               │
-                                                  | verb_data?  TEXT     (JSON-encoded)               |
                                                   | field?      TEXT     (JSON-encoded)               |
                                                   | tags?       TEXT     (JSON-encoded)               |
                                                   | refs?       TEXT     (JSON-encoded)               |
@@ -71,7 +70,6 @@ export interface Sense {
   note?: string;
   glosses: string; // JSON.stringify(string[])
   pos: string; // JSON.stringify(string[])
-  verb_data?: string; // JSON.stringify(VerbData)
   fields?: string; // JSON.stringify(string[])
   tags?: string; // JSON.stringify(string[])
   refs?: string; // JSON.stringify(Ref[])
@@ -89,12 +87,6 @@ export interface Ref {
   ent_seq: number;
   sense_id: number;
   written: string;
-}
-
-export interface VerbData {
-  verb_group: string;
-  transitive?: boolean;
-  auxiliary?: boolean;
 }
 
 // -------------------------

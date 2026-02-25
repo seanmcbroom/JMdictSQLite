@@ -4,7 +4,7 @@
  * ⚠️ Note:
  * - These types are intended for **in-memory parsing and manipulation**.
  * - Do **not** use them directly in SQL queries.
- * - For database queries, use the types defined in `database-sql.ts`.
+ * - For database queries, use the types defined in `database-query.ts`.
  */
 
 // -------------------------
@@ -30,7 +30,6 @@ export interface Sense {
   note?: string;
   glosses: string[];
   pos: string[];
-  verb_data?: VerbData;
   fields?: string[];
   tags?: string[];
   ant?: Ref[];
@@ -40,12 +39,6 @@ export interface Sense {
 export interface Ref {
   written: string;
   index?: string;
-}
-
-export interface VerbData {
-  verb_group: string;
-  transitive?: true;
-  auxiliary?: true;
 }
 
 // -------------------------
@@ -145,48 +138,3 @@ export interface Variant {
   var_type: string;
   value?: string;
 }
-
-/**
-Kanjidic structure reference
-
-header {
-    file_version
-    database_version
-    date_of_creation
-}
-character {
-    literal
-    codepoint {
-        cp_value
-    }
-
-    dic_number {
-        dic_ref
-    }
-
-    query_code {
-        q_code
-    }
-
-    radical {
-        rad_value
-    }
-
-    reading_meaning {
-        rmgroup {
-            reading
-            meaning
-        }
-        nanori
-    }
-
-    misc {
-        grade
-        stroke_count
-        variant
-        freq
-        rad_name
-        jlpt // NOT DONE YET
-    }
-}
-*/

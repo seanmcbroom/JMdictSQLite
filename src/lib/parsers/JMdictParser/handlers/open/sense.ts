@@ -8,11 +8,6 @@ export default function sense(parser: JMdictParser) {
     note: undefined,
     glosses: [],
     pos: [],
-    verb_data: {
-      verb_group: '',
-      transitive: undefined,
-      auxiliary: undefined,
-    },
     fields: [],
     tags: [],
     ant: [],
