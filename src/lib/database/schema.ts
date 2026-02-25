@@ -20,7 +20,6 @@ export const CREATE_TABLES_SQL = `
       note      TEXT DEFAULT NULL,
       glosses   TEXT NOT NULL CHECK (json_valid(glosses)), -- JSON array of gloss strings
       pos       TEXT NOT NULL CHECK (json_valid(pos)),     -- JSON array of POS tags
-      verb_data TEXT DEFAULT NULL CHECK (verb_data IS NULL OR json_valid(verb_data)),
       fields    TEXT DEFAULT NULL CHECK (fields IS NULL OR json_valid(fields)),
       tags      TEXT DEFAULT NULL CHECK (tags IS NULL OR json_valid(tags)),
       ant       TEXT DEFAULT NULL CHECK (ant IS NULL OR json_valid(ant)), -- JSON array of Ref

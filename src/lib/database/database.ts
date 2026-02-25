@@ -67,7 +67,6 @@ export class JMDictSQLiteDatabase {
       sense.note,
       JSON.stringify(sense.glosses),
       JSON.stringify(sense.pos),
-      sense.verb_data?.verb_group ? JSON.stringify(sense.verb_data) : null,
       sense.fields?.length ? JSON.stringify(sense.fields) : null,
       sense.tags?.length ? JSON.stringify(sense.tags) : null,
       sense.ant?.length ? JSON.stringify(sense.ant) : null,
