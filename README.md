@@ -55,7 +55,7 @@ Each entry can have multiple senses, but each sense belongs to exactly one entry
  */
 
 // -------------------------
-// Entries & Senses
+// Entries & Senses (JMdict)
 // -------------------------
 export interface Entry {
   ent_seq: number; // Primary Key
@@ -90,7 +90,7 @@ export interface Ref {
 }
 
 // -------------------------
-// Kanji (KANJIDIC2)
+// Kanji (Kanjidic)
 // -------------------------
 export interface Character {
   literal: string; // Primary Key
