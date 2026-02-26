@@ -63,6 +63,7 @@ export class JMDictSQLiteDatabase {
   insertSense(sense: Sense) {
     this.insertSenseStmt.run(
       sense.ent_seq,
+      sense.sort_order,
       sense.lang,
       sense.note,
       JSON.stringify(sense.glosses),

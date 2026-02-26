@@ -3,8 +3,8 @@ export const INSERT_ENTRY_SQL = `
 `;
 
 export const INSERT_SENSE_SQL = `
-  INSERT INTO senses (ent_seq, lang, note, glosses, pos, fields, tags, ant, see) 
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  INSERT INTO senses (ent_seq, sort_order, lang, note, glosses, pos, fields, tags, ant, see) 
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `;
 
 export const INSERT_KANJI_SQL = `

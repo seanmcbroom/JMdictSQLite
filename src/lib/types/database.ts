@@ -26,6 +26,7 @@ export interface Written {
 export interface Sense {
   id: number;
   ent_seq: number;
+  sort_order: number;
   lang: string;
   note?: string;
   glosses: string[];

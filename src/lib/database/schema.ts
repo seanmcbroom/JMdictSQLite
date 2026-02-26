@@ -16,6 +16,7 @@ export const CREATE_TABLES_SQL = `
     CREATE TABLE IF NOT EXISTS senses (
       id        INTEGER PRIMARY KEY AUTOINCREMENT,
       ent_seq   INTEGER NOT NULL,
+      sort_order   INTEGER NOT NULL,
       lang      TEXT DEFAULT NULL,
       note      TEXT DEFAULT NULL,
       glosses   TEXT NOT NULL CHECK (json_valid(glosses)), -- JSON array of gloss strings

@@ -24,10 +24,11 @@ Each entry can have multiple senses, but each sense belongs to exactly one entry
 ├────────────────────────────────────┤            ├───────────────────────────────────────────────────┤
 │ ent_seq   INTEGER       PK         │◄────┐      │ id          INTEGER  PK AUTOINC                   │
 │ kanji?    TEXT                     │     └────► │ ent_seq     INTEGER  FK → entries.ent_seq         │
-│          – JSON-encoded            │            | lang?       TEXT                                  |
-│ kana      TEXT                     │            | note?       TEXT                                  | 
-│          – JSON-encoded            │            │ glosses     TEXT     (JSON-encoded)               │
-└────────────────────────────────────┘            │ pos         TEXT     (JSON-encoded)               │
+│          – JSON-encoded            │            | sort_order  INTEGER                               |
+│ kana      TEXT                     │            | lang?       TEXT                                  |
+│          – JSON-encoded            │            | note?       TEXT                                  | 
+└────────────────────────────────────┘            │ glosses     TEXT     (JSON-encoded)               │
+                                                  │ pos         TEXT     (JSON-encoded)               │
                                                   | field?      TEXT     (JSON-encoded)               |
                                                   | tags?       TEXT     (JSON-encoded)               |
                                                   | refs?       TEXT     (JSON-encoded)               |
@@ -66,6 +67,7 @@ export interface Entry {
 export interface Sense {
   id: number; // Primary Key (AUTOINC)
   ent_seq: number; // Foreign Key → entries.ent_seq
+  sort_order: number
   lang?: string;
   note?: string;
   glosses: string; // JSON.stringify(string[])

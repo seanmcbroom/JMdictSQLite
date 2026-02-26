@@ -17,6 +17,7 @@ export interface Entry {
 export interface Sense {
   id: number; // Primary Key (AUTOINC)
   ent_seq: number; // Foreign Key → entries.ent_seq
+  sort_order: number; // Order of the sense within the entry
   lang?: string;
   note?: string;
   glosses: string; // JSON.stringify(string[])
