@@ -76,20 +76,15 @@ jobs:
         env:
           PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
         run: |
-          # Create a secure temporary file
           KEY_FILE=$(mktemp)
           chmod 600 "$KEY_FILE"
           printf "%s" "$PGP_PRIVATE_KEY" > "$KEY_FILE"
-
-          # Import into GPG
           gpg --batch --import "$KEY_FILE"
-
-          # Shred temporary file
           shred -u "$KEY_FILE"
 
       - name: Sign manifest.json
         run: |
-          gpg --batch --yes --armor --detach-sign manifest.json
+          gpg --batch --yes --armor --pinentry-mode loopback --detach-sign manifest.json
 
       - name: Update 'latest' tag
         run: |
