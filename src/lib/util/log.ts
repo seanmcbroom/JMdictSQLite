@@ -32,6 +32,10 @@ interface LogInfo {
 }
 
 export const log = (text: string, info: LogInfo = {}) => {
+  const isVerbose = process.env.VERBOSE === 'true';
+
+  if (!isVerbose) return;
+
   const { backgroundColor, textColor, bold, dim } = info;
 
   let style = '';

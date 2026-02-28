@@ -22,7 +22,6 @@ export class Processor {
   private readonly kanjidicXMLPath: string;
   private readonly outputPath: string;
   private readonly db: JMDictSQLiteDatabase;
-  private readonly verbose: boolean;
 
   /**
    * Creates a new Processor instance.
@@ -31,13 +30,11 @@ export class Processor {
    * @param params.jmdictXMLPath - Path to the JMdict XML file
    * @param params.kanjidicXMLPath - Path to the Kanjidic XML file
    * @param params.outputPath - Path where the SQLite database will be created
-   * @param params.verbose - Whether to log timing information to the console
    */
   constructor({
     jmdictXMLPath,
     kanjidicXMLPath,
     outputPath,
-    verbose = true,
   }: {
     jmdictXMLPath: string;
     kanjidicXMLPath: string;
@@ -47,7 +44,6 @@ export class Processor {
     this.jmdictXMLPath = jmdictXMLPath;
     this.kanjidicXMLPath = kanjidicXMLPath;
     this.outputPath = outputPath;
-    this.verbose = verbose;
 
     this.db = new JMDictSQLiteDatabase(this.outputPath);
   }
@@ -77,10 +73,9 @@ export class Processor {
           .pipe(new EntityReplace(JMdictTags)),
       );
 
-      if (this.verbose)
-        logger.info(
-          `[${((Date.now() - startTime) / 1000).toFixed(2)}s] Done parsing JMdict.`,
-        );
+      logger.info(
+        `[${((Date.now() - startTime) / 1000).toFixed(2)}s] Done parsing JMdict.`,
+      );
     } catch (err) {
       logger.error(`JMdict parsing failed: ${err}`);
     }
@@ -92,20 +87,17 @@ export class Processor {
         fs.createReadStream(this.kanjidicXMLPath, { encoding: 'utf8' }),
       );
 
-      if (this.verbose)
-        logger.info(
-          `[${((Date.now() - startTime) / 1000).toFixed(2)}s] Done parsing Kanjidic.`,
-        );
+      logger.info(
+        `[${((Date.now() - startTime) / 1000).toFixed(2)}s] Done parsing Kanjidic.`,
+      );
     } catch (err) {
       logger.error(`Kanjidic parsing failed: ${err}`);
     }
 
     this.db.close();
 
-    if (this.verbose) {
-      logger.success(
-        `[${((Date.now() - startTime) / 1000).toFixed(2)}s] All processing complete. Database saved to ${this.outputPath}`,
-      );
-    }
+    logger.success(
+      `[${((Date.now() - startTime) / 1000).toFixed(2)}s] All processing complete. Database saved to ${this.outputPath}`,
+    );
   }
 }

@@ -10,29 +10,29 @@
     "npm": ">=10.9.2",
     "yarn": "yarn is not supported. Please use npm"
   },
-  "scripts": {
-    "1": "Main commands",
-    "start": "node dist/src/index.js",
-    "dev": "npm run clean:data-sqlite && tsx src/index.ts",
-    "build": "npm run clean:build && tsc && tsc-alias && npm run copy:test-files-to-dist",
+    "scripts": {
+    "start": "cross-env NODE_ENV=production node dist/src/index.js",
+    "start:verbose": "cross-env NODE_ENV=production VERBOSE=true node dist/src/index.js",
 
-    "2": "Linting",
+    "dev": "npm run clean:data-sqlite && cross-env NODE_ENV=development VERBOSE=true tsx src/index.ts",
+
+    "build": "npm run clean:build && npm run clean:data-sqlite && tsc && tsc-alias && npm run copy:test-files-to-dist",
+
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
 
-    "3": "Testing",
-    "test": "npm run build && node dist/test/runner.js",
-    "test:release": "npm run build && NODE_ENV=release node dist/test/runner.js",
+    "test": "npm run build && cross-env NODE_ENV=test node dist/test/runner.js",
+    "test:release": "npm run build && cross-env NODE_ENV=release node dist/test/runner.js",
 
-    "4": "JMdict/Packaging",
-    "create-release": "npm run build && npm run start",
+    "create-release": "npm run build && npm run start:verbose",
 
-    "5": "File handling",
     "clean:dist": "rimraf dist",
-    "clean:data-sqlite": "rimraf /data/jmdict.sqlite",
-    "clean:data-jmdict": "rimraf /data/jmdict.xml",
+    "clean:data-sqlite": "rimraf data/jmdict.sqlite",
+    "clean:data-jmdict": "rimraf data/jmdict.xml",
+    "clean:data-kanjidic": "rimraf data/kanjidic.xml",
     "clean:build": "npm run clean:dist && npm run clean:data-sqlite",
-    "clean:all": "npm run clean:dist && npm run clean:data-sqlite && npm run clean:data-jmdict",
+    "clean:all": "npm run clean:dist && npm run clean:data-sqlite && npm run clean:data-jmdict && npm run clean:data-kanjidic",
+
     "copy:test-files-to-dist": "copyfiles -u 1 \"test/**/*.xml\" dist/test"
   },
   "devDependencies": {
@@ -41,6 +41,7 @@
     "@types/sax": "1.2.7",
     "@typescript-eslint/eslint-plugin": "8.56.0",
     "copyfiles": "2.4.1",
+    "cross-env": "^10.1.0",
     "eslint": "9.39.2",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-import": "2.32.0",
