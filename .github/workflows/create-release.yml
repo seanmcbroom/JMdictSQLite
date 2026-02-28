@@ -83,8 +83,12 @@ jobs:
           shred -u "$KEY_FILE"
 
       - name: Sign manifest.json
+        env:
+          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
         run: |
-          gpg --batch --yes --armor --pinentry-mode loopback --detach-sign manifest.json
+          gpg --batch --yes --armor --pinentry-mode loopback \
+              --passphrase "$PGP_PASSPHRASE" \
+              --detach-sign manifest.json
 
       - name: Update 'latest' tag
         run: |
