@@ -1,9 +1,9 @@
 import * as ftp from 'basic-ftp';
-import fs from 'fs';
-import path from 'path';
-import { pipeline } from 'stream';
-import { promisify } from 'util';
-import * as zlib from 'zlib';
+import fs from 'node:fs';
+import path from 'node:path';
+import { pipeline } from 'node:stream';
+import { promisify } from 'node:util';
+import * as zlib from 'node:zlib';
 
 const pipe = promisify(pipeline);
 
@@ -12,17 +12,21 @@ const pipe = promisify(pipeline);
  * @param filename File name without the extension
  * @returns Path to the decompressed XML file, e.g., 'data/JMdict_e.xml'
  */
-async function downloadEDRDGArchive(filename: string): Promise<string> {
+async function downloadEDRDGArchive(
+  filename: string,
+  outputPath: string | undefined,
+): Promise<string> {
   const ftpUrl = 'ftp.edrdg.org';
   const ftpPath = `/pub/Nihongo/${filename}.gz`;
   const localGzPath = path.join('data', `${filename}.gz`);
+  const basePath = outputPath || 'data';
   const localXmlPath = path.join(
-    'data',
+    basePath,
     `${filename.endsWith('.xml') ? filename.slice(0, -4) : filename}.xml`, // Prevents double file extensions
   );
 
   // Ensure data directory exists
-  fs.mkdirSync('data', { recursive: true });
+  fs.mkdirSync(basePath, { recursive: true });
 
   const client = new ftp.Client();
 
@@ -66,11 +70,14 @@ async function downloadEDRDGArchive(filename: string): Promise<string> {
 
   console.log(`Downloaded ${filename} to ${localXmlPath}`);
 
-  return localXmlPath;
+  return path.resolve(localXmlPath);
 }
 
-const downloadJMdict = () => downloadEDRDGArchive('JMdict_e');
-const downloadJMnedict = () => downloadEDRDGArchive('JMnedict_e');
-const downloadKanjidic = () => downloadEDRDGArchive('kanjidic2.xml');
+const downloadJMdict = (outputPath?: string) =>
+  downloadEDRDGArchive('JMdict_e', outputPath);
+const downloadJMnedict = (outputPath?: string) =>
+  downloadEDRDGArchive('JMnedict_e', outputPath);
+const downloadKanjidic = (outputPath?: string) =>
+  downloadEDRDGArchive('kanjidic2.xml', outputPath);
 
 export { downloadJMdict, downloadJMnedict, downloadKanjidic };
