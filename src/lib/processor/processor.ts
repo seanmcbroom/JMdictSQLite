@@ -64,37 +64,40 @@ export class Processor {
   public async process(): Promise<void> {
     const startTime = Date.now();
 
-    const jmdictParser = await JMdictParser.create(this.db);
-
-    await jmdictParser.parse(
-      fs
-        .createReadStream(this.jmdictXMLPath, {
-          encoding: 'utf8',
-        })
-        .pipe(new EntityReplace(JMdictTags)),
-    );
-
-    if (this.verbose)
-      console.log(
-        `Done parsing JMdict. ${((Date.now() - startTime) / 1000).toFixed(2)}s elapsed.`,
+    // JMdict
+    try {
+      const jmdictParser = await JMdictParser.create(this.db);
+      await jmdictParser.parse(
+        fs
+          .createReadStream(this.jmdictXMLPath, {
+            encoding: 'utf8',
+          })
+          .pipe(new EntityReplace(JMdictTags)),
       );
 
+      if (this.verbose)
+        console.log(
+          `Done parsing JMdict. ${((Date.now() - startTime) / 1000).toFixed(2)}s elapsed.`,
+        );
+    } catch (err) {
+      console.error('JMdict parsing failed:', err);
+    }
+
+    // Kanjidic
     try {
       const kanjidicParser = await KanjidicParser.create(this.db);
       await kanjidicParser.parse(
         fs.createReadStream(this.kanjidicXMLPath, { encoding: 'utf8' }),
       );
+
+      if (this.verbose)
+        console.log(
+          `Done parsing Kanjidic. Time elapsed: ${((Date.now() - startTime) / 1000).toFixed(2)}s`,
+        );
     } catch (err) {
       console.error('Kanjidic parsing failed:', err);
     }
 
-    if (this.verbose) console.log(`Done parsing Kanjidic.`);
-
     this.db.close();
-
-    if (this.verbose)
-      console.log(
-        `All done. Time elapsed: ${((Date.now() - startTime) / 1000).toFixed(2)}s`,
-      );
   }
 }
