@@ -38,6 +38,8 @@ export class JMdictParser extends BaseParser<JMdictParser, Entry> {
    * Creates a new JMdict parser instance.
    *
    * @param db - SQLite database used to persist parsed entries
+   * @param openTagHandlers - Map of handlers for opening XML tags
+   * @param closeTagHandlers - Map of handlers for closing XML tags
    */
   private constructor(
     db: JMDictSQLiteDatabase,
@@ -62,22 +64,15 @@ export class JMdictParser extends BaseParser<JMdictParser, Entry> {
     this.buffer.length = 0;
   }
 
-  // -------------------------
-  // Expose current entry & sense
-  // -------------------------
-
   /**
-   * Returns the current JMdict entry being parsed.
-   *
-   * Intended for use by open/close tag handlers to mutate
-   * the active entry as XML elements are processed.
+   * Returns the current entry being parsed.
    */
   public get entry() {
     return this.currentEntry;
   }
 
   /**
-   * Sets the current JMdict entry being parsed.
+   * Sets the current entry being parsed.
    *
    * @param value - Entry to mark as active, or `undefined` when complete
    */

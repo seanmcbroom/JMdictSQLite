@@ -57,6 +57,10 @@ export abstract class BaseParser<P extends BaseParser<P, T>, T> {
    * Creates a new BaseParser instance and wires SAX event handlers.
    *
    * @param options - Parser configuration
+   * @param options.db - SQLite database instance for persistence
+   * @param options.openTagHandlers - Map of XML open-tag handlers
+   * @param options.closeTagHandlers - Map of XML close-tag handlers
+   * @param options.batchSize - Number of entries to buffer before flushing
    */
   constructor({
     db,
@@ -90,16 +94,8 @@ export abstract class BaseParser<P extends BaseParser<P, T>, T> {
     });
   }
 
-  /**
-   * Returns the underlying SAX stream parser.
-   * Useful for piping or advanced stream composition.
-   */
-  getStream() {
-    return this.parser;
-  }
-
   // -------------------------
-  // Handlers called by stream
+  // Event handlers
   // -------------------------
 
   /**
