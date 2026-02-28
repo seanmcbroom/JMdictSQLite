@@ -11,7 +11,7 @@
     "yarn": "yarn is not supported. Please use npm"
   },
   "scripts": {
-    "create-release": "npm run build && cross-env VERBOSE=true node dist/src/index.js",
+    "create-release": "npm run build && node dist/src/index.js",
     "create-release:production": "npm run clean:all && npm run build && cross-env NODE_ENV=production VERBOSE=true node dist/src/index.js",
 
     "start": "cross-env VERBOSE=true node dist/src/index.js",

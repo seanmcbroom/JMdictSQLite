@@ -8,21 +8,25 @@ on:
 permissions:
   contents: write
 
+env:
+  NODE_ENV: production 
+
 jobs:
   test:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-node@v4
-          with:
-            node-version: '22.17.0'
-        - run: npm ci
-        - run: npm run test:production
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.17.0'
+      - run: npm ci
+      - run: npm run test:production
 
   release:
     needs: test
     if: ${{ needs.test.result == 'success' }}
     runs-on: ubuntu-latest
+    environment: production  # Ensure secrets are fetched from your "production" env
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -56,15 +60,36 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           DATE="${{ steps.date.outputs.date }}"
           REPO_URL="https://github.com/${{ github.repository }}"
+          PUBLIC_KEY=$(cat public.key | sed ':a;N;$!ba;s/\n/\\n/g')
 
           cat <<EOF > manifest.json
           {
             "version": "$VERSION",
             "date": "$DATE",
             "url": "$REPO_URL/releases/download/latest/jmdict.sqlite",
-            "sha256": "$CHECKSUM"
+            "sha256": "$CHECKSUM",
+            "pgp_public_key": "$PUBLIC_KEY"
           }
           EOF
+
+      - name: Import PGP private key
+        env:
+          PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
+        run: |
+          # Create a secure temporary file
+          KEY_FILE=$(mktemp)
+          chmod 600 "$KEY_FILE"
+          printf "%s" "$PGP_PRIVATE_KEY" > "$KEY_FILE"
+
+          # Import into GPG
+          gpg --batch --import "$KEY_FILE"
+
+          # Shred temporary file
+          shred -u "$KEY_FILE"
+
+      - name: Sign manifest.json
+        run: |
+          gpg --batch --yes --armor --detach-sign manifest.json
 
       - name: Update 'latest' tag
         run: |
@@ -86,5 +111,6 @@ jobs:
           files: |
             ./data/jmdict.sqlite
             manifest.json
+            manifest.json.asc
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
