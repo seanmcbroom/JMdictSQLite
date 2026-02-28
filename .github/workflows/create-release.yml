@@ -36,7 +36,7 @@ jobs:
         run: npm ci
 
       - name: Parse (generate database)
-        run: npm run create-release
+        run: npm run create-release:production
 
       - name: Set release date
         id: date
