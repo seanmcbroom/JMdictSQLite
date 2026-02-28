@@ -60,15 +60,13 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           DATE="${{ steps.date.outputs.date }}"
           REPO_URL="https://github.com/${{ github.repository }}"
-          PUBLIC_KEY=$(cat public.key | sed ':a;N;$!ba;s/\n/\\n/g')
 
           cat <<EOF > manifest.json
           {
             "version": "$VERSION",
             "date": "$DATE",
             "url": "$REPO_URL/releases/download/latest/jmdict.sqlite",
-            "sha256": "$CHECKSUM",
-            "pgp_public_key": "$PUBLIC_KEY"
+            "sha256": "$CHECKSUM"
           }
           EOF
 
@@ -81,6 +79,14 @@ jobs:
           printf "%s" "$PGP_PRIVATE_KEY" > "$KEY_FILE"
           gpg --batch --import "$KEY_FILE"
           shred -u "$KEY_FILE"
+
+      - name: Sign jmdict.sqlite
+        env:
+          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+        run: |
+          gpg --batch --yes --armor --pinentry-mode loopback \
+              --passphrase "$PGP_PASSPHRASE" \
+              --detach-sign ./data/jmdict.sqlite
 
       - name: Sign manifest.json
         env:
@@ -103,12 +109,33 @@ jobs:
           body: |
             ## Automatic Release
 
-            - 📅 Released on: ${{ steps.date.outputs.date }}
-            - 🧩 Version: v${{ steps.version.outputs.version }}
+            - Released on: ${{ steps.date.outputs.date }}
+            - Version: v${{ steps.version.outputs.version }}
+
+            ## PGP Signed Files
+
+            For added security and to verify the authenticity of this release, the following files are PGP signed:
+
+            - `manifest.json` (PGP signature: `manifest.json.asc`)
+            - `jmdict.sqlite` (PGP signature: `jmdict.sqlite.asc`)
+
+            ### How to Verify the Files
+
+            1. **Import the public key**: First, import the PGP public key used to sign the files. You can find the public key in the repository at `public.key`:
+              ```bash
+              gpg --import public.key
+            ```
+
+            2. **Verify the manifest and SQLite files**: After importing the key, verify the signatures of the files:
+              ```bash
+              gpg --verify manifest.json.asc manifest.json
+              gpg --verify jmdict.sqlite.asc jmdict.sqlite
+              ```
             
             > This is an automatic release not reviewed by a human.
           files: |
             ./data/jmdict.sqlite
+            ./data/jmdict.sqlite.asc
             manifest.json
             manifest.json.asc
         env:
