@@ -10,16 +10,16 @@ const pipe = promisify(pipeline);
 /**
  * Downloads and decompresses a specified archive file (.gz) from the FTP server.
  * @param filename File name without the extension
+ * @param basePath Optional base path to save the downloaded and decompressed files (default: 'data')
  * @returns Path to the decompressed XML file, e.g., 'data/JMdict_e.xml'
  */
 async function downloadEDRDGArchive(
   filename: string,
-  outputPath: string | undefined,
+  basePath: string = 'data',
 ): Promise<string> {
   const ftpUrl = 'ftp.edrdg.org';
   const ftpPath = `/pub/Nihongo/${filename}.gz`;
-  const localGzPath = path.join('data', `${filename}.gz`);
-  const basePath = outputPath || 'data';
+  const localGzPath = path.join(basePath, `${filename}.gz`);
   const localXmlPath = path.join(
     basePath,
     `${filename.endsWith('.xml') ? filename.slice(0, -4) : filename}.xml`, // Prevents double file extensions
