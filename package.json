@@ -22,7 +22,7 @@
     "test": "npm run build && cross-env NODE_ENV=test node dist/test/runner.js",
     "test:production": "npm run build && cross-env NODE_ENV=production node dist/test/runner.js",
 
-    "create-release": "npm run build && npm run start:release",
+    "create-release": "npm run build && npm run start:production",
 
     "clean:dist": "rimraf dist",
     "clean:data-sqlite": "rimraf data/jmdict.sqlite",
