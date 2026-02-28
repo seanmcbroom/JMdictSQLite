@@ -1,5 +1,5 @@
 import type { JMDictSQLiteDatabase } from '@/lib/database/index.js';
-import { BaseParser } from '@/lib/parsers/BaseParser/BaseParser.js';
+import { BaseXMLParser } from '@/lib/parsers/BaseXMLParser/BaseXMLParser.js';
 import closeTagHandlersPromise from '@/lib/parsers/KanjidicParser/handlers/close/index.js';
 import openTagHandlersPromise from '@/lib/parsers/KanjidicParser/handlers/open/index.js';
 import type { Character } from '@/lib/types/database.js';
@@ -8,11 +8,11 @@ import type { CloseTagHandlers, OpenTagHandlers } from '@/lib/types/parser.js';
 /**
  * Streaming parser for the Kanjidic XML dictionary.
  *
- * This parser extends {@link BaseParser} and implements Kanjidic-specific
+ * This parser extends {@link BaseXMLParser} and implements Kanjidic-specific
  * state management and persistence logic. XML tag handling is delegated
  * to handler maps, which mutate the parser's internal state.
  */
-export class KanjidicParser extends BaseParser<KanjidicParser, Character> {
+export class KanjidicParser extends BaseXMLParser<KanjidicParser, Character> {
   /**
    * Currently active character being parsed.
    *

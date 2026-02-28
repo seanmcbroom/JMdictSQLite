@@ -1,4 +1,4 @@
-import { BaseParser } from '../BaseParser/BaseParser.js';
+import { BaseXMLParser } from '../BaseXMLParser/BaseXMLParser.js';
 
 import type { JMDictSQLiteDatabase } from '@/lib/database/index.js';
 import closeTagHandlersPromise from '@/lib/parsers/JMdictParser/handlers/close/index.js';
@@ -9,11 +9,11 @@ import type { CloseTagHandlers, OpenTagHandlers } from '@/lib/types/parser.js';
 /**
  * Streaming parser for the JMdict XML dictionary.
  *
- * This parser extends {@link BaseParser} and implements JMdict-specific
+ * This parser extends {@link BaseXMLParser} and implements JMdict-specific
  * state management and persistence logic. XML tag handling is delegated
  * to handler maps, which mutate the parser's internal state.
  */
-export class JMdictParser extends BaseParser<JMdictParser, Entry> {
+export class JMdictParser extends BaseXMLParser<JMdictParser, Entry> {
   /**
    * Currently active dictionary entry being parsed.
    *

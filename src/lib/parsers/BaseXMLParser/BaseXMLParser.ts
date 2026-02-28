@@ -4,12 +4,12 @@ import type { JMDictSQLiteDatabase } from '@/lib/database/index.js';
 import type { OpenTagHandlers, CloseTagHandlers } from '@/lib/types/parser.js';
 
 /**
- * Configuration options for {@link BaseParser}.
+ * Configuration options for {@link BaseXMLParser}.
  *
- * @template P - Concrete parser type extending BaseParser
+ * @template P - Concrete parser type extending BaseXMLParser
  * @template T - Type of items in the buffer
  */
-interface ParserOptions<P extends BaseParser<P, T>, T> {
+interface ParserOptions<P extends BaseXMLParser<P, T>, T> {
   /** SQLite database instance used for persisting parsed entries */
   db: JMDictSQLiteDatabase;
 
@@ -37,10 +37,10 @@ interface ParserOptions<P extends BaseParser<P, T>, T> {
  * The generic parameter `P` enables strongly typed handler callbacks
  * that receive the concrete parser instance.
  *
- * @template P - Concrete parser type extending BaseParser
+ * @template P - Concrete parser type extending BaseXMLParser
  * @template T - Type of items in the buffer
  */
-export abstract class BaseParser<P extends BaseParser<P, T>, T> {
+export abstract class BaseXMLParser<P extends BaseXMLParser<P, T>, T> {
   protected readonly db: JMDictSQLiteDatabase;
 
   protected readonly parser = sax.createStream(true, { trim: true });
@@ -54,7 +54,7 @@ export abstract class BaseParser<P extends BaseParser<P, T>, T> {
   protected readonly batchSize: number;
 
   /**
-   * Creates a new BaseParser instance and wires SAX event handlers.
+   * Creates a new BaseXMLParser instance and wires SAX event handlers.
    *
    * @param options - Parser configuration
    * @param options.db - SQLite database instance for persistence
