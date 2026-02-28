@@ -11,20 +11,18 @@
     "yarn": "yarn is not supported. Please use npm"
   },
     "scripts": {
-    "start": "cross-env NODE_ENV=production node dist/src/index.js",
-    "start:verbose": "cross-env NODE_ENV=production VERBOSE=true node dist/src/index.js",
-
+    "start": "cross-env VERBOSE=true node dist/src/index.js",
+    "start:production": "cross-env NODE_ENV=production VERBOSE=true node dist/src/index.js",
     "dev": "npm run clean:data-sqlite && cross-env NODE_ENV=development VERBOSE=true tsx src/index.ts",
-
     "build": "npm run clean:build && npm run clean:data-sqlite && tsc && tsc-alias && npm run copy:test-files-to-dist",
 
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
 
     "test": "npm run build && cross-env NODE_ENV=test node dist/test/runner.js",
-    "test:release": "npm run build && cross-env NODE_ENV=release node dist/test/runner.js",
+    "test:production": "npm run build && cross-env NODE_ENV=production node dist/test/runner.js",
 
-    "create-release": "npm run build && npm run start:verbose",
+    "create-release": "npm run build && npm run start:release",
 
     "clean:dist": "rimraf dist",
     "clean:data-sqlite": "rimraf data/jmdict.sqlite",

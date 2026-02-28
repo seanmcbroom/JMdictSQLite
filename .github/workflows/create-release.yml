@@ -17,7 +17,7 @@ jobs:
           with:
             node-version: '22.17.0'
         - run: npm ci
-        - run: npm run test:release
+        - run: npm run test:production
 
   release:
     needs: test
