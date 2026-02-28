@@ -5,6 +5,7 @@ import { JMDictSQLiteDatabase } from '@/lib/database/index.js';
 import { JMdictParser } from '@/lib/parsers/JMdictParser/index.js';
 import { KanjidicParser } from '@/lib/parsers/KanjidicParser/index.js';
 import { EntityReplace } from '@/lib/util/EntityReplace.js';
+import { logger } from '@/lib/util/log.js';
 
 /**
  * Orchestrates parsing of JMdict and Kanjidic XML files and
@@ -30,6 +31,7 @@ export class Processor {
    * @param params.jmdictXMLPath - Path to the JMdict XML file
    * @param params.kanjidicXMLPath - Path to the Kanjidic XML file
    * @param params.outputPath - Path where the SQLite database will be created
+   * @param params.verbose - Whether to log timing information to the console
    */
   constructor({
     jmdictXMLPath,
@@ -76,11 +78,11 @@ export class Processor {
       );
 
       if (this.verbose)
-        console.log(
-          `Done parsing JMdict. ${((Date.now() - startTime) / 1000).toFixed(2)}s elapsed.`,
+        logger.info(
+          `[${((Date.now() - startTime) / 1000).toFixed(2)}s] Done parsing JMdict.`,
         );
     } catch (err) {
-      console.error('JMdict parsing failed:', err);
+      logger.error(`JMdict parsing failed: ${err}`);
     }
 
     // Kanjidic
@@ -91,13 +93,19 @@ export class Processor {
       );
 
       if (this.verbose)
-        console.log(
-          `Done parsing Kanjidic. Time elapsed: ${((Date.now() - startTime) / 1000).toFixed(2)}s`,
+        logger.info(
+          `[${((Date.now() - startTime) / 1000).toFixed(2)}s] Done parsing Kanjidic.`,
         );
     } catch (err) {
-      console.error('Kanjidic parsing failed:', err);
+      logger.error(`Kanjidic parsing failed: ${err}`);
     }
 
     this.db.close();
+
+    if (this.verbose) {
+      logger.success(
+        `[${((Date.now() - startTime) / 1000).toFixed(2)}s] All processing complete. Database saved to ${this.outputPath}`,
+      );
+    }
   }
 }

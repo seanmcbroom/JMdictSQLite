@@ -5,6 +5,8 @@ import { pipeline } from 'node:stream';
 import { promisify } from 'node:util';
 import * as zlib from 'node:zlib';
 
+import { logger } from '@/lib/util/log.js';
+
 const pipe = promisify(pipeline);
 
 /**
@@ -33,7 +35,7 @@ async function downloadEDRDGArchive(
   /* Check if the XML file already exists,
    if it does, skip download and decompression. */
   if (fs.existsSync(localXmlPath)) {
-    console.log(`${filename} already exists. Skipping download.`);
+    logger.info(`${filename} already exists. Skipping download.`);
 
     return localXmlPath;
   }
