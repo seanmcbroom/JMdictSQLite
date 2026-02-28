@@ -111,32 +111,16 @@ jobs:
           tag_name: latest
           name: JMdictSQLite-${{ steps.date.outputs.date }}-${{steps.version.outputs.version}}
           body: |
-            ## Automatic Release
-
-            - Released on: ${{ steps.date.outputs.date }}
-            - Version: v${{ steps.version.outputs.version }}
-
-            ## PGP Signed Files
-
-            For added security and to verify the authenticity of this release, the following files are PGP signed:
-
-            - `manifest.json` (PGP signature: `manifest.json.asc`)
-            - `jmdict.sqlite` (PGP signature: `jmdict.sqlite.asc`)
-
-            ### How to Verify the Files
-
-            1. **Import the public key**: First, import the PGP public key used to sign the files. You can find the public key in the repository at `public.key`:
-              ```bash
-              gpg --import public.key
-            ```
-
-            2. **Verify the manifest and SQLite files**: After importing the key, verify the signatures of the files:
-              ```bash
-              gpg --verify manifest.json.asc manifest.json
-              gpg --verify jmdict.sqlite.asc jmdict.sqlite
-              ```
-            
             > This is an automatic release not reviewed by a human.
+
+            - Released on: 2026-02-28
+            - Version: v1.5.2
+
+            #### PGP Signed Files
+
+            The following files are PGP signed. The public key can be found in the repository at `public.key`.
+            - `manifest.json` (signature: `manifest.json.asc`)
+            - `jmdict.sqlite` (signature: `jmdict.sqlite.asc`)
           files: |
             ./data/jmdict.sqlite
             ./data/jmdict.sqlite.asc
