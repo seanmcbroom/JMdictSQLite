@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename);
 let jmdictPath: string;
 let kanjidicPath: string;
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'deploy') {
   const dataDir = path.resolve(__dirname, '../data');
   jmdictPath = await downloadJMdict(dataDir);
   kanjidicPath = await downloadKanjidic(dataDir);
