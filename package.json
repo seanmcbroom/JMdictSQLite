@@ -23,7 +23,6 @@
     "3": "Testing",
     "test": "npm run build && node dist/test/runner.js",
     "test:release": "npm run build && NODE_ENV=release node dist/test/runner.js",
-    "test:dev": "tsx dist/test/runner.ts",
 
     "4": "JMdict/Packaging",
     "create-release": "npm run build && npm run start",

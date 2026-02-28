@@ -31,12 +31,26 @@ async function main() {
     ...collectTestFiles(path.join(__dirname, '/tests/suites')),
   ];
 
-  run({
+  const testStream = run({
     files: testFiles,
     concurrency: false,
-  })
-    .compose(spec())
-    .pipe(process.stdout);
+  });
+
+  let failed = 0;
+
+  testStream.on('test:fail', () => {
+    failed++;
+  });
+
+  testStream.compose(spec()).pipe(process.stdout);
+
+  await new Promise(resolve => {
+    testStream.on('end', resolve);
+  });
+
+  if (failed > 0) {
+    process.exit(1);
+  }
 }
 
 await main();
