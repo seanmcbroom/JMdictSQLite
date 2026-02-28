@@ -27,7 +27,7 @@ describe('Senses Table', () => {
     validateJsonField('pos', row.pos);
     validateJsonField('fields', row.fields);
     validateJsonField('tags', row.tags);
-    validateJsonField('refs', row.refs, false);
+    validateJsonField('refs', row.refs);
 
     db.close();
   });
