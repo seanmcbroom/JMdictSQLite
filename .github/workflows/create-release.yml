@@ -1,4 +1,4 @@
-name: Release Latest JMDict SQLite
+name: Release Latest JMdict SQLite
 
 on:
   schedule:
@@ -9,7 +9,19 @@ permissions:
   contents: write
 
 jobs:
+  test:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: '22.17.0'
+        - run: npm ci
+        - run: npm run test:production
+
   release:
+    needs: test
+    if: ${{ needs.test.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -24,7 +36,7 @@ jobs:
         run: npm ci
 
       - name: Parse (generate database)
-        run: npm run create-release
+        run: npm run create-release:production
 
       - name: Set release date
         id: date

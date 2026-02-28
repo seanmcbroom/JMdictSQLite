@@ -1,32 +1,41 @@
 import * as ftp from 'basic-ftp';
-import fs from 'fs';
-import path from 'path';
-import { pipeline } from 'stream';
-import { promisify } from 'util';
-import * as zlib from 'zlib';
+import fs from 'node:fs';
+import path from 'node:path';
+import { pipeline } from 'node:stream';
+import { promisify } from 'node:util';
+import * as zlib from 'node:zlib';
+
+import { logger } from '@/lib/util/log.js';
 
 const pipe = promisify(pipeline);
 
 /**
  * Downloads and decompresses a specified archive file (.gz) from the FTP server.
  * @param filename File name without the extension
+ * @param basePath Optional base path to save the downloaded and decompressed files (default: 'data')
  * @returns Path to the decompressed XML file, e.g., 'data/JMdict_e.xml'
  */
-async function downloadEDRDGArchive(filename: string): Promise<string> {
+async function downloadEDRDGArchive(
+  filename: string,
+  basePath: string = 'data',
+): Promise<string> {
   const ftpUrl = 'ftp.edrdg.org';
   const ftpPath = `/pub/Nihongo/${filename}.gz`;
-  const localGzPath = path.join('data', `${filename}.gz`);
-  const localXmlPath = path.join('data', `${filename}.xml`);
+  const localGzPath = path.join(basePath, `${filename}.gz`);
+  const localXmlPath = path.join(
+    basePath,
+    `${filename.endsWith('.xml') ? filename.slice(0, -4) : filename}.xml`, // Prevents double file extensions
+  );
 
   // Ensure data directory exists
-  fs.mkdirSync('data', { recursive: true });
+  fs.mkdirSync(basePath, { recursive: true });
 
   const client = new ftp.Client();
 
   /* Check if the XML file already exists,
    if it does, skip download and decompression. */
   if (fs.existsSync(localXmlPath)) {
-    console.log(`${filename} already exists. Skipping download.`);
+    logger.info(`${filename} already exists. Skipping download.`);
 
     return localXmlPath;
   }
@@ -63,11 +72,14 @@ async function downloadEDRDGArchive(filename: string): Promise<string> {
 
   console.log(`Downloaded ${filename} to ${localXmlPath}`);
 
-  return localXmlPath;
+  return path.resolve(localXmlPath);
 }
 
-const downloadJMdict = () => downloadEDRDGArchive('JMdict_e');
-const downloadJMnedict = () => downloadEDRDGArchive('JMnedict_e');
-const downloadKanjidic = () => downloadEDRDGArchive('kanjidic');
+const downloadJMdict = (outputPath?: string) =>
+  downloadEDRDGArchive('JMdict_e', outputPath);
+const downloadJMnedict = (outputPath?: string) =>
+  downloadEDRDGArchive('JMnedict_e', outputPath);
+const downloadKanjidic = (outputPath?: string) =>
+  downloadEDRDGArchive('kanjidic2.xml', outputPath);
 
 export { downloadJMdict, downloadJMnedict, downloadKanjidic };

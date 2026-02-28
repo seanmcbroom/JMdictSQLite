@@ -2,12 +2,12 @@
 {
   "compilerOptions": {
     "target": "es2022",
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "outDir": "dist",
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
+      "@/test/*": ["./test/*"]
     },
     "lib": ["es2023"],
     "strict": true,
