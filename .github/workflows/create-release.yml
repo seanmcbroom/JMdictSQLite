@@ -74,9 +74,9 @@ jobs:
           }
           EOF
 
-      - name: Compress build archive
+      - name: Compress source archive
         run: |
-          tar -czf dist.tar.gz dist
+          tar -czf source.tar.gz -C $GITHUB_WORKSPACE .
 
       - name: Import PGP private key
         env:
@@ -104,13 +104,13 @@ jobs:
               --passphrase "$PGP_PASSPHRASE" \
               --detach-sign manifest.json
 
-      - name: Sign build archive
+      - name: Sign source archive
         env:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
         run: |
           gpg --batch --yes --armor --pinentry-mode loopback \
               --passphrase "$PGP_PASSPHRASE" \
-              --detach-sign dist.tar.gz
+              --detach-sign source.tar.gz
 
       - name: Update 'latest' tag
         run: |
@@ -127,7 +127,7 @@ jobs:
 
             **jmdict.sqlite** - Compiled SQLite database, ready for direct use.
             **manifest.json** - Release metadata with version, date, URLs, and checksum.
-            **dist.tar.gz** - Compressed `dist/` build output.
+            **source.tar.gz** - Compressed source including build and modules.
 
             All artifacts are PGP-signed; the public key is available in this repository as `public.key`.
 
@@ -142,7 +142,7 @@ jobs:
             ./data/jmdict.sqlite.asc
             manifest.json
             manifest.json.asc
-            dist.tar.gz
-            dist.tar.gz.asc
+            source.tar.gz
+            source.tar.gz.asc
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
