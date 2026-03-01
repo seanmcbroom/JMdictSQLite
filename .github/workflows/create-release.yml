@@ -74,6 +74,10 @@ jobs:
           }
           EOF
 
+      - name: Compress build archive
+        run: |
+          tar -czf dist.tar.gz dist
+
       - name: Import PGP private key
         env:
           PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
@@ -100,6 +104,14 @@ jobs:
               --passphrase "$PGP_PASSPHRASE" \
               --detach-sign manifest.json
 
+      - name: Sign build archive
+        env:
+          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+        run: |
+          gpg --batch --yes --armor --pinentry-mode loopback \
+              --passphrase "$PGP_PASSPHRASE" \
+              --detach-sign dist.tar.gz
+
       - name: Update 'latest' tag
         run: |
           git tag -f latest
@@ -111,20 +123,29 @@ jobs:
           tag_name: latest
           name: JMdictSQLite-${{ steps.date.outputs.date }}-${{steps.version.outputs.version}}
           body: |
+            ### Release artifacts
+
+            **jmdict.sqlite** - Compiled SQLite database, ready for direct use.
+            **manifest.json** - Release metadata with version, date, URLs, and checksum.
+            **dist.tar.gz** - Compressed `dist/` build output.
+
+            All artifacts are PGP-signed; verify with:
+            `gpg --verify <file>.asc <file>`
+
+            The public key is available in this repository as `public.key`.
+
+            ---
+
             > This is an automatic release not reviewed by a human.
 
-            - Released on: ${{ steps.date.outputs.date }}
-            - Version: ${{steps.version.outputs.version}}
-
-            #### PGP Signed Files
-
-            The following files are PGP signed. The public key can be found in the repository at `public.key`.
-            - `manifest.json` (signature: `manifest.json.asc`)
-            - `jmdict.sqlite` (signature: `jmdict.sqlite.asc`)
+            Released on: ${{ steps.date.outputs.date }}
+            Version: ${{steps.version.outputs.version}}
           files: |
             ./data/jmdict.sqlite
             ./data/jmdict.sqlite.asc
             manifest.json
             manifest.json.asc
+            dist.tar.gz
+            dist.tar.gz.asc
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
