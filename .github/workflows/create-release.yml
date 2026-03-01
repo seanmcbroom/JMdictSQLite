@@ -74,9 +74,18 @@ jobs:
           }
           EOF
 
+      - name: Create source directory
+        run: |
+          mkdir source
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='source' \
+            ./ source/
+
       - name: Compress source archive
         run: |
-          tar --exclude='source.tar.gz' -czf source.tar.gz -C $GITHUB_WORKSPACE .
+          tar -czf source.tar.gz -C source .
 
       - name: Import PGP private key
         env:
