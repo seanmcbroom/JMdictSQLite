@@ -129,10 +129,7 @@ jobs:
             **manifest.json** - Release metadata with version, date, URLs, and checksum.
             **dist.tar.gz** - Compressed `dist/` build output.
 
-            All artifacts are PGP-signed; verify with:
-            `gpg --verify <file>.asc <file>`
-
-            The public key is available in this repository as `public.key`.
+            All artifacts are PGP-signed; the public key is available in this repository as `public.key`.
 
             ---
 
