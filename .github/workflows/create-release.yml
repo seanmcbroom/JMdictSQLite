@@ -76,7 +76,7 @@ jobs:
 
       - name: Compress source archive
         run: |
-          tar -czf source.tar.gz -C $GITHUB_WORKSPACE .
+          tar --exclude='source.tar.gz' -czf source.tar.gz -C $GITHUB_WORKSPACE .
 
       - name: Import PGP private key
         env:
