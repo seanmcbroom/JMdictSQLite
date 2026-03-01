@@ -113,8 +113,8 @@ jobs:
           body: |
             > This is an automatic release not reviewed by a human.
 
-            - Released on: 2026-02-28
-            - Version: v1.5.2
+            - Released on: ${{ steps.date.outputs.date }}
+            - Version: ${{steps.version.outputs.version}}
 
             #### PGP Signed Files
 
