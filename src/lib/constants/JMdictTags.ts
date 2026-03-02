@@ -7,7 +7,6 @@ import type { TagDictionary } from '@/lib/types/tags.js';
  */
 export const JMdictTags: TagDictionary = {
   pos: [
-    'v', // Custom tag representing all verb entires, verb info is split (See https://github.com/seanmcbroom/JMdictSQLite/issues/5)
     'adj-f',
     'adj-i',
     'adj-ix',
