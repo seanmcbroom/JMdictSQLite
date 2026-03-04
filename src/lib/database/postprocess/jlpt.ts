@@ -40,7 +40,7 @@ export async function postProcessJLPT(db: DatabaseType) {
       // Kana + Kanji matching
       for (const kana of kanaArr) {
         for (const kanji of kanjiArr) {
-          level = pairMap.get(`${kana.written}${kanji.written}`);
+          level = pairMap.get(`${kana.written}-${kanji.written}`);
 
           if (level) {
             kanaArr[0].tags?.push(`jlpt-${level}`);
@@ -52,8 +52,8 @@ export async function postProcessJLPT(db: DatabaseType) {
       }
     } else {
       // Kana-only matching
-      for (const k of kanaArr) {
-        level = pairMap.get(`${k.written}-`);
+      for (const kana of kanaArr) {
+        level = pairMap.get(`${kana.written}-`);
 
         if (level) {
           kanaArr[0].tags?.push(`jlpt-${level}`);
@@ -63,9 +63,7 @@ export async function postProcessJLPT(db: DatabaseType) {
       }
     }
 
-    if (!level) {
-      continue;
-    }
+    if (!level) continue;
 
     updates.push({
       ent_seq: e.ent_seq,
