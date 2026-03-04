@@ -17,9 +17,7 @@ export async function postProcessJLPT(db: DatabaseType) {
     .forEach(line => {
       const [kana, kanji, level] = line.split(',');
 
-      if (!kana && !kanji) return;
-
-      pairMap.set(`${kana.trim()}|${kanji.trim()}`, level.trim() as JLPTLevel);
+      pairMap.set(`${kana.trim()}-${kanji.trim()}`, level.trim() as JLPTLevel);
     });
 
   const entries = db
@@ -38,11 +36,12 @@ export async function postProcessJLPT(db: DatabaseType) {
 
     let level: JLPTLevel | undefined;
 
-    if (kanjiArr.length > 1) {
+    if (kanjiArr.length >= 1) {
       // Kana + Kanji matching
-      for (const k of kanaArr) {
-        for (const j of kanjiArr) {
-          level = pairMap.get(`${k.written}|${j.written}`);
+      for (const kana of kanaArr) {
+        for (const kanji of kanjiArr) {
+          level = pairMap.get(`${kana.written}${kanji.written}`);
+
           if (level) {
             kanaArr[0].tags?.push(`jlpt-${level}`);
             kanjiArr[0].tags?.push(`jlpt-${level}`);
@@ -54,7 +53,8 @@ export async function postProcessJLPT(db: DatabaseType) {
     } else {
       // Kana-only matching
       for (const k of kanaArr) {
-        level = pairMap.get(`${k.written}|`);
+        level = pairMap.get(`${k.written}-`);
+
         if (level) {
           kanaArr[0].tags?.push(`jlpt-${level}`);
 
@@ -63,7 +63,9 @@ export async function postProcessJLPT(db: DatabaseType) {
       }
     }
 
-    if (!level) continue;
+    if (!level) {
+      continue;
+    }
 
     updates.push({
       ent_seq: e.ent_seq,
