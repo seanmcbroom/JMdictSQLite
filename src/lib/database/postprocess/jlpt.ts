@@ -2,6 +2,7 @@ import type { Database as DatabaseType } from 'better-sqlite3';
 import fs from 'node:fs';
 
 import type { Entry, Written } from '@/lib/types/database-query.js';
+import { logger } from '@/lib/util/log.js';
 
 type JLPTLevel = 'n1' | 'n2' | 'n3' | 'n4' | 'n5';
 
@@ -15,7 +16,8 @@ export async function postProcessJLPT(db: DatabaseType) {
     .filter(Boolean)
     .forEach(line => {
       const [kana, kanji, level] = line.split(',');
-      if (!kana || !kanji) return;
+
+      if (!kana && !kanji) return;
 
       pairMap.set(`${kana.trim()}|${kanji.trim()}`, level.trim() as JLPTLevel);
     });
@@ -23,10 +25,6 @@ export async function postProcessJLPT(db: DatabaseType) {
   const entries = db
     .prepare(`SELECT ent_seq, kanji, kana FROM entries`)
     .all() as Entry[];
-
-  const updateStmt = db.prepare(
-    `UPDATE entries SET kanji = ?, kana = ? WHERE ent_seq = ?`,
-  );
 
   const updates: {
     ent_seq: number;
@@ -40,22 +38,32 @@ export async function postProcessJLPT(db: DatabaseType) {
 
     let level: JLPTLevel | undefined;
 
-    for (const k of kanaArr) {
-      for (const j of kanjiArr) {
-        level = pairMap.get(`${k.written}|${j.written}`);
+    if (kanjiArr.length > 1) {
+      // Kana + Kanji matching
+      for (const k of kanaArr) {
+        for (const j of kanjiArr) {
+          level = pairMap.get(`${k.written}|${j.written}`);
+          if (level) {
+            kanaArr[0].tags?.push(`jlpt-${level}`);
+            kanjiArr[0].tags?.push(`jlpt-${level}`);
 
-        if (level) break;
+            break;
+          }
+        }
+      }
+    } else {
+      // Kana-only matching
+      for (const k of kanaArr) {
+        level = pairMap.get(`${k.written}|`);
+        if (level) {
+          kanaArr[0].tags?.push(`jlpt-${level}`);
+
+          break;
+        }
       }
     }
 
     if (!level) continue;
-
-    const tag = `jlpt-${level}`;
-
-    for (const w of [...kanjiArr, ...kanaArr]) {
-      w.tags ??= [];
-      if (!w.tags.includes(tag)) w.tags.push(tag);
-    }
 
     updates.push({
       ent_seq: e.ent_seq,
@@ -64,11 +72,15 @@ export async function postProcessJLPT(db: DatabaseType) {
     });
   }
 
+  const updateStmt = db.prepare(
+    `UPDATE entries SET kanji = ?, kana = ? WHERE ent_seq = ?`,
+  );
+
   const transaction = db.transaction((rows: typeof updates) => {
     rows.forEach(row => updateStmt.run(row.kanji, row.kana, row.ent_seq));
   });
 
   transaction(updates);
 
-  console.log(`JLPT tags injected into ${updates.length} entries`);
+  logger.gray(`JLPT tags injected into ${updates.length} entries`);
 }
