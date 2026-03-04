@@ -94,7 +94,7 @@ export class Processor {
       logger.error(`Kanjidic parsing failed: ${err}`);
     }
 
-    this.db.close();
+    await this.db.close();
 
     logger.success(
       `[${((Date.now() - startTime) / 1000).toFixed(2)}s] All processing complete. Database saved to ${this.outputPath}`,
