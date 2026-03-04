@@ -30,8 +30,8 @@ export interface Sense {
 // JMdict-related JSON helper types
 export interface Written {
   written: string;
-  tags?: [];
-  restr?: [];
+  tags?: string[];
+  restr?: string[];
 }
 
 export interface Ref {
