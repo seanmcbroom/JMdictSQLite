@@ -54,7 +54,7 @@
     "typescript-eslint": "8.58.0"
   },
   "dependencies": {
-    "basic-ftp": "5.2.1",
+    "basic-ftp": "5.2.2",
     "better-sqlite3": "12.8.0",
     "sax": "1.6.0"
   }
