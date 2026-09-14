@@ -34,7 +34,7 @@
     "copy:test-files-to-dist": "copyfiles -u 1 \"test/**/*.xml\" dist/test"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "7.6.13",
+    "@types/better-sqlite3": "9.6.0",
     "@types/node": "26.4.1",
     "@types/sax": "1.2.7",
     "@typescript-eslint/eslint-plugin": "8.69.0",
