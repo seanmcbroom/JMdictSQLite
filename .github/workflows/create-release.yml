@@ -2,7 +2,7 @@ name: Release Latest JMdict SQLite
 
 on:
   schedule:
-    - cron: '35 4 * * *'  # Every day at 4:35 AM UTC
+    - cron: '35 5 * * 0'  # Every day at 5:35 AM UTC, on Sunday
   workflow_dispatch:
 
 permissions:
@@ -15,8 +15,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: '22.17.0'
       - run: npm ci
@@ -29,10 +29,10 @@ jobs:
     environment: deploy
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '22.17.0'
 
