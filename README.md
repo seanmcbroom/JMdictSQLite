@@ -1,6 +1,6 @@
 # JMdictSQLite
 A lightweight, SQLite-compatible version of the JMdict Japanese-English dictionary.<br>
-*Automatic daily releases @ 5AM UTC.*
+*Automatic weekly releases @ Sunday, 6AM UTC.*
 
 **⬇️ Download latest:** [jmdict.sqlite](https://github.com/seanmcbroom/JMdictSQLite/releases/download/latest/jmdict.sqlite)
 
