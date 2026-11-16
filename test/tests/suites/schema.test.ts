@@ -35,4 +35,29 @@ describe('Database Schema & File', () => {
 
     db.close();
   });
+
+  it('should include query planner statistics (ANALYZE)', () => {
+    const db = openDb();
+    const stats = db
+      .prepare("SELECT tbl FROM sqlite_stat1 WHERE tbl = 'senses'")
+      .all();
+
+    equal(stats.length > 0, true, 'sqlite_stat1 has no rows for senses');
+
+    db.close();
+  });
+
+  it('should not have a redundant index on kanji.literal', () => {
+    const db = openDb();
+    const indexes = db
+      .prepare(
+        "SELECT name FROM sqlite_master WHERE type = 'index' AND tbl_name = 'kanji'",
+      )
+      .all() as { name: string }[];
+
+    // Only the PRIMARY KEY's own index
+    equal(indexes.length, 1, indexes.map(i => i.name).join(', '));
+
+    db.close();
+  });
 });
