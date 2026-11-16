@@ -37,9 +37,17 @@ export interface Sense {
   see?: Ref[];
 }
 
+/**
+ * A cross-reference (`<xref>` / `<ant>`) as written in JMdict:
+ * `keb`, `reb` or `keb・reb`, optionally followed by `・N`.
+ */
 export interface Ref {
+  /** The keb or reb of the target entry */
   written: string;
-  index?: string;
+  /** The target's reb, when given as `keb・reb` */
+  reading?: string;
+  /** 1-based sense number in the target entry */
+  sense?: number;
 }
 
 // -------------------------
