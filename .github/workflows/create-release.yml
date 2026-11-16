@@ -130,7 +130,7 @@ jobs:
           git push origin -f latest
 
       - name: GitHub Release Upload for latest
-        uses: softprops/action-gh-release@v2.3.2
+        uses: softprops/action-gh-release@v3.0.4
         with:
           tag_name: latest
           name: JMdictSQLite-${{ steps.date.outputs.date }}-${{steps.version.outputs.version}}
