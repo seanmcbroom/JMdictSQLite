@@ -42,6 +42,4 @@ export const CREATE_TABLES_SQL = `
       query_code    TEXT DEFAULT NULL CHECK (query_code IS NULL OR json_valid(query_code)),
       misc          TEXT DEFAULT NULL CHECK (misc IS NULL OR json_valid(misc))
     );
-
-    CREATE INDEX IF NOT EXISTS idx_kanji_literal ON kanji(literal);
 `;

@@ -100,6 +100,11 @@ export class JMDictSQLiteDatabase {
   async close() {
     await runPostProcesses(this.db);
 
+    // The released file is read-only: record index statistics for the
+    // query planner, then rebuild it compactly (~7% smaller).
+    this.db.exec('ANALYZE');
+    this.db.exec('VACUUM');
+
     this.db.close();
   }
 
