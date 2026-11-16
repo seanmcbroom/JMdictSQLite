@@ -25,6 +25,13 @@ cd JMdictSQLite
 ```bash
 npm ci
 ```
+> **Windows without Visual Studio Build Tools:** `npm ci` tries to compile `better-sqlite3` from source and fails. Run `npm ci --ignore-scripts` instead; `better-sqlite3` ships a prebuilt Windows binary.
+
+Run the tests (they build from the sample XML in `test/data`, no download needed):
+```bash
+npm test
+```
+Build the full database (downloads JMdict and KANJIDIC2 into `data/` first):
 ```bash
 npm run create-release
 ```

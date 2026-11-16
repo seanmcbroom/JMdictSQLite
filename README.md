@@ -1,6 +1,6 @@
 # JMdictSQLite
 A lightweight, SQLite-compatible version of the JMdict Japanese-English dictionary.<br>
-*Automatic weekly releases @ Sunday, 6AM UTC.*
+*Automatic weekly releases every Sunday (scheduled for 05:35 UTC; GitHub may start the run later).*
 
 **⬇️ Download latest:** [jmdict.sqlite](https://github.com/seanmcbroom/JMdictSQLite/releases/download/latest/jmdict.sqlite)
 
@@ -8,7 +8,7 @@ A lightweight, SQLite-compatible version of the JMdict Japanese-English dictiona
 This project transforms the JMdict XML dataset into a normalized, developer-friendly SQLite format for use in apps, browser extensions, or any application needing a fast, local Japanese-English dictionary.
 - Designed for easy integration into apps and tools
 - Compact schema with JSON-encoded kanji, kana, and sense data
-- Ideal for full-text search, filtering, and offline usage
+- Works offline; search and filter with SQLite's JSON functions (see the example query below; no full-text index is included)
 
 ## 🗂️ _Database Schema Diagram_
 *`PK`* — Primary Key: uniquely identifies a row in the table.<br>
@@ -29,7 +29,7 @@ Each entry can have multiple senses, but each sense belongs to exactly one entry
 │          – JSON-encoded            │            | note?       TEXT                                  | 
 └────────────────────────────────────┘            │ glosses     TEXT     (JSON-encoded)               │
                                                   │ pos         TEXT     (JSON-encoded)               │
-                                                  | field?      TEXT     (JSON-encoded)               |
+                                                  | fields?     TEXT     (JSON-encoded)               |
                                                   | tags?       TEXT     (JSON-encoded)               |
                                                   | refs?       TEXT     (JSON-encoded)               |
                                                   └───────────────────────────────────────────────────┘
@@ -45,7 +45,15 @@ Each entry can have multiple senses, but each sense belongs to exactly one entry
 │ query_code?    TEXT        (JSON-encoded)                                    │
 │ misc?          TEXT        (JSON-encoded)                                    │
 └──────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────┐
+│                meta                │
+├────────────────────────────────────┤
+│ key       TEXT          PK         │
+│ value     TEXT                     │
+└────────────────────────────────────┘
 ```
+The `meta` table holds build information as key/value pairs: `version` (the JMdictSQLite version that built the file), `language` and `license`.
 ### 📝 SQLite Query Types (TypeScript)
 ```ts
 /**
@@ -67,7 +75,7 @@ export interface Entry {
 export interface Sense {
   id: number; // Primary Key (AUTOINC)
   ent_seq: number; // Foreign Key → entries.ent_seq
-  sort_order: number
+  sort_order: number; // 1-based position of the sense within its entry
   lang?: string;
   note?: string;
   glosses: string; // JSON.stringify(string[])
@@ -80,15 +88,21 @@ export interface Sense {
 // JMdict-related JSON helper types
 export interface Written {
   written: string;
-  tags?: [];
-  restr?: [];
+  // JMdict ke_inf/re_inf/ke_pri/re_pri codes, e.g. "ichi1", "nf01", "rK".
+  // The forms an entry's JLPT level was matched on also get "jlpt-n1"…"jlpt-n5".
+  tags?: string[];
+  restr?: string[]; // re_restr: the kanji this reading is restricted to
 }
 
+// A resolved cross-reference (<xref> → 'see', <ant> → 'ant').
+// A reference that names a sense (e.g. 丸・まる・1) links just that sense;
+// otherwise there is one Ref per sense of the target entry.
+// References that don't match exactly one entry are left out.
 export interface Ref {
   type: 'see' | 'ant';
-  ent_seq: number;
-  sense_id: number;
-  written: string;
+  ent_seq: number; // target entry
+  sense_id: number; // target sense (senses.id)
+  written: string; // the kanji or kana form the reference was written with
 }
 
 // -------------------------
