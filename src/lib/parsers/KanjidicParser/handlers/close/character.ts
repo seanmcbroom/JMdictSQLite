@@ -5,7 +5,7 @@ export default function character(parser: KanjidicParser) {
 
   if (!current) return;
 
-  parser.bufferRef.push(current);
-
   parser.character = undefined;
+
+  parser.enqueue(current);
 }
