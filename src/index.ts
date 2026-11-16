@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { inspect } from 'node:util';
 
 import { Processor } from '@/lib/processor/index.js';
 import {
@@ -19,8 +20,13 @@ if (fs.existsSync(outputPath)) {
   process.exit(1);
 }
 
-new Processor({
-  jmdictXMLPath: path.resolve(jmdictPath),
-  kanjidicXMLPath: path.resolve(kanjidicPath),
-  outputPath,
-}).process();
+try {
+  await new Processor({
+    jmdictXMLPath: path.resolve(jmdictPath),
+    kanjidicXMLPath: path.resolve(kanjidicPath),
+    outputPath,
+  }).process();
+} catch (err) {
+  logger.error(`Build failed:\n${inspect(err)}`);
+  process.exitCode = 1;
+}

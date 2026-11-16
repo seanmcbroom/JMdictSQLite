@@ -61,36 +61,47 @@ export class Processor {
   public async process(): Promise<void> {
     const startTime = Date.now();
 
-    // JMdict
     try {
+      // JMdict
+      // Streams are opened only after the parser exists, so `parse()` is
+      // listening before any read error can be emitted.
       const jmdictParser = await JMdictParser.create(this.db);
-      await jmdictParser.parse(
-        fs
-          .createReadStream(this.jmdictXMLPath, {
-            encoding: 'utf8',
-          })
-          .pipe(new EntityReplace()),
-      );
+      const jmdictSource = fs.createReadStream(this.jmdictXMLPath, {
+        encoding: 'utf8',
+      });
+      const jmdictInput = jmdictSource.pipe(new EntityReplace());
+
+      // `pipe` does not forward errors, so pass read errors downstream.
+      jmdictSource.once('error', err => jmdictInput.destroy(err));
+
+      await jmdictParser.parse(jmdictInput).catch(err => {
+        throw new Error(`JMdict parsing failed (${this.jmdictXMLPath})`, {
+          cause: err,
+        });
+      });
 
       logger.info(
         `[${((Date.now() - startTime) / 1000).toFixed(2)}s] Done parsing JMdict.`,
       );
-    } catch (err) {
-      logger.error(`JMdict parsing failed: ${err}`);
-    }
 
-    // Kanjidic
-    try {
+      // Kanjidic
       const kanjidicParser = await KanjidicParser.create(this.db);
-      await kanjidicParser.parse(
-        fs.createReadStream(this.kanjidicXMLPath, { encoding: 'utf8' }),
-      );
+      await kanjidicParser
+        .parse(fs.createReadStream(this.kanjidicXMLPath, { encoding: 'utf8' }))
+        .catch(err => {
+          throw new Error(`Kanjidic parsing failed (${this.kanjidicXMLPath})`, {
+            cause: err,
+          });
+        });
 
       logger.info(
         `[${((Date.now() - startTime) / 1000).toFixed(2)}s] Done parsing Kanjidic.`,
       );
     } catch (err) {
-      logger.error(`Kanjidic parsing failed: ${err}`);
+      // Don't run post-processing on a partial database.
+      this.db.abort();
+
+      throw err;
     }
 
     await this.db.close();

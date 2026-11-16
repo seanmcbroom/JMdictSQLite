@@ -102,4 +102,12 @@ export class JMDictSQLiteDatabase {
 
     this.db.close();
   }
+
+  /**
+   * Closes the connection without running post-processing.
+   * Used when parsing failed and the database is incomplete.
+   */
+  abort() {
+    if (this.db.open) this.db.close();
+  }
 }
