@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 
-import { JMdictTags } from '@/lib/constants/JMdictTags.js';
 import { JMDictSQLiteDatabase } from '@/lib/database/index.js';
 import { JMdictParser } from '@/lib/parsers/JMdictParser/index.js';
 import { KanjidicParser } from '@/lib/parsers/KanjidicParser/index.js';
@@ -70,7 +69,7 @@ export class Processor {
           .createReadStream(this.jmdictXMLPath, {
             encoding: 'utf8',
           })
-          .pipe(new EntityReplace(JMdictTags)),
+          .pipe(new EntityReplace()),
       );
 
       logger.info(

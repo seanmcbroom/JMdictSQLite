@@ -1,37 +1,29 @@
 import { Transform } from 'node:stream';
+import type { TransformCallback } from 'node:stream';
 
-import type { TagDictionary } from '@/lib/types/tags.js';
+/** XML's built-in entities. These are left for the XML parser to decode. */
+const PREDEFINED_ENTITIES = new Set(['amp', 'lt', 'gt', 'quot', 'apos']);
+
+const ENTITY = /&([a-zA-Z0-9-]+);/g;
 
 /**
- * Transform stream that safely replaces XML entities with their codes.
+ * Replaces JMdict's DTD entities (e.g. `&v5k-s;`) with their bare code
+ * (`v5k-s`), which is how tags are stored in the database.
  *
- * This stream handles entities that may be split across chunks (e.g., `&adj-i;`)
- * by buffering incomplete entities until the next chunk arrives.
+ * XML's predefined entities (`&amp;`, `&lt;`, `&gt;`, `&quot;`, `&apos;`)
+ * and numeric character references are passed through untouched so the
+ * XML parser decodes them to `&`, `<`, `>`, `"` and `'`.
  *
- * ⚠️ Note: This parser does **not** process DTDs. Automatically handling DTDs
- * can lead to security risks (XXE attacks), memory/CPU exhaustion (Billion Laughs),
- * and network issues. Only known entities defined in `tags` are replaced.
+ * Entities split across chunks are buffered until the next chunk arrives.
+ *
+ * ⚠️ Note: This does **not** process DTDs. Automatically handling DTDs
+ * can lead to security risks (XXE attacks), memory/CPU exhaustion
+ * (Billion Laughs), and network issues.
  */
 export class EntityReplace extends Transform {
   private leftover = '';
-  private readonly entityMap: Record<string, string> = {};
 
-  constructor(tags: TagDictionary) {
-    super();
-
-    // Build a map of known entities to their replacement codes
-    for (const codes of Object.values(tags)) {
-      for (const code of codes) {
-        this.entityMap[`&${code};`] = code;
-      }
-    }
-  }
-
-  _transform(
-    chunk: Buffer,
-    _encoding: BufferEncoding,
-    callback: (error?: Error | null) => void,
-  ) {
+  _transform(chunk: Buffer, _encoding: BufferEncoding, cb: TransformCallback) {
     // Prepend leftover from previous chunk
     let data = this.leftover + chunk.toString();
 
@@ -47,32 +39,19 @@ export class EntityReplace extends Transform {
       this.leftover = '';
     }
 
-    // Replace all complete entities in the current data
-    const replaced = data.replaceAll(/&([a-zA-Z0-9-]+);/g, (entity, code) => {
-      const replacement = this.entityMap[entity] ?? code;
-
-      return replacement;
-    });
-
-    this.push(replaced);
-    callback();
+    this.push(replaceEntities(data));
+    cb();
   }
 
-  _flush(callback: (error?: Error | null) => void) {
-    // Process any leftover entity at the end of the stream
-    if (this.leftover) {
-      const flushed = this.leftover.replaceAll(
-        /&([a-zA-Z0-9-]+);/g,
-        (entity, code) => {
-          const replacement = this.entityMap[entity] ?? code;
+  _flush(cb: TransformCallback) {
+    if (this.leftover) this.push(replaceEntities(this.leftover));
 
-          return replacement;
-        },
-      );
-
-      this.push(flushed);
-    }
-
-    callback();
+    cb();
   }
+}
+
+function replaceEntities(text: string): string {
+  return text.replace(ENTITY, (entity, name: string) =>
+    PREDEFINED_ENTITIES.has(name) ? entity : name,
+  );
 }
