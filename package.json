@@ -45,7 +45,7 @@
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-prettier": "5.5.7",
     "eslint-plugin-unused-imports": "4.4.1",
-    "prettier": "3.9.10",
+    "prettier": "3.10.1",
     "rimraf": "6.1.4",
     "tsc-alias": "1.9.10",
     "tsx": "4.23.15",
