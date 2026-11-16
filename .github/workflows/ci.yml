@@ -8,8 +8,7 @@ on:
     types: [opened, synchronize, reopened]
 
 permissions:
-  checks: write
-  contents: write
+  contents: read
 
 jobs:
   test:
@@ -40,6 +39,8 @@ jobs:
     if: github.event_name == 'push'  # only when merging into main
     runs-on: ubuntu-latest
     needs: [test, lint]
+    permissions:
+      contents: write  # pushes the version tag
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
