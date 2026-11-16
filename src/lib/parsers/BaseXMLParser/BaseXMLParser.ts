@@ -221,19 +221,15 @@ export abstract class BaseXMLParser<P extends BaseXMLParser<P, T>, T> {
   }
 
   /**
-   * Exposes a reference to the internal entry buffer.
+   * Queues a fully parsed item for insertion, writing a batch to the
+   * database once `batchSize` items are buffered.
    * Intended for use by tag handlers.
+   *
+   * @param item - The finished entry or character
    */
-  public get bufferRef() {
-    return this.buffer;
-  }
-
-  /**
-   * Exposes the configured batch size.
-   * Intended for use by tag handlers.
-   */
-  public get batchSizeRef() {
-    return this.batchSize;
+  public enqueue(item: T) {
+    this.buffer.push(item);
+    this.maybeFlush();
   }
 }
 
