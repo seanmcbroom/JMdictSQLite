@@ -13,6 +13,7 @@
   "scripts": {
     "create-release": "npm run build && node dist/src/index.js",
     "create-release:deploy": "npm run clean:all && npm run build && cross-env NODE_ENV=deploy VERBOSE=true node dist/src/index.js",
+    "verify:db": "node dist/scripts/verify-db.js ./data/jmdict.sqlite",
 
     "start": "cross-env VERBOSE=true node dist/src/index.js",
     "dev": "npm run clean:data-sqlite && cross-env NODE_ENV=development VERBOSE=true tsx src/index.ts",
