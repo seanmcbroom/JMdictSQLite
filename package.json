@@ -27,8 +27,8 @@
 
     "clean:dist": "rimraf dist",
     "clean:data-sqlite": "rimraf data/jmdict.sqlite",
-    "clean:data-jmdict": "rimraf data/jmdict.xml",
-    "clean:data-kanjidic": "rimraf data/kanjidic.xml",
+    "clean:data-jmdict": "rimraf data/JMdict_e.xml",
+    "clean:data-kanjidic": "rimraf data/kanjidic2.xml",
     "clean:build": "npm run clean:dist && npm run clean:data-sqlite",
     "clean:all": "npm run clean:dist && npm run clean:data-sqlite && npm run clean:data-jmdict && npm run clean:data-kanjidic",
 
