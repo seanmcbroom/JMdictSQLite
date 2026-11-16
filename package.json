@@ -38,7 +38,7 @@
     "@types/better-sqlite3": "9.6.0",
     "@types/node": "26.6.6",
     "@types/sax": "1.2.7",
-    "@typescript-eslint/eslint-plugin": "8.72.1",
+    "@typescript-eslint/eslint-plugin": "8.72.2",
     "copyfiles": "2.4.1",
     "cross-env": "^10.1.0",
     "eslint": "9.39.2",
