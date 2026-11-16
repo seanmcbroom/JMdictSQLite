@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "basic-ftp": "6.2.6",
-    "better-sqlite3": "13.0.3",
+    "better-sqlite3": "13.1.1",
     "sax": "1.6.1"
   }
 }
