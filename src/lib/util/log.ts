@@ -29,14 +29,15 @@ interface LogInfo {
   textColor?: keyof typeof logSettings.text;
   bold?: boolean;
   dim?: boolean;
+  /** Print even when VERBOSE is not set, and write to stderr. */
+  important?: boolean;
 }
 
 export const log = (text: string, info: LogInfo = {}) => {
   const isVerbose = process.env.VERBOSE === 'true';
+  const { backgroundColor, textColor, bold, dim, important } = info;
 
-  if (!isVerbose) return;
-
-  const { backgroundColor, textColor, bold, dim } = info;
+  if (!isVerbose && !important) return;
 
   let style = '';
 
@@ -47,7 +48,9 @@ export const log = (text: string, info: LogInfo = {}) => {
 
   if (textColor) style += logSettings.text[textColor];
 
-  console.log(`${style}%s${logSettings.reset}`, text);
+  const write = important ? console.error : console.log;
+
+  write(`${style}%s${logSettings.reset}`, text);
 };
 
 export const logger = {
@@ -55,9 +58,11 @@ export const logger = {
 
   success: (text: string) => log(text, { textColor: 'green', bold: true }),
 
-  warn: (text: string) => log(text, { textColor: 'yellow', bold: true }),
+  warn: (text: string) =>
+    log(text, { textColor: 'yellow', bold: true, important: true }),
 
-  error: (text: string) => log(text, { textColor: 'red', bold: true }),
+  error: (text: string) =>
+    log(text, { textColor: 'red', bold: true, important: true }),
 
   debug: (text: string) => log(text, { textColor: 'purple' }),
 

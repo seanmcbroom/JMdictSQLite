@@ -1,3 +1,4 @@
+import type { Readable } from 'node:stream';
 import sax from 'sax';
 
 import type { JMDictSQLiteDatabase } from '@/lib/database/index.js';
@@ -53,6 +54,9 @@ export abstract class BaseXMLParser<P extends BaseXMLParser<P, T>, T> {
   protected readonly buffer: T[] = [];
   protected readonly batchSize: number;
 
+  /** Rejects the in-flight {@link parse} promise; set while parsing. */
+  private failParse: ((err: Error) => void) | undefined;
+
   /**
    * Creates a new BaseXMLParser instance and wires SAX event handlers.
    *
@@ -77,21 +81,65 @@ export abstract class BaseXMLParser<P extends BaseXMLParser<P, T>, T> {
     this.parser.on('text', this.onText.bind(this));
     this.parser.on('closetag', this.onCloseTag.bind(this));
     this.parser.on('error', this.onError.bind(this));
-    this.parser.on('end', this.flush.bind(this));
   }
 
   /**
    * Starts parsing a readable XML stream.
    *
+   * The promise rejects on the first input-stream error, SAX parse error,
+   * tag-handler error or database flush error, so a partial parse can
+   * never be mistaken for a complete one.
+   *
    * @param inputStream - Readable stream containing XML data
    * @returns A promise that resolves when parsing completes
    */
-  parse(inputStream: NodeJS.ReadableStream): Promise<void> {
-    return new Promise(resolve => {
-      inputStream.pipe(this.parser);
+  parse(inputStream: Readable): Promise<void> {
+    return new Promise((resolve, reject) => {
+      let settled = false;
 
-      this.parser.once('end', () => resolve());
+      const fail = (err: Error) => {
+        if (settled) return;
+        settled = true;
+        this.failParse = undefined;
+
+        inputStream.unpipe(this.parser);
+        inputStream.destroy();
+        reject(err);
+      };
+
+      this.failParse = fail;
+
+      inputStream.once('error', fail);
+
+      this.parser.once('end', () => {
+        if (settled) return;
+
+        try {
+          this.flush();
+        } catch (err) {
+          fail(toError(err, 'Failed to flush parsed entries'));
+
+          return;
+        }
+
+        settled = true;
+        this.failParse = undefined;
+        resolve();
+      });
+
+      inputStream.pipe(this.parser);
     });
+  }
+
+  /**
+   * Fails the current {@link parse} call, or throws if none is running.
+   *
+   * @param err - The error that stopped parsing
+   */
+  protected fail(err: Error) {
+    if (!this.failParse) throw err;
+
+    this.failParse(err);
   }
 
   // -------------------------
@@ -105,12 +153,14 @@ export abstract class BaseXMLParser<P extends BaseXMLParser<P, T>, T> {
    * @param node - SAX tag metadata and attributes
    */
   protected onOpenTag(node: sax.Tag) {
-    try {
-      const handler = this.openTagHandlers[node.name];
+    const handler = this.openTagHandlers[node.name];
 
-      if (handler) handler(this as unknown as P, node.attributes);
+    if (!handler) return;
+
+    try {
+      handler(this as unknown as P, node.attributes);
     } catch (err) {
-      console.warn(`Error in open tag handler for <${node.name}>:`, err);
+      this.fail(toError(err, `Open tag handler for <${node.name}> failed`));
     }
   }
 
@@ -120,11 +170,7 @@ export abstract class BaseXMLParser<P extends BaseXMLParser<P, T>, T> {
    * @param text - Text content emitted by the SAX parser
    */
   protected onText(text: string) {
-    try {
-      this.currentText += text;
-    } catch (err) {
-      console.warn('Error in text handler:', err);
-    }
+    this.currentText += text;
   }
 
   /**
@@ -135,14 +181,14 @@ export abstract class BaseXMLParser<P extends BaseXMLParser<P, T>, T> {
    * @param name - Name of the closing tag
    */
   protected onCloseTag(name: string) {
+    const handler = this.closeTagHandlers[name];
+
     try {
-      const handler = this.closeTagHandlers[name];
-
       if (handler) handler(this as unknown as P, this.currentText.trim());
-
-      this.currentText = '';
     } catch (err) {
-      console.warn(`Error in close tag handler for </${name}>:`, err);
+      this.fail(toError(err, `Close tag handler for </${name}> failed`));
+    } finally {
+      this.currentText = '';
     }
   }
 
@@ -152,7 +198,7 @@ export abstract class BaseXMLParser<P extends BaseXMLParser<P, T>, T> {
    * @param err - Parsing error
    */
   protected onError(err: Error) {
-    console.warn('❌ SAX Parser Error:', err);
+    this.fail(toError(err, 'SAX parser error'));
   }
 
   // -------------------------
@@ -189,4 +235,12 @@ export abstract class BaseXMLParser<P extends BaseXMLParser<P, T>, T> {
   public get batchSizeRef() {
     return this.batchSize;
   }
+}
+
+/**
+ * Wraps an unknown thrown value in an Error with context, keeping the
+ * original as `cause`.
+ */
+function toError(err: unknown, message: string): Error {
+  return new Error(message, { cause: err });
 }
