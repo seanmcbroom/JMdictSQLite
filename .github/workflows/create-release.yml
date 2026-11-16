@@ -42,6 +42,9 @@ jobs:
       - name: Parse (generate database)
         run: npm run create-release:deploy
 
+      - name: Sanity-check database before signing
+        run: npm run verify:db
+
       - name: Set release date
         id: date
         run: echo "date=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
