@@ -1,0 +1,4 @@
+# Store and check out text files with LF endings on every platform.
+# Prettier enforces LF, so without this a Windows checkout with
+# core.autocrlf=true reports every line as a lint error.
+* text=auto eol=lf

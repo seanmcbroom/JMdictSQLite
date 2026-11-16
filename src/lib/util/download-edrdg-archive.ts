@@ -1,78 +1,91 @@
 import * as ftp from 'basic-ftp';
 import fs from 'node:fs';
 import path from 'node:path';
-import { pipeline } from 'node:stream';
-import { promisify } from 'node:util';
+import { pipeline } from 'node:stream/promises';
 import * as zlib from 'node:zlib';
 
 import { logger } from '@/lib/util/log.js';
 
-const pipe = promisify(pipeline);
+const FTP_HOST = 'ftp.edrdg.org';
 
 /**
- * Downloads and decompresses a specified archive file (.gz) from the FTP server.
- * @param filename File name without the extension
- * @param basePath Optional base path to save the downloaded and decompressed files (default: 'data')
- * @returns Path to the decompressed XML file, e.g., 'data/JMdict_e.xml'
+ * Decompresses `gzPath` into `outPath`.
+ *
+ * Output goes to `<outPath>.tmp` and is renamed only once decompression
+ * succeeds, so a failed or interrupted run never leaves a truncated file
+ * at `outPath`.
+ *
+ * @throws If the input can't be read or isn't valid gzip data
+ */
+export async function gunzipFile(gzPath: string, outPath: string) {
+  const tmpPath = `${outPath}.tmp`;
+
+  try {
+    await pipeline(
+      fs.createReadStream(gzPath),
+      zlib.createGunzip(),
+      fs.createWriteStream(tmpPath),
+    );
+    fs.renameSync(tmpPath, outPath);
+  } finally {
+    fs.rmSync(tmpPath, { force: true });
+  }
+}
+
+/**
+ * Downloads a gzipped file from the EDRDG FTP server and decompresses it.
+ * An existing decompressed file is reused.
+ *
+ * @param filename File name without the `.gz` extension
+ * @param basePath Directory to save into (default: 'data')
+ * @returns Absolute path to the decompressed XML file, e.g. `…/data/JMdict_e.xml`
+ * @throws If the download or decompression fails
  */
 async function downloadEDRDGArchive(
   filename: string,
   basePath: string = 'data',
 ): Promise<string> {
-  const ftpUrl = 'ftp.edrdg.org';
   const ftpPath = `/pub/Nihongo/${filename}.gz`;
-  const localGzPath = path.join(basePath, `${filename}.gz`);
-  const localXmlPath = path.join(
+  const localGzPath = path.resolve(basePath, `${filename}.gz`);
+  const localXmlPath = path.resolve(
     basePath,
     `${filename.endsWith('.xml') ? filename.slice(0, -4) : filename}.xml`, // Prevents double file extensions
   );
 
-  // Ensure data directory exists
-  fs.mkdirSync(basePath, { recursive: true });
-
-  const client = new ftp.Client();
-
-  /* Check if the XML file already exists,
-   if it does, skip download and decompression. */
   if (fs.existsSync(localXmlPath)) {
     logger.info(`${filename} already exists. Skipping download.`);
 
     return localXmlPath;
   }
 
-  // Download the .gz file from the FTP server
-  try {
-    await client.access({
-      host: ftpUrl,
-      secure: false,
-    });
+  fs.mkdirSync(basePath, { recursive: true });
 
+  const client = new ftp.Client();
+
+  try {
+    await client.access({ host: FTP_HOST, secure: false });
     await client.downloadTo(localGzPath, ftpPath);
   } catch (err) {
-    console.error('FTP download failed:', err);
-    process.exit(1);
+    fs.rmSync(localGzPath, { force: true });
+
+    throw new Error(`FTP download of ${FTP_HOST}${ftpPath} failed`, {
+      cause: err,
+    });
   } finally {
     client.close();
   }
 
-  // Decompress the .gz file to .xml
   try {
-    const fileContents = fs.createReadStream(localGzPath);
-    const writeStream = fs.createWriteStream(localXmlPath);
-    const unzip = zlib.createGunzip();
-
-    await pipe(fileContents, unzip, writeStream);
+    await gunzipFile(localGzPath, localXmlPath);
   } catch (err) {
-    console.error('Decompression failed:', err);
-    process.exit(1);
+    throw new Error(`Decompressing ${localGzPath} failed`, { cause: err });
+  } finally {
+    fs.rmSync(localGzPath, { force: true });
   }
 
-  // Delete the .gz file after decompression
-  fs.unlinkSync(localGzPath);
+  logger.info(`Downloaded ${filename} to ${localXmlPath}`);
 
-  console.log(`Downloaded ${filename} to ${localXmlPath}`);
-
-  return path.resolve(localXmlPath);
+  return localXmlPath;
 }
 
 const downloadJMdict = (outputPath?: string) =>

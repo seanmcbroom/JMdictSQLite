@@ -26,7 +26,7 @@ export default [
       // Prettier formatting
       // -------------------------
       // Prettier handles all code style: line length, indentation, spacing, blank lines
-      'prettier/prettier': ['error', { printWidth: 80 }],
+      'prettier/prettier': ['error', { printWidth: 80, endOfLine: 'auto' }],
 
       // -------------------------
       // TypeScript-specific rules

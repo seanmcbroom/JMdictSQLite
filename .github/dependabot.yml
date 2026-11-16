@@ -10,3 +10,9 @@ updates:
     labels: []
     schedule:
       interval: "weekly"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    labels: []
+    schedule:
+      interval: "weekly"

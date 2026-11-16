@@ -5,7 +5,7 @@ export default function entry(parser: JMdictParser) {
 
   if (!current) return;
 
-  parser.bufferRef.push(current);
-
   parser.entry = undefined;
+
+  parser.enqueue(current);
 }
