@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 
-import { JMdictTags } from '@/lib/constants/JMdictTags.js';
 import { JMDictSQLiteDatabase } from '@/lib/database/index.js';
 import { JMdictParser } from '@/lib/parsers/JMdictParser/index.js';
 import { KanjidicParser } from '@/lib/parsers/KanjidicParser/index.js';
@@ -70,7 +69,7 @@ export class Processor {
       const jmdictSource = fs.createReadStream(this.jmdictXMLPath, {
         encoding: 'utf8',
       });
-      const jmdictInput = jmdictSource.pipe(new EntityReplace(JMdictTags));
+      const jmdictInput = jmdictSource.pipe(new EntityReplace());
 
       // `pipe` does not forward errors, so pass read errors downstream.
       jmdictSource.once('error', err => jmdictInput.destroy(err));
