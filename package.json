@@ -50,7 +50,7 @@
     "tsc-alias": "1.9.10",
     "tsx": "4.23.15",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.72.1"
+    "typescript-eslint": "8.72.2"
   },
   "dependencies": {
     "basic-ftp": "6.2.6",
