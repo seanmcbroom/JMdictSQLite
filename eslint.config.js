@@ -1,4 +1,3 @@
-import tsParser from '@typescript-eslint/parser';
 import prettierConfig from 'eslint-config-prettier';
 import eslintPluginPrettier from 'eslint-plugin-prettier';
 import eslintPluginImport from 'eslint-plugin-import';
@@ -12,7 +11,7 @@ export default [
   {
     files: ['**/*.{ts,tsx,js,jsx,mjs,cjs}'],
     languageOptions: {
-      parser: tsParser,
+      parser: tseslint.parser,
       parserOptions: {
         project: './tsconfig.json',
       },
@@ -27,7 +26,7 @@ export default [
       // Prettier formatting
       // -------------------------
       // Prettier handles all code style: line length, indentation, spacing, blank lines
-      'prettier/prettier': ['error', { printWidth: 80 }],
+      'prettier/prettier': ['error', { printWidth: 80, endOfLine: 'auto' }],
 
       // -------------------------
       // TypeScript-specific rules
